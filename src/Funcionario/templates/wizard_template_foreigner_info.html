@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_page_style %}
+{% endblock custom_page_style %}
+
+{% block content %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-4">Informações de Funcionario Estrangeiro</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+                <div class="col-lg-8">  <!--COL 1 STARTS-->
+                    
+                    <!--ARRIVAL DATE-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.estr_data_chegada.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.estr_data_chegada.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.estr_data_chegada class="form-control" placeholder=wizard.form.estr_data_chegada.label %}
+                        </div>
+                    </div>
+                    
+                    <!--CITIZENSHIP DATE-->
+                    <div class="form-group"  style="visibility: hidden" id = "citizenship_date">
+                        <label for="{{ wizard.form.estr_data_naturalizacao.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.estr_data_naturalizacao.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.estr_data_naturalizacao class="form-control" placeholder=wizard.form.estr_data_naturalizacao.label %}
+                        </div>
+                    </div>
+                
+                </div>  <!--COL 1 ENDS-->
+                <div class="col-lg-4">  <!--COL 2 STARTS-->
+                    
+                    <!--CITIZENSHIP-->
+                    <div class="form-group">
+                        <div class="col-lg-offset-1 col-lg-9">
+                            <div class="checkbox" onclick='showCountry("citizenship", "citizenship_date")'>
+                                <label for="{{ wizard.form.estr_naturalizado.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                    {% render_field wizard.form.estr_naturalizado id="citizenship"%}
+                                    {{wizard.form.estr_naturalizado.label}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--MARRIED TO BRAZILIAN-->
+                    <div class="form-group">
+                        <div class="col-lg-offset-1 col-lg-9">
+                            <div class="checkbox">
+                                <label for="{{ wizard.form.estr_casado_brasileiro.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                    {% render_field wizard.form.estr_casado_brasileiro %}
+                                    {{wizard.form.estr_casado_brasileiro.label}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>  <!--COL 2 ENDS-->
+            </div>  <!--ROW 1 ENDS-->
+
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}

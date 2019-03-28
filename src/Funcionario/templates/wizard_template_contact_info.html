@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_page_style %}
+{% endblock custom_page_style %}
+
+{% block content %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-4">Informações de Funcionario Deficiente</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+                <div class="col-lg-4">  <!--COL 1 STARTS-->
+                    
+                    <!--LANDLINE-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_tel_fixo.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.cont_tel_fixo.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.cont_tel_fixo class="form-control" placeholder=wizard.form.cont_tel_fixo.label %}
+                        </div>
+                    </div>
+
+                </div>  <!--COL 1 ENDS-->
+                <div class="col-lg-4">  <!--COL 2 STARTS-->
+                    
+                    <!--CELL-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_tel_cel.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.cont_tel_cel.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.cont_tel_cel class="form-control" placeholder=wizard.form.cont_tel_cel.label %}
+                        </div>
+                    </div>
+
+                </div>  <!--COL 2 ENDS-->
+                <div class="col-lg-4">  <!--COL 3 STARTS-->
+
+                    <!--MESSAGES PHONE-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_tel_recado.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.cont_tel_recado.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.cont_tel_recado class="form-control" placeholder=wizard.form.cont_tel_recado.label %}
+                        </div>
+                    </div>
+                
+                </div>  <!--COL 3 ENDS-->
+            </div>  <!--ROW 1 ENDS-->
+            <div class="spacer"></div>
+            <div class="row">   <!--ROW 2 STARTS-->
+                <div class="col-lg-12"> <!--COL 2 STARTS-->
+                    
+                    <!--EMAIL-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_email.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.cont_email.label}}
+                        </label>
+                        <div class="col-lg-5">
+                            {% render_field wizard.form.cont_email class="form-control" placeholder=wizard.form.cont_email.label %}
+                        </div>
+                    </div>
+
+                </div> <!--COL 2 ENDS-->
+            </div>  <!--ROW 2 ENDS-->
+
+
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}

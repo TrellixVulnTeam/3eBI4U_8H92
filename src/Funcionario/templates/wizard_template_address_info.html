@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_page_style %}
+{% endblock custom_page_style %}
+
+{% block content %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Endereço</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+
+                <div class="col-lg-3">  <!--COL 1 STARTS-->
+                    <!--CEP-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.end_CEP.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.end_CEP.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.end_CEP class="form-control" placeholder=wizard.form.end_CEP.label %}
+                        </div>
+                    </div>
+
+                    <!--COUNTY-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.end_bairro.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.end_bairro.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.end_bairro class="form-control" placeholder=wizard.form.end_bairro.label  %}
+                        </div>
+                    </div>
+
+                </div>  <!--COL 1 ENDS-->
+
+                <div class="col-lg-6">  <!--COL 2 STARTS-->
+                    <!--MAIN ADDRESS-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.end_geral.id_for_label }}" class = "control-label col-lg-2 text-right">
+                            {{wizard.form.end_geral.label}}
+                        </label>
+                        <div class="col-lg-10">
+                            {% render_field wizard.form.end_geral class="form-control" placeholder=wizard.form.end_geral.label %}
+                        </div>
+                    </div>
+
+                    <!--NEIGHBORHOOD-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.end_municipio.id_for_label }}" class = "control-label col-lg-2 text-right">
+                            {{wizard.form.end_municipio.label}}
+                        </label>
+                        <div class="col-lg-10">
+                            {% render_field wizard.form.end_municipio class="form-control" placeholder=wizard.form.end_municipio.label  %}
+                        </div>
+                    </div>
+
+
+                </div>  <!--COL 2 ENDS-->
+
+                <div class="col-lg-3">  <!--COL 3 STARTS-->
+                    <!--ADDRESS NUMBER-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.end_numero.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.end_numero.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.end_numero class="form-control" placeholder=wizard.form.end_numero.label %}
+                        </div>
+                    </div>
+
+                    <!--STATE-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.end_estado.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.end_estado.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.end_estado class="form-control" placeholder=wizard.form.end_estado.label  %}
+                        </div>
+                    </div>
+
+
+                </div>  <!--COL 3 ENDS-->
+            </div>  <!--ROW 1 ENDS-->
+
+            <div class="row">   <!--ROW 2 STARTS-->
+                <div class="col-lg-3"> <!--COLUMN 1 STARTS--> 
+
+                    <!--RESIDENT ABROAD-->
+                    <div class="form-group">
+                        <div class="col-lg-offset-1 col-lg-9">
+                            <div class="checkbox" onclick='showCountry("checkbox_abroad", "country_selector")'>
+                                <label for="{{ wizard.form.end_residente_exterior.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                    {% render_field wizard.form.end_residente_exterior id="checkbox_abroad"%}
+                                    {{wizard.form.end_residente_exterior.label}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--OWN RESIDENCE-->
+                    <div class="form-group">
+                        <div class="col-lg-offset-1 col-lg-9">
+                            <div class="checkbox">
+                                <label for="{{ wizard.form.end_residencia_propria.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                    {% render_field wizard.form.end_residencia_propria %}
+                                    {{wizard.form.end_residencia_propria.label}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+    
+                </div>  <!--COLUMN 1 ENDS-->
+                <div class="col-lg-6">  <!--COLUMN 2 STARTS-->
+
+                    <!--COUNTRY-->
+                    <div class="form-group" style="visibility: hidden" id = "country_selector">
+                        <label for="{{ wizard.form.end_pais.id_for_label }}" class = "control-label col-lg-1 text-right">
+                            {{wizard.form.end_pais.label}}
+                        </label>
+                        <div class="col-lg-10 col-lg-offset-1">
+                            {% render_field wizard.form.end_pais class="form-control" placeholder=wizard.form.end_pais.label %}
+                        </div>
+                    </div>
+                    
+                    <!--BOUGHT ON FGTS-->
+                    <div class="form-group">
+                        <div class="col-lg-9">
+                            <div class="checkbox">
+                                <label for="{{ wizard.form.end_comprado_FGTS.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                    {% render_field wizard.form.end_comprado_FGTS %}
+                                    {{wizard.form.end_comprado_FGTS.label}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>  <!--COLUMN 2 ENDS-->
+                <div class="div col-lg-3">  <!--COLUMN 3 STARTS-->
+                    
+                    <!--COMPLEMENT-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.end_complemento.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.end_complemento.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.end_complemento class="form-control" placeholder=wizard.form.end_complemento.label %}
+                        </div>
+                    </div>
+
+                </div>  <!--COLUMN 3 ENDS-->
+            </div>  <!--ROW 2 ENDS-->
+
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}
