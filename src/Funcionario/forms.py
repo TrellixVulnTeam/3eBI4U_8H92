@@ -1,4 +1,5 @@
 import os
+import re
 from django import forms
 from django.forms import widgets
 from django.http import HttpResponse
@@ -256,9 +257,9 @@ class ContactInfoForm(forms.ModelForm):
         ]
 
         labels = {
-            'cont_tel_fixo'     : 'Telefone Fixo',
-            'cont_tel_cel'      : 'Telefone Celular',
-            'cont_tel_recado'   : 'Telefone para Recados',
+            'cont_tel_fixo'     : 'Residêncial',
+            'cont_tel_cel'      : 'Celular',
+            'cont_tel_recado'   : 'Recados',
             'cont_email'        : 'E-Mail',
         }
 
@@ -299,10 +300,18 @@ class AnotherJobInfoForm(forms.ModelForm):
         labels = {
             'vinc_outra_emp_func' : 'Funcionario em Outra Empresa',
             'vinc_outra_emp_soc' : 'Sócio em Outra Empresa',
-            'vinc_outra_emp_nome' : 'Nome da Outra Empresa',
-            'vinc_outra_emp_CNPJ' : 'CNPJ da Outra Empresa',
-            'vinc_outra_emp_salario' : 'Salário na Outra Empresa',
+            'vinc_outra_emp_nome' : 'Nome da Empresa',
+            'vinc_outra_emp_CNPJ' : 'CNPJ da Empresa',
+            'vinc_outra_emp_salario' : 'Salário',
             'vinc_comentarios' : 'Comentários'
+        }
+
+        widgets = {
+            'vinc_outra_emp_func'   :   widgets.CheckboxInput,
+            'vinc_outra_emp_soc'    :   widgets.CheckboxInput,
+            'vinc_outra_emp_CNPJ'   :   widgets.TextInput,
+            'vinc_outra_emp_salario':   widgets.TextInput,
+            'vinc_comentarios'      :   widgets.Textarea
         }
 
 class InternInfoForm(forms.ModelForm):
@@ -323,18 +332,22 @@ class InternInfoForm(forms.ModelForm):
             'estag_instituto_tel'            
         ]
         labels = {
-            'estag_data_inicio' : 'Data de Início do Estágio',
-            'estag_data_fim' : 'Data de Fim do Estágio',
+            'estag_data_inicio' : 'Data de Início',
+            'estag_data_fim' : 'Data de Fim',
             'estag_obrigatorio' : 'Estágio Obrigatório',
             'estag_escolaridade' : 'Nível de Escolaridade',
             'estag_area_atuacao' : 'Área de Atuação',
             'estag_valor_bolsa' : 'Valor da Bolsa',
-            'estag_instituto_nome' : 'Nome da Instituição de Ensino',
-            'estag_instituto_CNPJ' : 'CNPJ da Instituição de Ensino',
-            'estag_instituto_end' : 'Endereço da Instituição de Ensino',
-            'estag_instituto_UF' : 'Estado da Instituição de Ensino',
-            'estag_instituto_CEP' : 'CEP da Instituição de Ensino',
-            'estag_instituto_tel' : 'Telefone da Instituição de Ensino'            
+            'estag_instituto_nome' : 'Nome',
+            'estag_instituto_CNPJ' : 'CNPJ',
+            'estag_instituto_end' : 'Endereço',
+            'estag_instituto_UF' : 'Estado',
+            'estag_instituto_CEP' : 'CEP',
+            'estag_instituto_tel' : 'Telefone'            
+        }
+        widgets = {
+            'estag_obrigatorio'     :   widgets.CheckboxInput,
+            'estag_valor_bolsa'     :   widgets.TextInput   
         }
 
 class PositionInfoForm(forms.ModelForm):
@@ -348,11 +361,15 @@ class PositionInfoForm(forms.ModelForm):
             'funcao_descricao'
         ]
         labels = {
-            'funcao_cargo' : 'Cargo',
-            'funcao_nivel' : 'Nível do Cargo',
-            'funcao_gestor' : 'Gestor',
-            'funcao_CBO' : 'CBO',
-            'funcao_descricao' : 'Descrição do Cargo'
+            'funcao_cargo'      : 'Cargo',
+            'funcao_nivel'      : 'Nível',
+            'funcao_gestor'     : 'Cargo de Gestão',
+            'funcao_CBO'        : 'CBO da Função',
+            'funcao_descricao'  : 'Descrição da Função'
+        }
+        widgets = {
+            'funcao_gestor' : widgets.CheckboxInput,
+            'funcao_descricao' : widgets.Textarea
         }
 
 class ContractualInfoForm(forms.ModelForm):
@@ -390,8 +407,17 @@ class ContractualInfoForm(forms.ModelForm):
             'contrat_vale_comb_valor' : 'Valor do Vale Combustível',
             'contrat_vale_transp' : 'Vale Transporte',
             'contrat_vale_transp_valor' : 'Valor do Vale transporte',
-            'contrat_salario_atual' : 'Valor do Salário Atual',
-            'contrat_salario_base' : 'Valor Do Salário Base'            
+            'contrat_salario_atual' : 'Salário Atual',
+            'contrat_salario_base' : 'Salário Base'            
+        }
+        widgets = {
+            'contrat_salario_atual' : widgets.TextInput,
+            'contrat_salario_base' : widgets.TextInput,
+            'contrat_vale_alim' : widgets.CheckboxInput,
+            'contrat_vale_ref' : widgets.CheckboxInput,
+            'contrat_cesta' : widgets.CheckboxInput,
+            'contrat_vale_comb' : widgets.CheckboxInput,
+            'contrat_vale_transp' : widgets.CheckboxInput,
         }
 
 class DocScansForm(forms.ModelForm):
@@ -453,7 +479,12 @@ TEMPLATES = {
         'Foreigner Info'    :   'wizard_template_foreigner_info.html',
         'Handicapped Info'  :   'wizard_template_handicapped_info.html',
         'Contact Info'      :   'wizard_template_contact_info.html',
-        'Banking Info'      :   'wizard_template_banking_info.html'
+        'Banking Info'      :   'wizard_template_banking_info.html',
+        'Another Job Info'  :   'wizard_template_anotherjob_info.html',
+        'Intern Info'       :   'wizard_template_intern_info.html',
+        'Position Info'     :   'wizard_template_position_info.html',
+        'Contractual Info'  :   'wizard_template_contractual_info.html',
+        'Doc Scans'         :   'wizard_template_doc_scans.html'
         }
 
 class CadastroFuncionarioWizard(SessionWizardView):
@@ -465,13 +496,12 @@ class CadastroFuncionarioWizard(SessionWizardView):
     def get_template_names(self):
         return [TEMPLATES[self.steps.current]]
 
-
     def done(self, form_list, form_dict, **kwargs):
         
         for k, v in form_dict.items():
-            #print('key {} ----- {}'.format(k, v.cleaned_data))
             if k == 'Basic Info':
-                basicinfo = BasicInfo.objects.create(**v.cleaned_data)
+                cdata = v.cleaned_data
+                basicinfo = BasicInfo.objects.create(**cdata)
             elif k == 'Address Info':
                 cdata = v.cleaned_data
                 cdata['basicinfo'] = basicinfo

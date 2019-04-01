@@ -1,11 +1,11 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from .utilities import (
-    validateCPF, validateRG, user_media_path_CERTIDAOCASAMENTO,
-    user_media_path_CERTIDAONASCIMENTO, user_media_path_COMPROVANTEESCOLAR,
-    user_media_path_CPF, user_media_path_TE, user_media_path_CTPS, user_media_path_RESERVISTA,
-    user_media_path_CV, user_media_path_COMPROVANTERESIDENCIA, user_media_path_VACINACAO, user_media_path_RG)
-
+    validateCPF, validateRG, funcionario_media_path_CERTIDAOCASAMENTO,
+    funcionario_media_path_CERTIDAONASCIMENTO, funcionario_media_path_COMPROVANTEESCOLAR,
+    funcionario_media_path_CPF, funcionario_media_path_TE, funcionario_media_path_CTPS, funcionario_media_path_RESERVISTA,
+    funcionario_media_path_CV, funcionario_media_path_COMPROVANTERESIDENCIA, funcionario_media_path_VACINACAO, funcionario_media_path_RG,
+    funcionario_media_path_PICTURE)
 
 # App Logic ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ grau_parentesco_choices     = [
 
 # Regex Validators 
 phoneRegex = RegexValidator(
-    regex=r'^\+?\d{0,4}\(\d{0,3}\)\d{7,15}$',
+    regex=r'^(\+\d{0,4})?(\(\d{0,3}\))?([0-9\-]{7,15})$',
     message="Entre Telefone no Formato: '+99(99)999999999'."
 )
 
@@ -93,6 +93,7 @@ phoneRegex = RegexValidator(
 class BasicInfo(models.Model):
 
     id                          =   models.BigAutoField(primary_key = True)
+
     primeiro_nome               =   models.CharField(max_length = 100, null = True, blank = True)
     ultimo_nome                 =   models.CharField(max_length = 100, null = True, blank = True)
     data_nascimento             =   models.DateField(null = True, blank = True)
@@ -100,7 +101,7 @@ class BasicInfo(models.Model):
     nacionalidade               =   models.CharField(max_length = 200, null = True, blank = True)
     estado_nascimento           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     municipio_nascimento        =   models.CharField(max_length = 200, null = True, blank = True)
-    numero_documento_CPF        =   models.DecimalField(max_digits = 11, decimal_places = 0, null = True, blank = True)
+    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF], null = True, blank = True)
     numero_inscricao_NIS        =   models.IntegerField(null = True, blank = True)
     numero_PIS_PASEP            =   models.IntegerField(null = True, blank = True)
     numero_NIT_INSS             =   models.IntegerField(null = True, blank = True)
@@ -118,6 +119,7 @@ class BasicInfo(models.Model):
     deficiente                  =   models.BooleanField(null = True, blank = True)
 
     ativo                       =   models.BooleanField(default = True)
+    obs_desligamento            =   models.TextField(null = True, blank = True)
 
 # 2 - Address Info
 class AddressInfo(models.Model):
@@ -131,7 +133,7 @@ class AddressInfo(models.Model):
     end_complemento             =   models.CharField(max_length = 100, null = True, blank = True)
     end_municipio               =   models.CharField(max_length = 200, null = True, blank = True)
     end_estado                  =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    end_CEP                     =   models.IntegerField(null = True, blank = True)
+    end_CEP                     =   models.CharField(max_length = 9, null = True, blank = True)
     end_pais                    =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
     end_residencia_propria      =   models.BooleanField(null = True, blank = True)
     end_comprado_FGTS           =   models.BooleanField(null = True, blank = True)
@@ -200,7 +202,9 @@ class HandicappedInfo(models.Model):
 # 7 - Banking Info
 class BankingInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    id                          =   models.BigAutoField(primary_key = True)
+
+    basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
 
     banco_numero_codigo         =   models.DecimalField(max_digits = 4, decimal_places = 0, null = True, blank = True)
     banco_nome                  =   models.CharField(max_length = 200, choices = bank_choices, null = True, blank = True)
@@ -232,10 +236,10 @@ class InternInfo(models.Model):
     estag_area_atuacao          =   models.CharField(max_length = 300, null = True, blank = True)
     estag_valor_bolsa           =   models.DecimalField(max_digits = 10, decimal_places=2, null = True, blank = True)
     estag_instituto_nome        =   models.CharField(max_length = 200, null = True, blank = True)
-    estag_instituto_CNPJ        =   models.CharField(max_length = 11, null = True, blank = True)
+    estag_instituto_CNPJ        =   models.CharField(max_length = 18, null = True, blank = True)
     estag_instituto_end         =   models.CharField(max_length = 200, null = True, blank = True)
     estag_instituto_UF          =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    estag_instituto_CEP         =   models.CharField(max_length = 8, null = True, blank = True)
+    estag_instituto_CEP         =   models.CharField(max_length = 9, null = True, blank = True)
     estag_instituto_tel         =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
 
 # 10 - Position Info
@@ -258,17 +262,17 @@ class ContractualInfo(models.Model):
     contrat_data_inicio         =   models.DateField(null = True, blank = True)
     contrat_cargo_inicial       =   models.CharField(max_length = 200, choices = position_choices, null = True, blank = True)
     contrat_vale_alim           =   models.BooleanField(null = True, blank = True)
-    contrat_vale_alim_valor     =   models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+    contrat_vale_alim_valor     =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_vale_ref            =   models.BooleanField(null = True, blank = True)
-    contrat_vale_ref_valor      =   models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+    contrat_vale_ref_valor      =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_cesta               =   models.BooleanField(null = True, blank = True)
-    contrat_cesta_valor         =   models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+    contrat_cesta_valor         =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_vale_comb           =   models.BooleanField(null = True, blank = True)
-    contrat_vale_comb_valor     =   models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+    contrat_vale_comb_valor     =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_vale_transp         =   models.BooleanField(null = True, blank = True)
-    contrat_vale_transp_valor   =   models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
-    contrat_salario_atual       =   models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
-    contrat_salario_base        =   models.DecimalField(max_digits = 10, decimal_places = 2, null = True, blank = True)
+    contrat_vale_transp_valor   =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_salario_atual       =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_salario_base        =   models.CharField(max_length = 20, null = True, blank = True)
 
 # 12 - Document File Attachments
 class DocumentAttachments(models.Model):
@@ -277,15 +281,16 @@ class DocumentAttachments(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    docscan_CPF                 =   models.ImageField(upload_to = user_media_path_CPF, null = True, blank = True)
-    docscan_TE                  =   models.ImageField(upload_to = user_media_path_TE, null = True, blank = True)
-    docscan_CTPS                =   models.ImageField(upload_to = user_media_path_CTPS, null = True, blank = True)   
-    docscan_reservista          =   models.ImageField(upload_to = user_media_path_RESERVISTA, null = True, blank = True)   
-    docscan_certidao_nascimento =   models.ImageField(upload_to = user_media_path_CERTIDAONASCIMENTO, null = True, blank = True)   
-    docscan_certidao_casamento  =   models.ImageField(upload_to = user_media_path_CERTIDAOCASAMENTO, null = True, blank = True)   
-    docscan_comprovante_resid   =   models.ImageField(upload_to = user_media_path_COMPROVANTERESIDENCIA, null = True, blank = True)   
-    docscan_comprovante_escolar =   models.ImageField(upload_to = user_media_path_COMPROVANTEESCOLAR, null = True, blank = True)   
-    docscan_CV                  =   models.FileField(upload_to  = user_media_path_CV, null = True, blank = True)
+    docscan_picture             =   models.ImageField(upload_to = funcionario_media_path_PICTURE, null = True, blank = True)
+    docscan_CPF                 =   models.ImageField(upload_to = funcionario_media_path_CPF, null = True, blank = True)
+    docscan_TE                  =   models.ImageField(upload_to = funcionario_media_path_TE, null = True, blank = True)
+    docscan_CTPS                =   models.ImageField(upload_to = funcionario_media_path_CTPS, null = True, blank = True)   
+    docscan_reservista          =   models.ImageField(upload_to = funcionario_media_path_RESERVISTA, null = True, blank = True)   
+    docscan_certidao_nascimento =   models.ImageField(upload_to = funcionario_media_path_CERTIDAONASCIMENTO, null = True, blank = True)   
+    docscan_certidao_casamento  =   models.ImageField(upload_to = funcionario_media_path_CERTIDAOCASAMENTO, null = True, blank = True)   
+    docscan_comprovante_resid   =   models.ImageField(upload_to = funcionario_media_path_COMPROVANTERESIDENCIA, null = True, blank = True)   
+    docscan_comprovante_escolar =   models.ImageField(upload_to = funcionario_media_path_COMPROVANTEESCOLAR, null = True, blank = True)   
+    docscan_CV                  =   models.FileField(upload_to  = funcionario_media_path_CV, null = True, blank = True)
 
 # 13 - Dependent Info (If Needed)
 class Dependente(models.Model):
@@ -296,8 +301,8 @@ class Dependente(models.Model):
     nome                        =   models.CharField(max_length = 200, null = True, blank = True)
     data_nascimento             =   models.DateField(null = True, blank = True)
     CPF                         =   models.CharField(max_length = 11, null = True, blank = True)
-    docscan_certidao_nascimento =   models.ImageField(upload_to = user_media_path_CERTIDAONASCIMENTO, null = True, blank = True)   
-    docscan_CPF                 =   models.ImageField(upload_to = user_media_path_CPF, null = True, blank = True)
-    docscan_vacinacao           =   models.ImageField(upload_to = user_media_path_VACINACAO, null = True, blank = True)
-    docscan_RG                  =   models.ImageField(upload_to = user_media_path_RG, null = True, blank = True)
+    docscan_certidao_nascimento =   models.ImageField(upload_to = funcionario_media_path_CERTIDAONASCIMENTO, null = True, blank = True)   
+    docscan_CPF                 =   models.ImageField(upload_to = funcionario_media_path_CPF, null = True, blank = True)
+    docscan_vacinacao           =   models.ImageField(upload_to = funcionario_media_path_VACINACAO, null = True, blank = True)
+    docscan_RG                  =   models.ImageField(upload_to = funcionario_media_path_RG, null = True, blank = True)
 

@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_scripts %}
+<script>
+</script>
+{% endblock custom_scripts %}
+
+{% block content %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Contrato</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+                
+                <!--ADMISSION DATE-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.contrat_data_admissao.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_data_admissao.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_data_admissao class="form-control date" placeholder="DD/MM/YYYY"  %}
+                    </div>
+                </div>  
+                
+                <!--START DATE-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.contrat_data_inicio.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_data_inicio.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_data_inicio class="form-control date" placeholder="DD/MM/YYYY"  %}
+                    </div>
+                </div>  
+
+                <!--STARTING POSITION-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.contrat_cargo_inicial.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.contrat_cargo_inicial.label}}
+                    </label>
+                    <div class="col-lg-7">
+                        {% render_field wizard.form.contrat_cargo_inicial class="form-control" placeholder=wizard.form.contrat_cargo_inicial.label %}
+                    </div>
+                </div>  
+                
+                <!--STARTING PAYMENT-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.contrat_salario_base.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_salario_base.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_salario_base class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>  
+                
+                <!--STARTING PAYMENT-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.contrat_salario_atual.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_salario_atual.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_salario_atual class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>  
+
+            </div>  <!--ROW 1 ENDS-->
+
+            <div class="spacer"></div>
+            <legend>Benefícios</legend>
+            <div class="spacer"></div>
+
+            <div class="row">   <!--ROW 2 STARTS-->
+                
+                <div class="col-lg-2"></div>
+
+                <!--MEAL TICKET-->
+                <div class="form-group col-lg-2">
+                    <div style="transform:translate(-2.5%,-75%)">{{wizard.form.contrat_vale_ref.label}}</div>
+                    <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_ref", "vale_refeicao")'>
+                        <label for="{{ wizard.form.contrat_vale_ref.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.contrat_vale_ref %}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!--FOOD TICKET-->
+                <div class="form-group col-lg-2">
+                    <div style="transform:translate(-10%,-75%)">{{wizard.form.contrat_vale_alim.label}}</div>
+                    <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_alim", "vale_alimentacao")'>
+                        <label for="{{ wizard.form.contrat_vale_alim.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.contrat_vale_alim %}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!--BASIC FOOD BASKET-->
+                <div class="form-group col-lg-2">
+                    <div style="transform:translate(-2.5%,-75%)">{{wizard.form.contrat_cesta.label}}</div>
+                    <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_cesta", "cesta_basica")'>
+                        <label for="{{ wizard.form.contrat_cesta.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.contrat_cesta %}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!--FUEL VOUCHER-->
+                <div class="form-group col-lg-2">
+                    <div style="transform:translate(-10%,-75%)">{{wizard.form.contrat_vale_comb.label}}</div>
+                    <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_comb", "vale_combustivel")'>
+                        <label for="{{ wizard.form.contrat_vale_comb.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.contrat_vale_comb %}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!--TRANSPORTATION VOUCHER-->
+                <div class="form-group col-lg-2">
+                    <div style="transform:translate(-7.5%,-75%)">{{wizard.form.contrat_vale_transp.label}}</div>
+                    <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_transp", "vale_transporte")'>
+                        <label for="{{ wizard.form.contrat_vale_transp.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.contrat_vale_transp %}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>  <!--ROW 2 ENDS-->
+
+            <div class="row">   <!--ROW 3 STARTS-->
+                
+                <!--MEAL TICKET VALUE-->
+                <div class="form-group col-lg-6" id="vale_refeicao" style="display:none;">
+                    <label for="{{ wizard.form.contrat_vale_ref_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_vale_ref_valor.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_vale_ref_valor class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>
+
+                <!--FOOD TICKET VALUE-->
+                <div class="form-group col-lg-6" id="vale_alimentacao" style="display:none;">
+                    <label for="{{ wizard.form.contrat_vale_alim_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_vale_alim_valor.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_vale_alim_valor class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>  
+
+                <!--BASIC FOOD BASKET VALUE-->
+                <div class="form-group col-lg-6" id="cesta_basica" style="display:none;">
+                    <label for="{{ wizard.form.contrat_cesta_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_cesta_valor.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_cesta_valor class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>  
+
+                <!--FUEL VOUCHER VALUE-->
+                <div class="form-group col-lg-6" id="vale_combustivel" style="display:none;">
+                    <label for="{{ wizard.form.contrat_vale_comb_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_vale_comb_valor.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_vale_comb_valor class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>  
+
+                <!--TRANSPORTATION VOUCHER VALUE-->
+                <div class="form-group col-lg-6" id="vale_transporte" style="display:none;">
+                    <label for="{{ wizard.form.contrat_vale_transp_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_vale_transp_valor.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_vale_transp_valor class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>  
+
+
+
+
+
+            </div>  <!--ROW 3 ENDS-->
+
+
+
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}
+
+
+'contrat_vale_alim',
+'contrat_vale_alim_valor',
+'contrat_vale_ref',
+'contrat_vale_ref_valor',
+'contrat_cesta',
+'contrat_cesta_valor',
+'contrat_vale_comb',
+'contrat_vale_comb_valor',
+'contrat_vale_transp',
+'contrat_vale_transp_valor',

@@ -7,6 +7,9 @@
     {{ wizard.form.media }}
 {% endblock head %}
 
+{% block linked_refs %}
+{% endblock linked_refs %}
+
 {% block custom_page_style %}
 {% endblock custom_page_style %}
 
@@ -17,17 +20,45 @@
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
-            
+
             <div class="row">   <!--ROW 1 STARTS-->
+                
+                <!--RESIDENT ABROAD-->
+                <div class="col-lg-2 col-sm-6" style= "right:0%;"> {{wizard.form.end_residente_exterior.label}} </div>
+                <div class="form-group col-lg-2 col-sm-6">
+                    <div class="checkbox" onclick='showField("checkbox_abroad", "country_selector")'>
+                        <label for="checkbox_abroad" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.end_residente_exterior id="checkbox_abroad"%}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+            
+                <!--COUNTRY-->
+                <div class="form-group col-lg-8 col-sm-12" style="visibility: hidden; transform: translateY(-25%);" id = "country_selector">
+                    <label for="{{ wizard.form.end_pais.id_for_label }}" class = "control-label col-lg-2 text-right">
+                        {{wizard.form.end_pais.label}}
+                    </label>
+                    <div class="col-lg-10">
+                        {% render_field wizard.form.end_pais class="form-control" placeholder=wizard.form.end_pais.label %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class= "spacer"></div>
+
+            <div class="row">   <!--ROW 2 STARTS-->
 
                 <div class="col-lg-3">  <!--COL 1 STARTS-->
+                    
                     <!--CEP-->
                     <div class="form-group">
                         <label for="{{ wizard.form.end_CEP.id_for_label }}" class = "control-label col-lg-3 text-right">
                             {{wizard.form.end_CEP.label}}
                         </label>
                         <div class="col-lg-9">
-                            {% render_field wizard.form.end_CEP class="form-control" placeholder=wizard.form.end_CEP.label %}
+                            {% render_field wizard.form.end_CEP class="form-control cep" placeholder=wizard.form.end_CEP.label %}
                         </div>
                     </div>
 
@@ -90,74 +121,46 @@
 
 
                 </div>  <!--COL 3 ENDS-->
-            </div>  <!--ROW 1 ENDS-->
-
-            <div class="row">   <!--ROW 2 STARTS-->
-                <div class="col-lg-3"> <!--COLUMN 1 STARTS--> 
-
-                    <!--RESIDENT ABROAD-->
-                    <div class="form-group">
-                        <div class="col-lg-offset-1 col-lg-9">
-                            <div class="checkbox" onclick='showCountry("checkbox_abroad", "country_selector")'>
-                                <label for="{{ wizard.form.end_residente_exterior.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
-                                    {% render_field wizard.form.end_residente_exterior id="checkbox_abroad"%}
-                                    {{wizard.form.end_residente_exterior.label}}
-                                </label>
-                            </div>
+            </div>  <!--ROW 2 ENDS-->
+            
+            <div class="spacer"></div>
+        
+            <div class="row">
+                
+                <!--OWN RESIDENCE-->
+                <div class="form-group col-lg-3">
+                    <div class="col-lg-offset-1 col-lg-9">
+                        <div class="checkbox">
+                            <label for="{{ wizard.form.end_residencia_propria.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                {% render_field wizard.form.end_residencia_propria %}
+                                {{wizard.form.end_residencia_propria.label}}
+                            </label>
                         </div>
                     </div>
-
-                    <!--OWN RESIDENCE-->
-                    <div class="form-group">
-                        <div class="col-lg-offset-1 col-lg-9">
-                            <div class="checkbox">
-                                <label for="{{ wizard.form.end_residencia_propria.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
-                                    {% render_field wizard.form.end_residencia_propria %}
-                                    {{wizard.form.end_residencia_propria.label}}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                </div>
                     
-    
-                </div>  <!--COLUMN 1 ENDS-->
-                <div class="col-lg-6">  <!--COLUMN 2 STARTS-->
+                <!--BOUGHT ON FGTS-->
+                <div class="form-group col-lg-4">
+                    <div class="col-lg-9">
+                        <div class="checkbox">
+                            <label for="{{ wizard.form.end_comprado_FGTS.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                {% render_field wizard.form.end_comprado_FGTS %}
+                                {{wizard.form.end_comprado_FGTS.label}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                                
+                <!--COMPLEMENT-->
+                <div class="form-group col-lg-5">
+                    <label for="{{ wizard.form.end_complemento.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.end_complemento.label}}
+                    </label>
+                    <div class="col-lg-7">
+                        {% render_field wizard.form.end_complemento class="form-control" placeholder=wizard.form.end_complemento.label %}
+                    </div>
+                </div>
 
-                    <!--COUNTRY-->
-                    <div class="form-group" style="visibility: hidden" id = "country_selector">
-                        <label for="{{ wizard.form.end_pais.id_for_label }}" class = "control-label col-lg-1 text-right">
-                            {{wizard.form.end_pais.label}}
-                        </label>
-                        <div class="col-lg-10 col-lg-offset-1">
-                            {% render_field wizard.form.end_pais class="form-control" placeholder=wizard.form.end_pais.label %}
-                        </div>
-                    </div>
-                    
-                    <!--BOUGHT ON FGTS-->
-                    <div class="form-group">
-                        <div class="col-lg-9">
-                            <div class="checkbox">
-                                <label for="{{ wizard.form.end_comprado_FGTS.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
-                                    {% render_field wizard.form.end_comprado_FGTS %}
-                                    {{wizard.form.end_comprado_FGTS.label}}
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>  <!--COLUMN 2 ENDS-->
-                <div class="div col-lg-3">  <!--COLUMN 3 STARTS-->
-                    
-                    <!--COMPLEMENT-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_complemento.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.end_complemento.label}}
-                        </label>
-                        <div class="col-lg-7">
-                            {% render_field wizard.form.end_complemento class="form-control" placeholder=wizard.form.end_complemento.label %}
-                        </div>
-                    </div>
-
-                </div>  <!--COLUMN 3 ENDS-->
             </div>  <!--ROW 2 ENDS-->
 
             {% include 'wizard_template_buttons.html' %}

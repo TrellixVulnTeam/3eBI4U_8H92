@@ -7,34 +7,10 @@
     {{ wizard.form.media }}
 {% endblock head %}
 
-{% block custom_page_style %}
-<script type="text/javascript">
-    $(document).ready(function(){
-        //Put our input DOM element into a jQuery Object
-        var $jqDate = jQuery('input[name="Basic Info-data_nascimento"]');
-
-        //Bind keyup/keydown to the input
-        $jqDate.bind('keyup','keydown', function(e){
-            
-        //To accomdate for backspacing, we detect which key was pressed - if backspace, do nothing:
-        if(e.which !== 8) {	
-            var numChars = $jqDate.val().length;
-            if(numChars === 2 || numChars === 5){
-                var thisVal = $jqDate.val();
-                thisVal += '/';
-                $jqDate.val(thisVal);
-            }
-        }
-        });
-    });
-</script>
-
-{% endblock custom_page_style %}
-
 {% block content %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações Básicas</small></h2>
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações Básicas</small></h2>
         <!--<h2 class="col-lg-offset-11" style="margin-bottom:40px;"><small class="col-lg-offset-6"> 1/11</small></h2>-->
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
@@ -66,11 +42,11 @@
 
                     <!--BIRTHDATE-->
                     <div class="form-group">
-                        <label for="{{ wizard.form.data_nascimento.id_for_label }}" class = "control-label col-lg-3 text-right dat">
+                        <label for="{{ wizard.form.data_nascimento.id_for_label }}" class = "control-label col-lg-3 text-right">
                             {{wizard.form.data_nascimento.label}}
                         </label>
                         <div class="col-lg-9">
-                            {% render_field wizard.form.data_nascimento class="form-control" placeholder="DD/MM/YYYY"%}
+                            {% render_field wizard.form.data_nascimento class="form-control date" placeholder="DD/MM/YYYY"%}
                         </div>
                     </div>
 
@@ -94,15 +70,17 @@
                         </div>
                     </div>
 
-                    <!--STATE OF BIRTH-->
+                    <!--COUNTY-->
                     <div class="form-group">
-                        <label for="{{ wizard.form.estado_nascimento.id_for_label }}" class = "control-label col-lg-3 text-right">
-                            {{wizard.form.estado_nascimento.label}}
+                        <label for="{{ wizard.form.municipio_nascimento.id_for_label }}" class = "control-label col-lg-4 text-right">
+                            {{wizard.form.municipio_nascimento.label}}
                         </label>
-                        <div class="col-lg-9">
-                            {% render_field wizard.form.estado_nascimento class="form-control" %}
+                        <div class="col-lg-8" >
+                            {% render_field wizard.form.municipio_nascimento class="form-control" placeholder=wizard.form.municipio_nascimento.label%}
                         </div>
                     </div>
+
+
                 </div>
 
                 <!--BOOLEAN INPUT FIELDS-->
@@ -168,12 +146,16 @@
                         </div>
                     </div>
 
-                    <!--NATIONALITY-->
+                    <!--STATE OF BIRTH-->
                     <div class="form-group">
-                            <div class="col-lg-offset-1 col-lg-11" >
-                                {% render_field wizard.form.municipio_nascimento class="form-control" placeholder=wizard.form.municipio_nascimento.label%}
-                            </div>
+                        <label for="{{ wizard.form.estado_nascimento.id_for_label }}" class = "control-label col-lg-6 text-right">
+                            {{wizard.form.estado_nascimento.label}}
+                        </label>
+                        <div class="col-lg-6">
+                            {% render_field wizard.form.estado_nascimento class="form-control" %}
+                        </div>
                     </div>
+
                 </div>
             </div>
             
@@ -187,7 +169,7 @@
                             {{wizard.form.numero_documento_CPF.label}}
                         </label>
                         <div class="col-lg-6">
-                            {% render_field wizard.form.numero_documento_CPF class="form-control" placeholder=wizard.form.numero_documento_CPF.label %}
+                            {% render_field wizard.form.numero_documento_CPF class="form-control cpf" placeholder="000.000.000-00" %}
                         </div>
                     </div>
 

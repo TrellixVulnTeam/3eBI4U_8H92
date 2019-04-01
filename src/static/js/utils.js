@@ -1,5 +1,6 @@
 // CEP AUTOCOMPLETE ADDRESSES ON ADDRESS INFO PAGE
 $(document).ready(function(){
+
     jQuery('input[name="Address Info-end_CEP"]').blur(function(){
         var cep = jQuery('input[name="Address Info-end_CEP"]').val().replace(/[^0-9]/, "");
 
@@ -21,8 +22,8 @@ $(document).ready(function(){
 
 });
 
-//SHOW COUNTRY SELECTION BAR ON ADDRESS INFO PAGE
-function showCountry(x, y) {
+//MAKE VISIBLE SELECTION FIELD BAR ON FORM WIZARD TEMPLATES - VISIBILITY
+function showField(x, y) {
 
     var checkbox    = document.getElementById(x);
     var elem     = document.getElementById(y);
@@ -33,5 +34,19 @@ function showCountry(x, y) {
         elem.style.visibility = "hidden";
     }
 }
+
+//MAKE VISIBLE SELECTION FIELD BAR ON FORM WIZARD TEMPLATES - DISPLAY
+function displayField(x, y) {
+
+    var checkbox    = document.getElementById(x);
+    var elem     = document.getElementById(y);
+
+    if (checkbox.checked == true){
+        elem.style.display = "inline-block";
+    } else{
+        elem.style.display = "none";
+    }
+}
+
 
 

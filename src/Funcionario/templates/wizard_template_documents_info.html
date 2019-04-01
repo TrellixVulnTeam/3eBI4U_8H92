@@ -7,30 +7,6 @@
     {{ wizard.form.media }}
 {% endblock head %}
 
-{% block custom_page_style %}
-<script type="text/javascript">
-    $(document).ready(function(){
-        //Put our input DOM element into a jQuery Object
-        var $jqDate = jQuery('input[name="Documents Info-docs_CTPS_data_emissao"]');
-
-        //Bind keyup/keydown to the input
-        $jqDate.bind('keyup','keydown', function(e){
-            
-        //To accomdate for backspacing, we detect which key was pressed - if backspace, do nothing:
-        if(e.which !== 8) {	
-            var numChars = $jqDate.val().length;
-            if(numChars === 2 || numChars === 5){
-                var thisVal = $jqDate.val();
-                thisVal += '/';
-                $jqDate.val(thisVal);
-            }
-        }
-        });
-    });
-</script>
-
-{% endblock custom_page_style %}
-
 {% block content %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
@@ -82,7 +58,7 @@
                             {{wizard.form.docs_CTPS_data_emissao.label}}
                         </label>
                         <div class="col-lg-7">
-                            {% render_field wizard.form.docs_CTPS_data_emissao class="form-control" placeholder="DD/MM/YYYY" %}
+                            {% render_field wizard.form.docs_CTPS_data_emissao class="form-control date" placeholder="DD/MM/YYYY" %}
                         </div>
                     </div>
 
@@ -105,6 +81,16 @@
                         </div>
                     </div>
 
+                    <!--TE ZONE NUMBER-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.docs_TE_zona.id_for_label }}" class = "control-label col-lg-6 text-right">
+                            {{wizard.form.docs_TE_zona.label}}
+                        </label>
+                        <div class="col-lg-6">
+                            {% render_field wizard.form.docs_TE_zona class="form-control" placeholder=wizard.form.docs_TE_zona.label  %}
+                        </div>
+                    </div>
+
                     <!--TE SECTION NUMBER-->
                     <div class="form-group">
                         <label for="{{ wizard.form.docs_TE_secao.id_for_label }}" class = "control-label col-lg-6 text-right">
@@ -115,15 +101,6 @@
                         </div>
                     </div>
 
-                    <!--TE SECTION NUMBER-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.docs_TE_zona.id_for_label }}" class = "control-label col-lg-6 text-right">
-                            {{wizard.form.docs_TE_zona.label}}
-                        </label>
-                        <div class="col-lg-6">
-                            {% render_field wizard.form.docs_TE_zona class="form-control" placeholder=wizard.form.docs_TE_zona.label  %}
-                        </div>
-                    </div>
 
                 </div>  <!--COL 1 ENDS-->
 
@@ -165,7 +142,7 @@
                             {{wizard.form.docs_RG_data_emissao.label}}
                         </label>
                         <div class="col-lg-7">
-                            {% render_field wizard.form.docs_RG_data_emissao class="form-control" placeholder=wizard.form.docs_RG_data_emissao.label  %}
+                            {% render_field wizard.form.docs_RG_data_emissao class="form-control date" placeholder="DD/MM/YYYY" %}
                         </div>
                     </div>
 
@@ -182,7 +159,7 @@
                         </div>
                     </div>
                     
-                    <!--RNE EMISSOR-->
+                    <!--RNE ISSUER-->
                     <div class="form-group">
                         <label for="{{ wizard.form.docs_RNE_emissor.id_for_label }}" class = "control-label col-lg-5 text-right">
                             {{wizard.form.docs_RNE_emissor.label}}
@@ -208,7 +185,7 @@
                             {{wizard.form.docs_RNE_data_emissao.label}}
                         </label>
                         <div class="col-lg-6">
-                            {% render_field wizard.form.docs_RNE_data_emissao class="form-control" placeholder=wizard.form.docs_RNE_data_emissao.label  %}
+                            {% render_field wizard.form.docs_RNE_data_emissao class="form-control date" placeholder="DD/MM/YYYY"  %}
                         </div>
                     </div>
 
@@ -256,7 +233,7 @@
                             {{wizard.form.docs_OC_data_emissao.label}}
                         </label>
                         <div class="col-lg-6">
-                            {% render_field wizard.form.docs_OC_data_emissao class="form-control" placeholder=wizard.form.docs_OC_data_emissao.label  %}
+                            {% render_field wizard.form.docs_OC_data_emissao class="form-control date" placeholder="DD/MM/YYYY"  %}
                         </div>
                     </div>
 
@@ -311,7 +288,7 @@
                             {{wizard.form.docs_CNH_data_emissao.label}}
                         </label>
                         <div class="col-lg-6">
-                            {% render_field wizard.form.docs_CNH_data_emissao class="form-control" placeholder=wizard.form.docs_CNH_data_emissao.label  %}
+                            {% render_field wizard.form.docs_CNH_data_emissao class="form-control date" placeholder="DD/MM/YYYY"  %}
                         </div>
                     </div>
 
@@ -321,7 +298,7 @@
                             {{wizard.form.docs_CNH_data_primeira.label}}
                         </label>
                         <div class="col-lg-6">
-                            {% render_field wizard.form.docs_CNH_data_primeira class="form-control" placeholder=wizard.form.docs_CNH_data_primeira.label  %}
+                            {% render_field wizard.form.docs_CNH_data_primeira class="form-control date" placeholder="DD/MM/YYYY" %}
                         </div>
                     </div>
 
@@ -331,14 +308,11 @@
                             {{wizard.form.docs_CNH_data_validade.label}}
                         </label>
                         <div class="col-lg-6">
-                            {% render_field wizard.form.docs_CNH_data_validade class="form-control" placeholder=wizard.form.docs_CNH_data_validade.label  %}
+                            {% render_field wizard.form.docs_CNH_data_validade class="form-control date" placeholder="DD/MM/YYYY" %}
                         </div>
                     </div>
                 </div>  <!--COL 3 ENDS-->
             </div>  <!--ROW 3 ENDS-->
-
-
-
 
             {% include 'wizard_template_buttons.html' %}
         </form>
