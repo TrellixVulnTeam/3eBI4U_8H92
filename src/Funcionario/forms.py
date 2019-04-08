@@ -2,11 +2,13 @@ import os
 import re
 from django import forms
 from django.forms import widgets
+from django.forms.models import model_to_dict
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
+from django.shortcuts import render, redirect
 
 
 from .models import (
@@ -425,6 +427,7 @@ class DocScansForm(forms.ModelForm):
         model = DocumentAttachments
 
         fields = [
+            'docscan_picture',
             'docscan_CPF',
             'docscan_TE',
             'docscan_CTPS',
@@ -436,6 +439,7 @@ class DocScansForm(forms.ModelForm):
             'docscan_CV'
         ]
         labels = {
+            'docscan_picture' : 'Foto',
             'docscan_CPF' : 'CPF',
             'docscan_TE' : 'Título de Eleitor',
             'docscan_CTPS' : 'Carteira de Trabalho - CTPS',
@@ -488,64 +492,234 @@ TEMPLATES = {
         }
 
 class CadastroFuncionarioWizard(SessionWizardView):
-   
-    file_storage = FileSystemStorage(
-        location = os.path.join(settings.MEDIA_ROOT, 'formwizard_temp_file_storage')
-        )
+
+    file_storage = FileSystemStorage(location = os.path.join(settings.MEDIA_ROOT, 'formwizard_temp_file_storage'))
 
     def get_template_names(self):
-        return [TEMPLATES[self.steps.current]]
+        t = [TEMPLATES[self.steps.current]]
+        return t
 
     def done(self, form_list, form_dict, **kwargs):
-        
-        for k, v in form_dict.items():
-            if k == 'Basic Info':
-                cdata = v.cleaned_data
-                basicinfo = BasicInfo.objects.create(**cdata)
-            elif k == 'Address Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                AddressInfo.objects.create(**cdata)
-            elif k == 'Documents Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                DocumentsInfo.objects.create(**cdata)
-            elif k == 'Foreigner Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                ForeignerInfo.objects.create(**cdata)
-            elif k == 'Handicapped Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                HandicappedInfo.objects.create(**cdata)
-            elif k == 'Contact Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                ContactInfo.objects.create(**cdata)
-            elif k == 'Banking Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                BankingInfo.objects.create(**cdata)
-            elif k == 'Another Job Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                AnotherJobInfo.objects.create(**cdata)
-            elif k == 'Intern Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                InternInfo.objects.create(**cdata)
-            elif k == 'Position Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                PositionInfo.objects.create(**cdata)
-            elif k == 'Contractual Info':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                ContractualInfo.objects.create(**cdata)
-            elif k == 'Doc Scans':
-                cdata = v.cleaned_data
-                cdata['basicinfo'] = basicinfo
-                DocumentAttachments.objects.create(**cdata)
+        if 'id' in self.kwargs:
+            
+            eid = self.kwargs['id']
 
-        return HttpResponse('yatta')
-    
+            for k, v in form_dict.items():
+                if k == 'Basic Info':
+                    cdata = v.cleaned_data
+                    basicinfo = BasicInfo.objects.get(id = eid)
+                    
+                    for attr, value in basicinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('basicinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    basicinfo.save()
+
+                elif k == 'Address Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    addressinfo = AddressInfo.objects.get(basicinfo = eid)
+                    
+                    for attr, value in addressinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('addressinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    addressinfo.save()
+
+                elif k == 'Documents Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    documentsinfo = DocumentsInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in documentsinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('documentsinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    documentsinfo.save()
+
+                elif k == 'Foreigner Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    foreignerinfo = ForeignerInfo.objects.get(basicinfo = eid)
+                    
+                    for attr, value in foreignerinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('foreignerinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    foreignerinfo.save()
+
+                elif k == 'Handicapped Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    handicappedinfo = HandicappedInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in handicappedinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('handicappedinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    handicappedinfo.save()
+
+                elif k == 'Contact Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    contactinfo = ContactInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in contactinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('contactinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    contactinfo.save()
+
+                elif k == 'Banking Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    bankinginfo = BankingInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in bankinginfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('bankinginfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    bankinginfo.save()
+
+                elif k == 'Another Job Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    anotherjobinfo = AnotherJobInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in anotherjobinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('anotherjobinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    anotherjobinfo.save()
+
+                elif k == 'Intern Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    interninfo = InternInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in interninfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('interninfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    interninfo.save()
+
+                elif k == 'Position Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    positioninfo = PositionInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in positioninfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('positioninfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    positioninfo.save()
+
+                elif k == 'Contractual Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    contractualinfo = ContractualInfo.objects.get(basicinfo = eid)
+
+                    for attr, value in contractualinfo.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('contractualinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    contractualinfo.save()
+
+                elif k == 'Doc Scans':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    docscans = DocumentAttachments.objects.get(basicinfo = eid)
+
+                    for attr, value in docscans.__dict__.items():
+                        if attr in cdata.keys():
+                            if not cdata[attr] == "None" and not cdata[attr] == None:
+                                exec('docscans.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    docscans.save()
+
+
+
+        else:
+            for k, v in form_dict.items():
+                if k == 'Basic Info':
+                    cdata = v.cleaned_data
+                    basicinfo = BasicInfo.objects.create(**cdata)
+                elif k == 'Address Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    AddressInfo.objects.create(**cdata)
+                elif k == 'Documents Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    DocumentsInfo.objects.create(**cdata)
+                elif k == 'Foreigner Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    ForeignerInfo.objects.create(**cdata)
+                elif k == 'Handicapped Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    HandicappedInfo.objects.create(**cdata)
+                elif k == 'Contact Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    ContactInfo.objects.create(**cdata)
+                elif k == 'Banking Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    BankingInfo.objects.create(**cdata)
+                elif k == 'Another Job Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    AnotherJobInfo.objects.create(**cdata)
+                elif k == 'Intern Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    InternInfo.objects.create(**cdata)
+                elif k == 'Position Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    PositionInfo.objects.create(**cdata)
+                elif k == 'Contractual Info':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    ContractualInfo.objects.create(**cdata)
+                elif k == 'Doc Scans':
+                    cdata = v.cleaned_data
+                    cdata['basicinfo'] = basicinfo
+                    DocumentAttachments.objects.create(**cdata)    
+
+        return redirect('/funcionario/')
+
+    def get_form_initial(self, step):
+        if 'id' in self.kwargs:
+            eid = self.kwargs['id']
+            if step == 'Basic Info':
+                obj = BasicInfo.objects.get(id=eid)
+            elif step == "Address Info":
+                obj = AddressInfo.objects.get(basicinfo=eid)
+            elif step == "Documents Info":
+                obj = DocumentsInfo.objects.get(basicinfo=eid)
+            elif step == "Contact Info":
+                obj = ContactInfo.objects.get(basicinfo=eid)
+            elif step == "Foreigner Info":
+                obj = ForeignerInfo.objects.get(basicinfo=eid)
+            elif step == "Handicapped Info":
+                obj = HandicappedInfo.objects.get(basicinfo=eid)
+            elif step == "Banking Info":
+                obj = BankingInfo.objects.get(basicinfo=eid)
+            elif step == "Another Job Info":
+                obj = AnotherJobInfo.objects.get(basicinfo=eid)
+            elif step == "Intern Info":
+                obj = InternInfo.objects.get(basicinfo=eid)
+            elif step == "Position Info":
+                obj = PositionInfo.objects.get(basicinfo=eid)
+            elif step == "Contractual Info":
+                obj = ContractualInfo.objects.get(basicinfo=eid)
+            elif step == "Doc Scans":
+                obj = DocumentAttachments.objects.get(basicinfo=eid)
+
+
+            modeldict = model_to_dict(obj)
+            return modeldict
+        else:
+            return self.initial_dict.get(step, {})

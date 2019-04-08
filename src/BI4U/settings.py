@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # THIRD PARTY
     'widget_tweaks',
     'formtools',
+    'sorl.thumbnail',
 
     # STANDARD
     'django.contrib.admin',

@@ -1,0 +1,27 @@
+.btnleft {
+    height:200px;
+    width:200px;
+    border-radius: 100%;
+    background-color: #122b41;
+    color:white;
+    transition: background-color 0.5s ease
+}
+
+.btnright {
+    height:200px;
+    width:200px;
+    border-radius: 100%;
+    float: right;
+    background-color: #122b41;
+    color:white;
+    transition: background-color 0.5s ease
+}
+
+.btnleft:hover, .btnright:hover {
+    background-color: #258fed;
+    color:white;
+}
+
+.btnleft:active, .btnright:active {
+    color:white;
+}

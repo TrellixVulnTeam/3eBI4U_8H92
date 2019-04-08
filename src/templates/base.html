@@ -3,15 +3,21 @@
 <html lang="pt-br">
   <head>
     <style>
-      body{
-          background-image: url('{% static "/strucimg/fundo_GAP_branco.jpg" %}'); 
-          background-size: cover;
-          }
-      .spacer{
+      body {
+        overflow-x:hidden;
+      }
+
+      .spacer {
         margin-top:30px;
       }
+
+      .spacer-xl {
+        margin-top:60px;
+      }
+
     </style>
     {% block head %}      <!--HEAD CONTENT HERE-->      {% endblock head %}
+    
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -22,13 +28,15 @@
     <script src='{% static "js/custom_masks.js" %}'></script>
     <script src='{% static "js/bootstrap.min.js" %}'></script> 
     <script src='{% static "js/jquery.mask.min.js" %}'></script> 
-    
 
     {% block linked_refs %}     <!--LINKED REFERENCES HERE-->     {% endblock linked_refs %}
     {% block custom_scripts %}     <!--CUSTOM PAGE SCRIPTS HERE-->     {% endblock custom_scripts %}
   </head>
   <body>
     {% block custom_page_style %}     <!--CUSTOM PAGE STYLE HERE-->     {% endblock custom_page_style %}
-    {% block content %}     <!--BODY CONTENT HERE-->     {% endblock content %}
+    {% include 'row_of_logos.html' %}
+    <div id="main">
+      {% block content %}     <!--BODY CONTENT HERE-->     {% endblock content %}
+    </div>
   </body>
 </html>

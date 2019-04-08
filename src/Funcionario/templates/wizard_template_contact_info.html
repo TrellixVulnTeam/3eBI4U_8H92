@@ -9,7 +9,7 @@
 
 {% block content %}
 
-    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações de Contato</small></h2>
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
@@ -23,7 +23,7 @@
                         {{wizard.form.cont_tel_fixo.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.cont_tel_fixo class="form-control tel" placeholder="+00(00)00000000" type="tel" %}
+                        {% render_field wizard.form.cont_tel_fixo class="form-control tel" placeholder="+00(DDD)00000000" type="tel" %}
                     </div>
                 </div>
 
@@ -34,7 +34,7 @@
                         {{wizard.form.cont_tel_cel.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.cont_tel_cel class="form-control tel" placeholder="+00(00)000000000" %}
+                        {% render_field wizard.form.cont_tel_cel class="form-control tel" placeholder="+00(DDD)000000000" %}
                     </div>
                 </div>
                 
@@ -47,7 +47,7 @@
                         {{wizard.form.cont_tel_recado.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.cont_tel_recado class="form-control tel" placeholder="+00(00)00000000" %}
+                        {% render_field wizard.form.cont_tel_recado class="form-control tel" placeholder="+00(DDD)00000000" %}
                     </div>
                 </div>
                 

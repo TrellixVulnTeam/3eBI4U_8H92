@@ -61,6 +61,14 @@
 {% block custom_scripts %}
 <script>
 $(document).ready(function(){
+
+    tgt0.addEventListener('change', function() {
+        if (tgt0.value !== "") {
+            tgtlbl0.classList.remove('notsel');
+            tgtlbl0.classList.add('sel');
+        }
+    });
+
     tgt1.addEventListener('change', function() {
         if (tgt1.value !== "") {
             tgtlbl1.classList.remove('notsel');
@@ -122,13 +130,17 @@ $(document).ready(function(){
 
 {% block content %}
 
-    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 40px; margin-bottom: 40px;">
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Anexo de Documentos</small></h2>
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
             
             <div class="row">   <!--ROW 1 STARTS-->
+
+                <!--DOCSCAN PIC-->
+                {% render_field wizard.form.docscan_picture id="tgt0" %}
+                <label for="tgt0" class="col-lg-3 notsel" id="tgtlbl0"> Foto </label>
 
                 <!--DOCSCAN CPF-->
                 {% render_field wizard.form.docscan_CPF id="tgt1" %}
@@ -165,6 +177,7 @@ $(document).ready(function(){
                 <!--DOCSCAN CV-->
                 {% render_field wizard.form.docscan_CV id="tgt9" %}
                 <label for="tgt9" class="col-lg-3 notsel" id="tgtlbl9"> Curriculum Vitae </label>
+                
 
             </div>  <!--ROW 1 ENDS-->
             {% include 'wizard_template_buttons.html' %}

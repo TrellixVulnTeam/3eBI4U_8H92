@@ -17,9 +17,8 @@ from Funcionario.forms import (
     CadastroFuncionarioWizard
     )
 from .utilities import estagiario_form_condition, estrangeiro_form_condition, outro_emprego_form_condition, deficiente_form_condition
+from .views import appMenu
 
-
-create_funcionario = 'cadastro/'
 create_funcionario_forms = [
     ('Basic Info', BasicInfoForm),
     ('Address Info', AddressInfoForm),
@@ -50,7 +49,7 @@ urlpatterns = [
     #path(create_funcionario + '/cargo/', views_funcionario.addFuncionarioPositionInfo),
     #path(create_funcionario + '/dados_contrato/', views_funcionario.addFuncionarioContractInfo),
     #path(create_funcionario + '/dependentes/', views_funcionario.addDependente),
-    path(create_funcionario, CadastroFuncionarioWizard.as_view(
+    path('cadastro/', CadastroFuncionarioWizard.as_view(
                                                         create_funcionario_forms,
                                                         condition_dict = {
                                                             'Foreigner Info'    :   estrangeiro_form_condition,
@@ -60,6 +59,18 @@ urlpatterns = [
                                                             }
                                                         )
     ),
+    path('visualizar/<int:id>', CadastroFuncionarioWizard.as_view(
+                                                        create_funcionario_forms,
+                                                        condition_dict = {
+                                                            'Foreigner Info'    :   estrangeiro_form_condition,
+                                                            'Handicapped Info'  :   deficiente_form_condition,
+                                                            'Another Job Info'  :   outro_emprego_form_condition,
+                                                            'Intern Info'       :   estagiario_form_condition,
+                                                            }
+                                                        )
+    ),
+
+    path('', appMenu),
     
     
     ]
