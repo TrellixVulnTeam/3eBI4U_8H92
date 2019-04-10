@@ -15,6 +15,22 @@
 
 {% block content %}
 
+    {% if wizard.form.end_CEP.errors or wizard.form.end_numero.errors %}
+        <div id="alert" class="alert alert-danger alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            
+            {% if wizard.form.end_CEP.errors %}
+                <div><strong>CEP:</strong> {{ wizard.form.end_CEP.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.end_numero.errors %}
+                <div><strong>Número:</strong> {{ wizard.form.end_numero.errors }}</div>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Endereço</small></h2>
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">

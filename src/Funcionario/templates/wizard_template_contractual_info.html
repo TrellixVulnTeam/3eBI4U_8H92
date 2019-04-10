@@ -14,6 +14,21 @@
 
 {% block content %}
 
+    {% if wizard.form.contrat_data_admissao.errors or wizard.form.contrat_data_inicio.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        
+        {% if wizard.form.contrat_data_admissao.errors %}
+            <div><strong>Data de Admissão:</strong> {{ wizard.form.contrat_data_admissao.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.contrat_data_inicio.errors %}
+            <div><strong>Data de Início:</strong> {{ wizard.form.contrat_data_inicio.errors }}</div>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Contrato</small></h2>
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">

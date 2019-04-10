@@ -8,6 +8,40 @@
 {% endblock head %}
 
 {% block content %}
+
+    {% if wizard.form.numero_PIS_PASEP.errors or wizard.form.numero_codigo_NIT.errors or wizard.form.numero_inscricao_NIS.errors or wizard.form.numero_NIT_INSS.errors or wizard.form.data_nascimento.errors or wizard.form.numero_documento_CPF.errors or wizard.form.primeiro_nome.errors or wizard.form.ultimo_nome.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+
+        {% if wizard.form.data_nascimento.errors %}
+            <div><strong>Data de Nascimento:</strong> {{ wizard.form.data_nascimento.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.numero_documento_CPF.errors %}
+            <div><strong>CPF:</strong> {{ wizard.form.numero_documento_CPF.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.numero_NIT_INSS.errors %}
+            <div><strong>Numero NIT INSS:</strong> {{ wizard.form.numero_NIT_INSS.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.numero_inscricao_NIS.errors %}
+            <div><strong>Numero do NIS:</strong> {{ wizard.form.numero_inscricao_NIS.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.numero_codigo_NIT.errors %}
+            <div><strong>Código NIT:</strong> {{ wizard.form.numero_codigo_NIT.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.numero_PIS_PASEP.errors %}
+            <div><strong>Número PIS PASEP:</strong> {{ wizard.form.numero_PIS_PASEP.errors }}</div>
+        {% endif %}
+
+
+
+    </div>
+    {% endif %}
+
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">    
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações Básicas</small></h2>
         <!--<h2 class="col-lg-offset-11" style="margin-bottom:40px;"><small class="col-lg-offset-6"> 1/11</small></h2>-->
@@ -78,7 +112,6 @@
                             {% render_field wizard.form.municipio_nascimento class="form-control" placeholder=wizard.form.municipio_nascimento.label%}
                         </div>
                     </div>
-
 
                 </div>
 

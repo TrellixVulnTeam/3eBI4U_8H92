@@ -12,6 +12,21 @@
 
 {% block content %}
 
+    {% if wizard.form.vinc_outra_emp_CNPJ.errors or wizard.form.vinc_outra_emp_salario.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        
+        {% if wizard.form.vinc_outra_emp_CNPJ.errors %}
+            <div><strong>CNPJ da Empresa:</strong> {{ wizard.form.vinc_outra_emp_CNPJ.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.vinc_outra_emp_salario.errors %}
+            <div><strong>Salário:</strong> {{ wizard.form.vinc_outra_emp_salario.errors }}</div>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Outro Trabalho</small></h2>
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
@@ -65,7 +80,7 @@
                             {{wizard.form.vinc_outra_emp_CNPJ.label}}
                         </label>
                         <div class="col-lg-7">
-                            {% render_field wizard.form.vinc_outra_emp_CNPJ class="form-control" placeholder=wizard.form.vinc_outra_emp_CNPJ.label  %}
+                            {% render_field wizard.form.vinc_outra_emp_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00"  %}
                         </div>
                     </div>
 
@@ -89,7 +104,7 @@
                             {{wizard.form.vinc_outra_emp_salario.label}}
                         </label>
                         <div class="col-lg-9">
-                            {% render_field wizard.form.vinc_outra_emp_salario class="form-control money" placeholder=wizard.form.vinc_outra_emp_salario.label  %}
+                            {% render_field wizard.form.vinc_outra_emp_salario class="form-control money" placeholder="0,00"  %}
                         </div>
                     </div>
                 

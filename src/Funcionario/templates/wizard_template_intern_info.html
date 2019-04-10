@@ -23,7 +23,7 @@
             $.getJSON(url, function(dadosRetorno){
                 try{
                     jQuery('input[name="Intern Info-estag_instituto_end"]').val(dadosRetorno.logradouro);
-                    //jQuery('input[name="Intern Info-estag_instituto_UF"]').val(dadosRetorno.uf);
+                    jQuery('input[name="Intern Info-estag_instituto_UF"]').val(dadosRetorno.uf);
                 }catch(ex){}
             });
         });
@@ -32,7 +32,45 @@
 </script>
 {% endblock custom_scripts %}
 
+
 {% block content %}
+
+    {% if wizard.form.estag_valor_bolsa.errors or wizard.form.vinc_outra_emp_salario.errors or wizard.form.estag_data_inicio.errors or wizard.form.estag_data_fim.errors or wizard.form.estag_instituto_CNPJ.errors or wizard.form.estag_instituto_CEP.errors or wizard.form.estag_instituto_tel.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        
+        {% if wizard.form.estag_valor_bolsa.errors %}
+            <div><strong>Remuneração:</strong> {{ wizard.form.estag_valor_bolsa.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.vinc_outra_emp_salario.errors %}
+            <div><strong>Salário:</strong> {{ wizard.form.vinc_outra_emp_salario.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_data_inicio.errors %}
+            <div><strong>Data de Início:</strong> {{ wizard.form.estag_data_inicio.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_data_fim.errors %}
+            <div><strong>Data de Fim:</strong> {{ wizard.form.estag_data_fim.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_instituto_CNPJ.errors %}
+            <div><strong>CNPJ:</strong> {{ wizard.form.estag_instituto_CNPJ.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_instituto_CEP.errors %}
+            <div><strong>CEP:</strong> {{ wizard.form.estag_instituto_CEP.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_instituto_tel.errors %}
+            <div><strong>Telefone:</strong> {{ wizard.form.estag_instituto_tel.errors }}</div>
+        {% endif %}
+
+
+    </div>
+    {% endif %}
+
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Estagio</small></h2>
@@ -53,19 +91,19 @@
                 </div>
 
                 <!--SALARY-->
-                <div class="form-group col-lg-4" style="transform:translateY(-25%);">
+                <div class="form-group col-lg-5" style="transform:translateY(-25%);">
                     <label for="{{ wizard.form.estag_valor_bolsa.id_for_label }}" class = "control-label col-lg-5 text-right">
                         {{wizard.form.estag_valor_bolsa.label}}
                     </label>
-                    <div class="col-lg-7">
-                        {% render_field wizard.form.estag_valor_bolsa class="form-control money" placeholder=wizard.form.estag_valor_bolsa.label%}
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.estag_valor_bolsa class="form-control money" placeholder="0,00" %}
                     </div>
                 </div>
 
                 <div class="col-lg-1"></div>
                 
                 <!--REQUIRED INTERNSHIP-->
-                <div class="form-group col-lg-2" style="transform:translateY(-10%);">
+                <div class="form-group col-lg-2" style="transform:translate(30%, -10%);">
                 <div style="transform:translate(-10%,-75%)">{{wizard.form.estag_obrigatorio.label}}</div>
                     <div class="checkbox">
                         <label for="{{ wizard.form.estag_obrigatorio.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
@@ -173,7 +211,7 @@
                         {{wizard.form.estag_instituto_tel.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.estag_instituto_tel class="form-control tel" placeholder="+00(00)000000000"%}
+                        {% render_field wizard.form.estag_instituto_tel class="form-control tel" placeholder="(DDD)000000000"%}
                     </div>
                 </div>
 

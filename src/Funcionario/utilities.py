@@ -4,7 +4,13 @@ import re
 
 # VALIDATORS ---------------------------------------------------------------------------------------------------------------------
 
-# CNPJ Validator That Checks Verification Digits
+# CEP Validator That Prevents Number of Charactes Different Than 9
+def validateCEP(value):
+        if len(value) != 9:
+                return ValidationError('CEP Inválido')
+        return None
+
+# CNPJ Validator That Prevents Invalid Verification Digits
 def validateCNPJ(value):
         CNPJ = re.sub(r'[\-\.\/\\]', '', value)
         CNPJ = [int(x) for x in list(str(CNPJ))]
@@ -18,9 +24,12 @@ def validateCNPJ(value):
 
         VD_2 = 0 if CNPJ_weighted < 2 else (11 - CNPJ_weighted)
 
-        return value if (VD_1, VD_2) == (CNPJ_VD[0], CNPJ_VD[1]) else ValidationError('CNPJ Invalido')
+        if ((VD_1, VD_2) != (CNPJ_VD[0], CNPJ_VD[1])) or len(value) < 14:
+                raise ValidationError('CNPJ Inválido')
 
-# CPF Validator That Checks Verification Digits
+        return None
+
+# CPF Validator That Prevents Invalid Verification Digits
 def validateCPF(value):
         
         CPF = re.sub(r'[\-\.\/\\]', '', value)
@@ -35,18 +44,20 @@ def validateCPF(value):
 
         VD_2 = 0 if CPF_weighted < 2 else (11 - CPF_weighted)
 
-        return value if (VD_1, VD_2) == (CPF_VD[0], CPF_VD[1]) else ValidationError('CNPJ Invalido')
+        if ((VD_1, VD_2) != (CPF_VD[0], CPF_VD[1])) or len(value) < 11:
+                raise ValidationError('CPF Inválido')
+ 
+        return None
 
-        
+# Date Validator That Prevents Future Dates
+def validateNoFutureDates(value):
 
-# RG Validator That Checks Verification Digit (Works for Sao Paulo, other states are uncertain due to ambiguous RG nature)
-def validateRG(value_as_string, *args, **kwargs):
-        CPF = [int(x) for x in list(str(value_as_string))]
-        CPF_root, CPF_VD = CPF[-2], CPF[-1]
-        VD = 0
-        VD = 11 - (sum([CPF_root[i - 2] * i for i in range(2, 10)]) % 11)
+        if value > date.today():
+                raise ValidationError('Datas Futúras São Inválidas Neste Campo')
 
-        return True if CPF_VD == VD else False
+
+
+
 
 # FORM CONDITIONS -----------------------------------------------------------------------------------------------------------------
 def estrangeiro_form_condition(wizard):

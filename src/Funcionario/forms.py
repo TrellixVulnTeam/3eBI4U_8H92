@@ -101,6 +101,11 @@ class BasicInfoForm(forms.ModelForm):
             'deficiente'            :   widgets.CheckboxInput
         }
 
+        error_messages = {
+            'data_nascimento'   :   {'invalid' : 'Data de Nascimento Inválida'},
+            'numero_documento_CPF'  :   {'invalid' : 'Número de CPF inválido'}
+        }
+
 class AddressInfoForm(forms.ModelForm):
     class Meta():
         model = AddressInfo
@@ -339,7 +344,7 @@ class InternInfoForm(forms.ModelForm):
             'estag_obrigatorio' : 'Estágio Obrigatório',
             'estag_escolaridade' : 'Nível de Escolaridade',
             'estag_area_atuacao' : 'Área de Atuação',
-            'estag_valor_bolsa' : 'Valor da Bolsa',
+            'estag_valor_bolsa' : 'Remuneração (R$)',
             'estag_instituto_nome' : 'Nome',
             'estag_instituto_CNPJ' : 'CNPJ',
             'estag_instituto_end' : 'Endereço',
@@ -400,17 +405,17 @@ class ContractualInfoForm(forms.ModelForm):
             'contrat_data_inicio' : 'Data de Inicio',
             'contrat_cargo_inicial' : 'Cargo Inicial',
             'contrat_vale_alim' : 'Vale Alimentação',
-            'contrat_vale_alim_valor' : 'Valor do Vale Alimentação',
+            'contrat_vale_alim_valor' : 'Valor do Vale Alimentação (R$)',
             'contrat_vale_ref' : 'Vale Refeição',
-            'contrat_vale_ref_valor' : 'Valor do Vale Refeição',
+            'contrat_vale_ref_valor' : 'Valor do Vale Refeição (R$)',
             'contrat_cesta' : 'Cesta Básica',
-            'contrat_cesta_valor' : 'Valor da Cesta Básica',
+            'contrat_cesta_valor' : 'Valor da Cesta Básica (R$)',
             'contrat_vale_comb' : 'Vale Combustível',
-            'contrat_vale_comb_valor' : 'Valor do Vale Combustível',
+            'contrat_vale_comb_valor' : 'Valor do Vale Combustível (R$)',
             'contrat_vale_transp' : 'Vale Transporte',
-            'contrat_vale_transp_valor' : 'Valor do Vale transporte',
-            'contrat_salario_atual' : 'Salário Atual',
-            'contrat_salario_base' : 'Salário Base'            
+            'contrat_vale_transp_valor' : 'Valor do Vale transporte (R$)',
+            'contrat_salario_atual' : 'Salário Atual (R$)',
+            'contrat_salario_base' : 'Salário Base (R$)'            
         }
         widgets = {
             'contrat_salario_atual' : widgets.TextInput,

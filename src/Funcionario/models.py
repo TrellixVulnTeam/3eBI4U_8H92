@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from .utilities import (
-    validateCPF, validateRG, funcionario_media_path_CERTIDAOCASAMENTO,
+    validateCPF, validateCNPJ, validateCEP, validateNoFutureDates, funcionario_media_path_CERTIDAOCASAMENTO,
     funcionario_media_path_CERTIDAONASCIMENTO, funcionario_media_path_COMPROVANTEESCOLAR,
     funcionario_media_path_CPF, funcionario_media_path_TE, funcionario_media_path_CTPS, funcionario_media_path_RESERVISTA,
     funcionario_media_path_CV, funcionario_media_path_COMPROVANTERESIDENCIA, funcionario_media_path_VACINACAO, funcionario_media_path_RG,
@@ -21,7 +21,8 @@ gender_choices              = [
     ('MASCULINO', 'Masculino'), ('FEMININO', 'Feminino'), ('OUTRO', 'Outro'), ('NAO_INFORMADO', 'Prefiro Não Informar')
 ]
 civil_state_choices         = [
-    ('CASADO', 'Casado(a)'), ('SOLTEIRO', 'Solteiro(a)'), ('VIUVO', 'Viuvo(a)'), ('DIVORCIADO', 'Divorciado(a)')
+    ('CASADO', 'Casado(a)'), ('SOLTEIRO', 'Solteiro(a)'), ('VIUVO', 'Viuvo(a)'), 
+    ('DIVORCIADO', 'Divorciado(a)'), ('UNIAO ESTAVEL', 'União Estável')
 ]
 country_choices             = [
     ('Afeganistão', 'Afeganistão'), ('África do Sul', 'África do Sul'), ('Akrotiri', 'Akrotiri'), ('Albânia', 'Albânia'), ('Alemanha', 'Alemanha'), ('Andorra', 'Andorra'), ('Angola', 'Angola'), ('Anguila', 'Anguila'), ('Antárctida', 'Antárctida'), ('Antígua e Barbuda', 'Antígua e Barbuda'), ('Arábia Saudita', 'Arábia Saudita'), ('Arctic Ocean', 'Arctic Ocean'), ('Argélia', 'Argélia'), ('Argentina', 'Argentina'), ('Arménia', 'Arménia'), ('Aruba', 'Aruba'), ('Ashmore and Cartier Islands', 'Ashmore and Cartier Islands'), ('Atlantic Ocean', 'Atlantic Ocean'), ('Austrália', 'Austrália'), ('Áustria', 'Áustria'), ('Azerbaijão', 'Azerbaijão'), ('Baamas', 'Baamas'), ('Bangladeche', 'Bangladeche'), ('Barbados', 'Barbados'), ('Barém', 'Barém'), ('Bélgica', 'Bélgica'), ('Belize', 'Belize'), ('Benim', 'Benim'), ('Bermudas', 'Bermudas'), ('Bielorrússia', 'Bielorrússia'), ('Birmânia', 'Birmânia'), ('Bolívia', 'Bolívia'), ('Bósnia e Herzegovina', 'Bósnia e Herzegovina'), ('Botsuana', 'Botsuana'), ('Brasil', 'Brasil'), ('Brunei', 'Brunei'), ('Bulgária', 'Bulgária'), ('Burquina Faso', 'Burquina Faso'), ('Burúndi', 'Burúndi'), ('Butão', 'Butão'), ('Cabo Verde', 'Cabo Verde'), ('Camarões', 'Camarões'), ('Camboja', 'Camboja'), ('Canadá', 'Canadá'), ('Catar', 'Catar'), ('Cazaquistão', 'Cazaquistão'), ('Chade', 'Chade'), ('Chile', 'Chile'), ('China', 'China'), ('Chipre', 'Chipre'), ('Clipperton Island', 'Clipperton Island'), ('Colômbia', 'Colômbia'), ('Comores', 'Comores'), ('Congo-Brazzaville', 'Congo-Brazzaville'), ('Congo-Kinshasa', 'Congo-Kinshasa'), ('Coral Sea Islands', 'Coral Sea Islands'), ('Coreia do Norte', 'Coreia do Norte'), ('Coreia do Sul', 'Coreia do Sul'), ('Costa do Marfim', 'Costa do Marfim'), ('Costa Rica', 'Costa Rica'), ('Croácia', 'Croácia'), ('Cuba', 'Cuba'), ('Curacao', 'Curacao'), ('Dhekelia', 'Dhekelia'), ('Dinamarca', 'Dinamarca'), ('Domínica', 'Domínica'), ('Egipto', 'Egipto'), ('Emiratos Árabes Unidos', 'Emiratos Árabes Unidos'), ('Equador', 'Equador'), ('Eritreia', 'Eritreia'), ('Eslováquia', 'Eslováquia'), ('Eslovénia', 'Eslovénia'), ('Espanha', 'Espanha'), ('Estados Unidos', 'Estados Unidos'), ('Estónia', 'Estónia'), ('Etiópia', 'Etiópia'), ('Faroé', 'Faroé'), ('Fiji', 'Fiji'), ('Filipinas', 'Filipinas'), ('Finlândia',
@@ -84,7 +85,7 @@ grau_parentesco_choices     = [
 # Regex Validators 
 phoneRegex = RegexValidator(
     regex=r'^(\+\d{0,4})?(\(\d{0,3}\))?([0-9\-]{7,15})$',
-    message="Entre Telefone no Formato: '+99(99)999999999'."
+    message="Entre Telefone no Formato: '(DDD)99999-9999'."
 )
 
 # Models --------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,12 +97,12 @@ class BasicInfo(models.Model):
 
     primeiro_nome               =   models.CharField(max_length = 100, null = True, blank = True)
     ultimo_nome                 =   models.CharField(max_length = 100, null = True, blank = True)
-    data_nascimento             =   models.DateField(null = True, blank = True)
+    data_nascimento             =   models.DateField(null = True, blank = True, validators = [validateNoFutureDates])
     genero                      =   models.CharField(max_length = 200, choices = gender_choices, null = True, blank = True)
     nacionalidade               =   models.CharField(max_length = 200, null = True, blank = True)
     estado_nascimento           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     municipio_nascimento        =   models.CharField(max_length = 200, null = True, blank = True)
-    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF], null = True, blank = True)
+    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF], unique = True, error_messages={'unique':"CPF Já Registrado"})
     numero_inscricao_NIS        =   models.IntegerField(null = True, blank = True)
     numero_PIS_PASEP            =   models.IntegerField(null = True, blank = True)
     numero_NIT_INSS             =   models.IntegerField(null = True, blank = True)
@@ -119,6 +120,7 @@ class BasicInfo(models.Model):
     deficiente                  =   models.BooleanField(null = True, blank = True)
 
     ativo                       =   models.BooleanField(default = True)
+    ferias                      =   models.BooleanField(default=False)
     obs_desligamento            =   models.TextField(null = True, blank = True)
 
 # 2 - Address Info
@@ -133,7 +135,7 @@ class AddressInfo(models.Model):
     end_complemento             =   models.CharField(max_length = 100, null = True, blank = True)
     end_municipio               =   models.CharField(max_length = 200, null = True, blank = True)
     end_estado                  =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    end_CEP                     =   models.CharField(max_length = 9, null = True, blank = True)
+    end_CEP                     =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
     end_pais                    =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
     end_residencia_propria      =   models.BooleanField(null = True, blank = True)
     end_comprado_FGTS           =   models.BooleanField(null = True, blank = True)
@@ -146,28 +148,28 @@ class DocumentsInfo(models.Model):
     docs_CTPS_numero_geral      =   models.IntegerField(null = True, blank = True)
     docs_CTPS_numero_serie      =   models.IntegerField(null = True, blank = True)
     docs_CTPS_UF                =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_CTPS_data_emissao      =   models.DateField(null = True, blank = True)
+    docs_CTPS_data_emissao      =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     docs_TE_numero_geral        =   models.DecimalField(max_digits = 12, decimal_places = 0, null = True, blank = True)
     docs_TE_secao               =   models.CharField(max_length = 10, null = True, blank = True)
     docs_TE_zona                =   models.CharField(max_length = 10, null = True, blank = True)
     docs_RG_numero_geral        =   models.DecimalField(max_digits = 11, decimal_places = 0, null = True, blank = True)
     docs_RG_emissor             =   models.CharField(max_length = 5, null = True, blank = True)
     docs_RG_UF                  =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_RG_data_emissao        =   models.DateField(null = True, blank = True)
+    docs_RG_data_emissao        =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     docs_RNE_numero_geral       =   models.CharField(max_length = 15, null = True, blank = True)
     docs_RNE_emissor            =   models.CharField(max_length = 5, null = True, blank = True)
     docs_RNE_UF                 =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_RNE_data_emissao       =   models.DateField(null = True, blank = True)
+    docs_RNE_data_emissao       =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     docs_OC_numero_geral        =   models.CharField(max_length = 15, null = True, blank = True)
     docs_OC_emissor             =   models.CharField(max_length = 15, null = True, blank = True)
     docs_OC_UF                  =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_OC_data_emissao        =   models.DateField(null = True, blank = True)
+    docs_OC_data_emissao        =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     docs_CNH_numero_geral       =   models.CharField(max_length = 15, null = True, blank = True)
     docs_CNH_emissor            =   models.CharField(max_length = 10, null = True, blank = True)
     docs_CNH_UF                 =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_CNH_data_emissao       =   models.DateField(null = True, blank = True)
+    docs_CNH_data_emissao       =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     docs_CNH_categoria          =   models.CharField(max_length = 1, choices = CNH_category_choices, null = True, blank = True)
-    docs_CNH_data_primeira      =   models.DateField(null = True, blank = True)
+    docs_CNH_data_primeira      =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     docs_CNH_data_validade      =   models.DateField(null = True, blank = True) 
 
 # 4 - Contact Info
@@ -185,9 +187,9 @@ class ForeignerInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    estr_data_chegada           =   models.DateField(null = True, blank = True)
+    estr_data_chegada           =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     estr_naturalizado           =   models.BooleanField(null = True, blank = True)
-    estr_data_naturalizacao     =   models.DateField(null = True, blank = True)
+    estr_data_naturalizacao     =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     estr_casado_brasileiro      =   models.BooleanField(null = True, blank = True)
     estr_filhos_brasileiros     =   models.BooleanField(null = True, blank = True)
 
@@ -209,7 +211,7 @@ class BankingInfo(models.Model):
     banco_numero_codigo         =   models.DecimalField(max_digits = 4, decimal_places = 0, null = True, blank = True)
     banco_nome                  =   models.CharField(max_length = 200, choices = bank_choices, null = True, blank = True)
     banco_agencia               =   models.IntegerField(null = True, blank = True)
-    banco_tipo_conta            =   models.CharField(max_length = 200, choices = [('Corrente', 'CC'), ('Poupança', 'CP')], null = True, blank = True)
+    banco_tipo_conta            =   models.CharField(max_length = 200, choices = [('Corrente', 'C. Corrente'), ('Poupança', 'Poupança')], null = True, blank = True)
     banco_numero_conta_root     =   models.CharField(max_length = 10, null = True, blank = True)
 
 # 8 - Another Job Info (If Needed)
@@ -220,7 +222,7 @@ class AnotherJobInfo(models.Model):
     vinc_outra_emp_func         =   models.BooleanField(null = True, blank = True)
     vinc_outra_emp_soc          =   models.BooleanField(null = True, blank = True)
     vinc_outra_emp_nome         =   models.CharField(max_length = 300, null = True, blank = True)
-    vinc_outra_emp_CNPJ         =   models.DecimalField(max_digits = 14, decimal_places = 0, null = True, blank = True)
+    vinc_outra_emp_CNPJ         =   models.CharField(max_length = 18, null = True, blank = True, validators=[validateCNPJ])
     vinc_outra_emp_salario      =   models.DecimalField(max_digits = 10, decimal_places=2, null = True, blank = True)       
     vinc_comentarios            =   models.CharField(max_length = 3000, null = True, blank = True)
 
@@ -229,7 +231,7 @@ class InternInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    estag_data_inicio           =   models.DateField(null = True, blank = True)
+    estag_data_inicio           =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     estag_data_fim              =   models.DateField(null = True, blank = True)
     estag_obrigatorio           =   models.BooleanField(null = True, blank = True)
     estag_escolaridade          =   models.CharField(max_length = 200, choices = intern_schooling_choices, null = True, blank = True)
@@ -239,7 +241,7 @@ class InternInfo(models.Model):
     estag_instituto_CNPJ        =   models.CharField(max_length = 18, null = True, blank = True)
     estag_instituto_end         =   models.CharField(max_length = 200, null = True, blank = True)
     estag_instituto_UF          =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    estag_instituto_CEP         =   models.CharField(max_length = 9, null = True, blank = True)
+    estag_instituto_CEP         =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
     estag_instituto_tel         =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
 
 # 10 - Position Info
@@ -258,7 +260,7 @@ class ContractualInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    contrat_data_admissao       =   models.DateField(null = True, blank = True)
+    contrat_data_admissao       =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     contrat_data_inicio         =   models.DateField(null = True, blank = True)
     contrat_cargo_inicial       =   models.CharField(max_length = 200, choices = position_choices, null = True, blank = True)
     contrat_vale_alim           =   models.BooleanField(null = True, blank = True)

@@ -15,7 +15,7 @@ $(document).ready(function(){
                 jQuery('input[name="Address Info-end_geral"]').val(dadosRetorno.logradouro);
                 jQuery('input[name="Address Info-end_bairro"]').val(dadosRetorno.bairro);
                 jQuery('input[name="Address Info-end_municipio"]').val(dadosRetorno.localidade);
-                //jQuery('input[name="Address Info-end_estado"]').val(dadosRetorno.uf);
+                jQuery('input[name="Address Info-end_estado"]').val(dadosRetorno.uf);
             }catch(ex){}
         });
     });

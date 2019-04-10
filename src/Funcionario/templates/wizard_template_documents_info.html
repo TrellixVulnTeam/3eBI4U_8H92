@@ -7,7 +7,118 @@
     {{ wizard.form.media }}
 {% endblock head %}
 
+{% block custom_page_style %}
+<style>
+    .error_border {
+        border-color: red;
+    }
+</style>
+{% endblock custom_page_style %}
+
 {% block content %}
+
+    {% if wizard.form.docs_CNH_data_validade.errors or wizard.form.docs_CNH_data_primeira.errors or wizard.form.docs_CNH_data_emissao.errors or wizard.form.docs_CNH_UF.errors or wizard.form.docs_CNH_emissor.errors or wizard.form.docs_CNH_numero_geral.errors or wizard.form.docs_OC_data_emissao.errors or wizard.form.docs_OC_UF.errors or wizard.form.docs_OC_emissor.errors or wizard.form.docs_OC_numero_geral.errors or wizard.form.docs_RNE_data_emissao.errors or wizard.form.docs_RNE_UF.errors or wizard.form.docs_RNE_emissor.errors or wizard.form.docs_RNE_numero_geral.errors or wizard.form.docs_RG_data_emissao.errors or wizard.form.docs_RG_UF.errors or wizard.form.docs_RG_emissor.errors or wizard.form.docs_RG_numero_geral.errors or wizard.form.docs_TE_secao.errors or wizard.form.docs_TE_zona.errors or wizard.form.docs_TE_numero_geral.errors or wizard.form.docs_CTPS_numero_geral.errors or wizard.form.docs_CTPS_numero_serie.errors or wizard.form.docs_CTPS_data_emissao.errors %}
+        <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {% if wizard.form.docs_CTPS_numero_geral.errors %}
+                <div><strong>Número CTPS:</strong> {{ wizard.form.docs_CTPS_numero_geral.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_CTPS_numero_serie.errors %}
+                <div><strong>Número Série CTPS:</strong> {{ wizard.form.docs_CTPS_numero_serie.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_CTPS_data_emissao.errors %}
+                <div><strong>Data Emissão CTPS:</strong> {{ wizard.form.docs_CTPS_data_emissao.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_TE_numero_geral.errors %}
+                <div><strong>Número Título:</strong> {{ wizard.form.docs_TE_numero_geral.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_TE_zona.errors %}
+                <div><strong>Zona Eleitoral:</strong> {{ wizard.form.docs_TE_zona.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_TE_secao.errors %}
+                <div><strong>Seção Eleitoral:</strong> {{ wizard.form.docs_TE_secao.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RG_numero_geral.errors %}
+                <div><strong>Número RG:</strong> {{ wizard.form.docs_RG_numero_geral.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RG_emissor.errors %}
+                <div><strong>Emissor RG:</strong> {{ wizard.form.docs_RG_emissor.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RG_UF.errors %}
+                <div><strong>UF RG:</strong> {{ wizard.form.docs_RG_UF.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RG_data_emissao.errors %}
+                <div><strong>Data Emissão RG:</strong> {{ wizard.form.docs_RG_data_emissao.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RNE_numero_geral.errors %}
+                <div><strong>Número RNE:</strong> {{ wizard.form.docs_RNE_numero_geral.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RNE_emissor.errors %}
+                <div><strong>Emissor RNE:</strong> {{ wizard.form.docs_RNE_emissor.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RNE_UF.errors %}
+                <div><strong>UF RNE:</strong> {{ wizard.form.docs_RNE_UF.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_RNE_data_emissao.errors %}
+                <div><strong>Data Emissão RNE:</strong> {{ wizard.form.docs_RNE_data_emissao.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_OC_numero_geral.errors %}
+                <div><strong>Número OC:</strong> {{ wizard.form.docs_OC_numero_geral.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_OC_emissor.errors %}
+                <div><strong>Emissor OC:</strong> {{ wizard.form.docs_OC_emissor.errors }}</div>
+            {% endif %}
+            
+            {% if wizard.form.docs_OC_UF.errors %}
+                <div><strong>UF OC:</strong> {{ wizard.form.docs_OC_UF.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_OC_data_emissao.errors %}
+                <div><strong>Data Emissão OC:</strong> {{ wizard.form.docs_OC_data_emissao.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_CNH_numero_geral.errors %}
+                <div><strong>Número CNH:</strong> {{ wizard.form.docs_CNH_numero_geral.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_CNH_emissor.errors %}
+                <div><strong>Emissor CNH:</strong> {{ wizard.form.docs_CNH_emissor.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_CNH_UF.error %}
+                <div><strong>UF CNH:</strong> {{ wizard.form.docs_CNH_UF.error }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_CNH_data_emissao.errors %}
+                <div><strong>Data Emissão CNH:</strong> {{ wizard.form.docs_CNH_data_emissao.errors }}</div>
+            {% endif %}
+            
+            {% if wizard.form.docs_CNH_data_primeira.errors %}
+                <div><strong>Data Primeira CNH:</strong> {{ wizard.form.docs_CNH_data_primeira.errors }}</div>
+            {% endif %}
+
+            {% if wizard.form.docs_CNH_data_validade.errors %}
+                <div><strong>Data Validade CNH:</strong> {{ wizard.form.docs_CNH_data_validade.errors }}</div>
+            {% endif %}
+
+        </div> 
+
+    {% endif %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Documentos</small></h2>
@@ -24,7 +135,7 @@
                             {{wizard.form.docs_CTPS_numero_geral.label}}
                         </label>
                         <div class="col-lg-7">
-                            {% render_field wizard.form.docs_CTPS_numero_geral class="form-control" placeholder=wizard.form.docs_CTPS_numero_geral.label  %}
+                            {% render_field wizard.form.docs_CTPS_numero_geral class="form-control" placeholder=wizard.form.docs_CTPS_numero_geral.label %}
                         </div>
                     </div>
 
