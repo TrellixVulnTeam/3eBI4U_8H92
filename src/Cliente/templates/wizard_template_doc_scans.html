@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_page_style %}
+<style>
+
+    .notsel {
+        background-color: #000;
+    }
+
+    .sel {
+        background-color: #B6F122;
+    }
+
+    [type="file"] {
+        border: 0;
+        clip: rect(0, 0, 0, 0);
+        height: 1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute !important;
+        white-space: nowrap;
+        width: 1px;  
+    }
+
+    [type="file"] + label {
+        
+        border-radius: 4rem;
+        color: #fff;
+        cursor: pointer;
+        display: inline-block;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        height: 4rem;
+        line-height: 4rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        transition: background-color 0.3s;
+    }
+ 
+[type="file"]:focus + label, [type="file"] + label:hover {
+        background-color: #f15d22;
+    }
+ 
+[type="file"]:focus + label {
+        outline: 1px dotted #000;
+        outline: -webkit-focus-ring-color auto 5px;
+}
+
+
+</style>
+{% endblock custom_page_style %}
+
+{% block custom_scripts %}
+<script>
+$(document).ready(function(){
+
+    tgt0.addEventListener('change', function() {
+        if (tgt0.value !== "") {
+            tgtlbl0.classList.remove('notsel');
+            tgtlbl0.classList.add('sel');
+        }
+    });
+
+    tgt1.addEventListener('change', function() {
+        if (tgt1.value !== "") {
+            tgtlbl1.classList.remove('notsel');
+            tgtlbl1.classList.add('sel');
+        }
+    });
+    tgt2.addEventListener('change', function() {
+        if (tgt2.value !== "") {
+            tgtlbl2.classList.remove('notsel');
+            tgtlbl2.classList.add('sel');
+        }
+    });
+    tgt3.addEventListener('change', function() {
+        if (tgt3.value !== "") {
+            tgtlbl3.classList.remove('notsel');
+            tgtlbl3.classList.add('sel');
+        }
+    });
+    tgt4.addEventListener('change', function() {
+        if (tgt4.value !== "") {
+            tgtlbl4.classList.remove('notsel');
+            tgtlbl4.classList.add('sel');
+        }
+    });
+    tgt5.addEventListener('change', function() {
+        if (tgt5.value !== "") {
+            tgtlbl5.classList.remove('notsel');
+            tgtlbl5.classList.add('sel');
+        }
+    });
+    tgt6.addEventListener('change', function() {
+        if (tgt6.value !== "") {
+            tgtlbl6.classList.remove('notsel');
+            tgtlbl6.classList.add('sel');
+        }
+    });
+    tgt7.addEventListener('change', function() {
+        if (tgt7.value !== "") {
+            tgtlbl7.classList.remove('notsel');
+            tgtlbl7.classList.add('sel');
+        }
+    });
+    tgt8.addEventListener('change', function() {
+        if (tgt8.value !== "") {
+            tgtlbl8.classList.remove('notsel');
+            tgtlbl8.classList.add('sel');
+        }
+    });
+    tgt9.addEventListener('change', function() {
+        if (tgt9.value !== "") {
+            tgtlbl9.classList.remove('notsel');
+            tgtlbl9.classList.add('sel');
+        }
+    });
+});
+</script>
+{% endblock custom_scripts %}
+
+
+{% block content %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Anexo de Documentos</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+
+                <!--DOCSCAN PIC-->
+                {% render_field wizard.form.docscan_picture id="tgt0" %}
+                <label for="tgt0" class="col-lg-3 notsel" id="tgtlbl0"> Foto </label>
+
+                <!--DOCSCAN CPF-->
+                {% render_field wizard.form.docscan_CPF id="tgt1" %}
+                <label for="tgt1" class="col-lg-3 notsel" id="tgtlbl1"> CPF </label>
+
+                <!--DOCSCAN TE-->
+                {% render_field wizard.form.docscan_TE id="tgt2" %}
+                <label for="tgt2" class="col-lg-3 notsel" id="tgtlbl2"> Titulo de Eleitor </label>
+
+                <!--DOCSCAN CTPS-->
+                {% render_field wizard.form.docscan_CTPS id="tgt3" %}
+                <label for="tgt3" class="col-lg-3 notsel" id="tgtlbl3"> CTPS </label>
+
+                <!--DOCSCAN RESERVISTA-->
+                {% render_field wizard.form.docscan_reservista id="tgt4" %}
+                <label for="tgt4" class="col-lg-3 notsel" id="tgtlbl4"> Reservista </label>
+
+                <!--DOCSCAN BIRTH CERTIFICATE-->
+                {% render_field wizard.form.docscan_certidao_nascimento id="tgt5" %}
+                <label for="tgt5" class="col-lg-3 notsel" id="tgtlbl5"> Certidão de Nascimento </label>
+
+                <!--DOCSCAN MARRIAGE CERTIFICATE-->
+                {% render_field wizard.form.docscan_certidao_casamento id="tgt6" %}
+                <label for="tgt6" class="col-lg-3 notsel" id="tgtlbl6"> Certidão de Casamento </label>
+
+                <!--DOCSCAN PROOF OF ADDRESS-->
+                {% render_field wizard.form.docscan_comprovante_resid id="tgt7" %}
+                <label for="tgt7" class="col-lg-3 notsel" id="tgtlbl7"> Comprovante de Residência </label>
+
+                <!--DOCSCAN PROOF OF SCHOLARSHIP-->
+                {% render_field wizard.form.docscan_comprovante_escolar id="tgt8" %}
+                <label for="tgt8" class="col-lg-3 notsel" id="tgtlbl8"> Comprovante Escolar </label>
+
+                <!--DOCSCAN CV-->
+                {% render_field wizard.form.docscan_CV id="tgt9" %}
+                <label for="tgt9" class="col-lg-3 notsel" id="tgtlbl9"> Curriculum Vitae </label>
+                
+
+            </div>  <!--ROW 1 ENDS-->
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}

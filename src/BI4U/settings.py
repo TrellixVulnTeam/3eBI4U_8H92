@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'formtools',
     'sorl.thumbnail',
+    'django_tables2',
 
     # STANDARD
     'django.contrib.admin',
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
 
     # CUSTOM
     'Funcionario',
+    'Financeiro',
+    'Cliente'
 ]
 
 MIDDLEWARE = [
@@ -140,3 +143,6 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL  = '/media/'
+
+# Tables Settings
+DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap.html"

@@ -17,7 +17,7 @@ from Funcionario.forms import (
     CadastroFuncionarioWizard
     )
 from .utilities import estagiario_form_condition, estrangeiro_form_condition, outro_emprego_form_condition, deficiente_form_condition
-from .views import appMenu
+from .views import appMenu, funcionariosListing
 
 create_funcionario_forms = [
     ('Basic Info', BasicInfoForm),
@@ -71,6 +71,6 @@ urlpatterns = [
     ),
 
     path('', appMenu),
-    
+    path('lista/', funcionariosListing, name='funcionariosListingName'),
     
     ]

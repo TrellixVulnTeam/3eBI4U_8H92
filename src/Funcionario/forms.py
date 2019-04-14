@@ -6,6 +6,7 @@ from django.forms.models import model_to_dict
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
@@ -53,7 +54,8 @@ class BasicInfoForm(forms.ModelForm):
             'estrangeiro',
             'deficiente',
             'outro_emprego',   
-            'estagiario'      
+            'estagiario',
+            'SEG'      
        
         ]
         labels = {
@@ -78,7 +80,8 @@ class BasicInfoForm(forms.ModelForm):
             'estrangeiro'                                       :'Estrangeiro ?',
             'outro_emprego'                                     :'Possui Outro Emprego ?',   
             'estagiario'                                        :'É Estagiário ?',
-            'deficiente'                                        :'Possui Alguma Deficiência ?'
+            'deficiente'                                        :'Possui Alguma Deficiência ?',
+            'SEG'                                               :'Funcionário SEG ou Eireli ?'
         }
         widgets = {
             'primeiro_nome'         :   widgets.TextInput,
@@ -98,7 +101,8 @@ class BasicInfoForm(forms.ModelForm):
             'estrangeiro'           :   widgets.CheckboxInput,
             'outro_emprego'         :   widgets.CheckboxInput,
             'estagiario'            :   widgets.CheckboxInput,
-            'deficiente'            :   widgets.CheckboxInput
+            'deficiente'            :   widgets.CheckboxInput,
+            'SEG'                   :   widgets.CheckboxInput
         }
 
         error_messages = {
@@ -500,6 +504,7 @@ class CadastroFuncionarioWizard(SessionWizardView):
 
     file_storage = FileSystemStorage(location = os.path.join(settings.MEDIA_ROOT, 'formwizard_temp_file_storage'))
 
+
     def get_template_names(self):
         t = [TEMPLATES[self.steps.current]]
         return t
@@ -513,11 +518,21 @@ class CadastroFuncionarioWizard(SessionWizardView):
                 if k == 'Basic Info':
                     cdata = v.cleaned_data
                     basicinfo = BasicInfo.objects.get(id = eid)
-                    
+                    print(v.changed_data)
+
+                    if 'ativo' in v.changed_data:
+                        if cdata['ativo'] == True:
+                            basicinfo.data_ultima_ativacao = timezone.localtime(timezone.now())
+                        else:
+                            basicinfo.data_ultimo_desligamento = timezone.localtime(timezone.now())
+
                     for attr, value in basicinfo.__dict__.items():
                         if attr in cdata.keys():
                             if not cdata[attr] == "None" and not cdata[attr] == None:
                                 exec('basicinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+
+                    basicinfo.data_ultima_modificacao = timezone.localtime(timezone.now())
+                    basicinfo.data_ultima_ativacao = timezone.localtime(timezone.now())
                     basicinfo.save()
 
                 elif k == 'Address Info':
@@ -722,6 +737,7 @@ class CadastroFuncionarioWizard(SessionWizardView):
                 obj = ContractualInfo.objects.get(basicinfo=eid)
             elif step == "Doc Scans":
                 obj = DocumentAttachments.objects.get(basicinfo=eid)
+                return self.initial_dict.get(step, {})
 
 
             modeldict = model_to_dict(obj)

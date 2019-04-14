@@ -1,3 +1,13 @@
+.btnsubmenu {
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    background-color: #FFA31A;
+    color:white;
+    transition: background-color 0.5s ease
+
+}
+
 .btnleft {
     height:200px;
     width:200px;
@@ -17,11 +27,15 @@
     transition: background-color 0.5s ease
 }
 
+.btnsubmenu:hover {
+    background-color: #905c0e;
+}
+
 .btnleft:hover, .btnright:hover {
     background-color: #258fed;
     color:white;
 }
 
-.btnleft:active, .btnright:active {
+.btnleft:active, .btnright:active, .btnsubmenu:active, .btnleft:visited, .btnright:visited, .btnsubmenu:visited {
     color:white;
 }

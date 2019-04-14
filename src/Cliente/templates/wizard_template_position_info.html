@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_scripts %}
+<script>
+</script>
+{% endblock custom_scripts %}
+
+{% block content %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações de Cargo</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+                
+                <!--POSITION-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.funcao_cargo.id_for_label }}" class = "control-label col-lg-2 text-right">
+                        {{wizard.form.funcao_cargo.label}}
+                    </label>
+                    <div class="col-lg-10">
+                        {% render_field wizard.form.funcao_cargo class="form-control" placeholder=wizard.form.funcao_cargo.label %}
+                    </div>
+                </div>
+
+                <!--POSITION LEVEL-->
+                <div class="form-group col-lg-2">
+                    <label for="{{ wizard.form.funcao_nivel.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.funcao_nivel.label}}
+                    </label>
+                    <div class="col-lg-7">
+                        {% render_field wizard.form.funcao_nivel class="form-control" placeholder=wizard.form.funcao_nivel.label %}
+                    </div>
+                </div>
+
+                <!--POSITION CBO-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.funcao_CBO.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.funcao_CBO.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.funcao_CBO class="form-control" placeholder=wizard.form.funcao_CBO.label %}
+                    </div>
+                </div>
+
+
+                <!--MANAGEMENT POSITION-->
+                <div class="form-group col-lg-2" style="transform:translateY(-10%); float:right;">
+                    <div style="transform:translate(-10%,-75%)">{{wizard.form.funcao_gestor.label}}</div>
+                    <div class="checkbox">
+                        <label for="{{ wizard.form.funcao_gestor.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.funcao_gestor placeholder=wizard.form.funcao_gestor.label %}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>  <!--ROW 1 ENDS-->
+
+            <div class="row">   <!--ROW 2 STARTS-->
+                
+                <!--POSITION DESCRIPTION-->
+                <label for="{{ wizard.form.funcao_descricao.id_for_label }}" class = "control-label text-right" style="transform: translateY(-25%);">
+                    {{wizard.form.funcao_descricao.label}}
+                </label>
+                <div class="col-lg-12">
+                    {% render_field wizard.form.funcao_descricao class="form-control" style="resize:none;"%}
+                </div>
+
+            </div>  <!--ROW 2 ENDS-->
+
+            <div class="spacer"></div>
+
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}
+
+'funcao_descricao'

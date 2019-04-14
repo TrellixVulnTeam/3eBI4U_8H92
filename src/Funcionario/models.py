@@ -102,7 +102,7 @@ class BasicInfo(models.Model):
     nacionalidade               =   models.CharField(max_length = 200, null = True, blank = True)
     estado_nascimento           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     municipio_nascimento        =   models.CharField(max_length = 200, null = True, blank = True)
-    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF], unique = True, error_messages={'unique':"CPF Já Registrado"})
+    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF], error_messages={'unique':"CPF Já Registrado"})
     numero_inscricao_NIS        =   models.IntegerField(null = True, blank = True)
     numero_PIS_PASEP            =   models.IntegerField(null = True, blank = True)
     numero_NIT_INSS             =   models.IntegerField(null = True, blank = True)
@@ -119,9 +119,14 @@ class BasicInfo(models.Model):
     estagiario                  =   models.BooleanField(null = True, blank = True)
     deficiente                  =   models.BooleanField(null = True, blank = True)
 
+    SEG                         =   models.BooleanField(default = True) # SEG == True, Eireli == False
     ativo                       =   models.BooleanField(default = True)
     ferias                      =   models.BooleanField(default=False)
     obs_desligamento            =   models.TextField(null = True, blank = True)
+
+    data_ultima_ativacao        =   models.DateTimeField(null = True, blank = True)
+    data_ultima_modificacao     =   models.DateTimeField(null = True, blank = True)
+    data_ultimo_desligamento    =   models.DateTimeField(null = True, blank = True)    
 
 # 2 - Address Info
 class AddressInfo(models.Model):

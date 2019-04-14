@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_page_style %}
+{% endblock custom_page_style %}
+
+{% block content %}
+
+    {% if wizard.form.vinc_outra_emp_CNPJ.errors or wizard.form.vinc_outra_emp_salario.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        
+        {% if wizard.form.vinc_outra_emp_CNPJ.errors %}
+            <div><strong>CNPJ da Empresa:</strong> {{ wizard.form.vinc_outra_emp_CNPJ.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.vinc_outra_emp_salario.errors %}
+            <div><strong>Salário:</strong> {{ wizard.form.vinc_outra_emp_salario.errors }}</div>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Outro Trabalho</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+                <div class="col-lg-3">  <!--COL 1 STARTS-->
+                    
+                    <!--EMPLOYEE-->
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <div class="checkbox">
+                                <label for="{{ wizard.form.vinc_outra_emp_func.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                    {% render_field wizard.form.vinc_outra_emp_func %}
+                                    {{wizard.form.vinc_outra_emp_func.label}}
+                                </label>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <!--PARTNER-->
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <div class="checkbox">
+                                <label for="{{ wizard.form.vinc_outra_emp_soc.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
+                                    {% render_field wizard.form.vinc_outra_emp_soc %}
+                                    {{wizard.form.vinc_outra_emp_soc.label}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div> <!--COL 1 ENDS-->
+
+                <div class="col-lg-6">  <!--COL 2 STARTS-->
+                
+                    <!--COMPANY NAME-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.vinc_outra_emp_nome.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.vinc_outra_emp_nome.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.vinc_outra_emp_nome class="form-control" placeholder=wizard.form.vinc_outra_emp_nome.label  %}
+                        </div>
+                    </div>
+                
+                    <!--COMPANY CNPJ-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.vinc_outra_emp_CNPJ.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.vinc_outra_emp_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00"  %}
+                        </div>
+                    </div>
+
+                    <!--COMMENTS-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.vinc_comentarios.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.vinc_comentarios.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.vinc_comentarios class="form-control" placeholder=wizard.form.vinc_comentarios.label style="resize:none;" %}
+                        </div>
+                    </div>
+
+
+                </div>  <!--COL 2 ENDS-->
+                <div class="col-lg-3">  <!--COL 3 ENDS-->
+                    
+                    <!--COMPANY PAYMENT-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.vinc_outra_emp_salario.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.vinc_outra_emp_salario class="form-control money" placeholder="0,00"  %}
+                        </div>
+                    </div>
+                
+                </div>  <!--COL 3 ENDS-->
+            </div>  <!--ROW 1 ENDS-->
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}

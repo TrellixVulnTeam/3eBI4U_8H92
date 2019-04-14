@@ -12,6 +12,31 @@
 
 {% block content %}
 
+    {% if wizard.form.banco_numero_codigo.errors or wizard.form.banco_nome.errors or wizard.form.banco_agencia.errors or wizard.form.banco_numero_conta_root.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+
+        {% if wizard.form.banco_numero_codigo.errors %}
+            <div><strong>Codigo do Banco:</strong> {{ wizard.form.banco_numero_codigo.errors }}</div>
+        {% endif %}
+        
+        {% if wizard.form.banco_nome.errors %}
+            <div><strong>Nome do Banco:</strong> {{ wizard.form.banco_nome.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.banco_agencia.errors %}
+            <div><strong>Agência:</strong> {{ wizard.form.banco_agencia.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.banco_numero_conta_root.errors %}
+            <div><strong>Número da Conta:</strong> {{ wizard.form.banco_numero_conta_root.errors }}</div>
+        {% endif %}
+
+
+    </div>
+    {% endif %}
+
+
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações Bancárias</small></h2>
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">

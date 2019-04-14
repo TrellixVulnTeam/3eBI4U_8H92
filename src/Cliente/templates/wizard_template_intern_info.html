@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block custom_scripts %}
+<script>
+    $(document).ready(function(){
+
+        jQuery('input[name="Intern Info-estag_instituto_CEP"]').blur(function(){
+            var cep = jQuery('input[name="Intern Info-estag_instituto_CEP"]').val().replace(/[^0-9]/, "");
+
+            if(cep.length != 8){
+                return false;
+            }
+            
+        var url = "https://viacep.com.br/ws/"+cep+"/json/";
+        
+            $.getJSON(url, function(dadosRetorno){
+                try{
+                    jQuery('input[name="Intern Info-estag_instituto_end"]').val(dadosRetorno.logradouro);
+                    jQuery('input[name="Intern Info-estag_instituto_UF"]').val(dadosRetorno.uf);
+                }catch(ex){}
+            });
+        });
+
+    });   
+</script>
+{% endblock custom_scripts %}
+
+
+{% block content %}
+
+    {% if wizard.form.estag_valor_bolsa.errors or wizard.form.vinc_outra_emp_salario.errors or wizard.form.estag_data_inicio.errors or wizard.form.estag_data_fim.errors or wizard.form.estag_instituto_CNPJ.errors or wizard.form.estag_instituto_CEP.errors or wizard.form.estag_instituto_tel.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        
+        {% if wizard.form.estag_valor_bolsa.errors %}
+            <div><strong>Remuneração:</strong> {{ wizard.form.estag_valor_bolsa.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.vinc_outra_emp_salario.errors %}
+            <div><strong>Salário:</strong> {{ wizard.form.vinc_outra_emp_salario.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_data_inicio.errors %}
+            <div><strong>Data de Início:</strong> {{ wizard.form.estag_data_inicio.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_data_fim.errors %}
+            <div><strong>Data de Fim:</strong> {{ wizard.form.estag_data_fim.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_instituto_CNPJ.errors %}
+            <div><strong>CNPJ:</strong> {{ wizard.form.estag_instituto_CNPJ.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_instituto_CEP.errors %}
+            <div><strong>CEP:</strong> {{ wizard.form.estag_instituto_CEP.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.estag_instituto_tel.errors %}
+            <div><strong>Telefone:</strong> {{ wizard.form.estag_instituto_tel.errors }}</div>
+        {% endif %}
+
+
+    </div>
+    {% endif %}
+
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
+        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Estagio</small></h2>
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            
+            <div class="row">   <!--ROW 1 STARTS-->
+                
+                <!--ACADEMIC LEVEL-->
+                <div class="form-group col-lg-5" style="transform:translateY(-25%);">
+                    <label for="{{ wizard.form.estag_escolaridade.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.estag_escolaridade.label}}
+                    </label>
+                    <div class="col-lg-7">
+                        {% render_field wizard.form.estag_escolaridade class="form-control" placeholder=wizard.form.estag_escolaridade.label%}
+                    </div>
+                </div>
+
+                <!--SALARY-->
+                <div class="form-group col-lg-5" style="transform:translateY(-25%);">
+                    <label for="{{ wizard.form.estag_valor_bolsa.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.estag_valor_bolsa.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.estag_valor_bolsa class="form-control money" placeholder="0,00" %}
+                    </div>
+                </div>
+
+                <div class="col-lg-1"></div>
+                
+                <!--REQUIRED INTERNSHIP-->
+                <div class="form-group col-lg-2" style="transform:translate(30%, -10%);">
+                <div style="transform:translate(-10%,-75%)">{{wizard.form.estag_obrigatorio.label}}</div>
+                    <div class="checkbox">
+                        <label for="{{ wizard.form.estag_obrigatorio.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.estag_obrigatorio placeholder=wizard.form.estag_obrigatorio.labe %}
+                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>  <!--ROW 1 ENDS-->
+
+            <div class="row">   <!--ROW 2 STARTS-->
+                
+                <!--INTERNSHIP START DATE-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_data_inicio.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.estag_data_inicio.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.estag_data_inicio class="form-control date" placeholder="DD/MM/YYYY"  %}
+                    </div>
+                </div>  
+                
+                <!--INTERNSHIP END DATE-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_data_fim.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.estag_data_fim.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.estag_data_fim class="form-control date" placeholder="DD/MM/YYYY"  %}
+                    </div>
+                </div>
+
+                <!--ACADEMIC FIELD-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_area_atuacao.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.estag_area_atuacao.label}}
+                    </label>
+                    <div class="col-lg-7">
+                        {% render_field wizard.form.estag_area_atuacao class="form-control" placeholder=wizard.form.estag_area_atuacao.label%}
+                    </div>
+                </div>
+
+            </div>  <!--ROW 2 ENDS-->
+
+            <div class="spacer"></div>
+
+            <legend>Instituição de Ensino</legend>
+
+            <div class="row">   <!--ROW 3 STARTS-->
+                
+                <!--INSTITUTE NAME-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_nome.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_nome.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_nome class="form-control" placeholder=wizard.form.estag_instituto_nome.label%}
+                    </div>
+                </div>
+
+                <!--INSTITUTE CNPJ-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_CNPJ.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_CNPJ.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00"%}
+                    </div>
+                </div>
+                
+                <!--INSTITUTE CEP-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_CEP.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_CEP.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_CEP class="form-control cep" placeholder="00000-000"%}
+                    </div>
+                </div>
+
+                <!--INSTITUTE ADDRESS-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_end.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_end.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_end class="form-control cnpj" placeholder=wizard.form.estag_instituto_end.label%}
+                    </div>
+                </div>
+
+                <!--INSTITUTE UF-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_UF.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_UF.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_UF class="form-control" %}
+                    </div>
+                </div>
+
+
+                <!--INSTITUTE CONTACT NUMBER-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_tel.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_tel.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_tel class="form-control tel" placeholder="(DDD)000000000"%}
+                    </div>
+                </div>
+
+
+            </div>  <!--ROW 3 ENDS-->
+
+
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}

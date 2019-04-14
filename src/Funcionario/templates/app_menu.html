@@ -5,12 +5,37 @@
 {% load i18n %}
 {% load static %}
 {% load thumbnail %}
+{% load django_tables2 %}
+
+{% block head %}
+    <title>BI4U - Funcionário</title>
+{% endblock head %}
 
 {% block custom_scripts %}
 
 <script>
 
     $(document).ready(function(){
+
+
+        // Enabling and Disabling Submit Button on ShutDown Form
+        const selectElement = document.querySelector('#CPFConfirmation');
+
+        selectElement.addEventListener('change', (event) => {
+        var ofCPF = $('#officialCPF').text();
+        var CPF = $('#CPFConfirmation').val();
+        var id = document.getElementById("eid").textContent;
+
+            if (ofCPF === CPF) {
+                $('#submitShutDown').prop("disabled", false);
+                $('#shutDownID').val(id); 
+            } else {
+                $('#submitShutDown').prop("disabled", true);
+                $('#shutDownID').val('');
+            }
+        });
+
+        // Adding Popover Event to Picture
         $('[data-toggle="popover"]').popover(); 
 
         if (window.location.hash === "#load") {
@@ -20,7 +45,8 @@
         }
     })
 
-    function visualizeEmployee(){
+    // Creating Visualize Employee URL and Assigning Window Location
+    function visualizeEmployee() {
         var id = document.getElementById("eid").textContent
 
         if (id !== '') {
@@ -29,6 +55,20 @@
             document.getElementById("alert2").style.display = "block";
         }
     }
+
+    function occurrenceShutDownRB() {
+        var OSDRB = document.getElementById('opt3');
+        var OSDTA = document.getElementById('occurrenceShutDown');
+
+        if (OSDRB.checked) {
+            OSDTA.style.display = "block";
+        } else {
+            OSDTA.style.display = "none";
+        }
+    }
+
+
+
 
 </script>
 
@@ -49,6 +89,15 @@
             <strong>Funcionário Não Encontrado!</strong> A busca pelo CPF do funcionário não retornou nenhum resultado.
         </div>
     {% endif %}
+
+    {% if ERROR == 3 %}
+        <div id="alert" class="alert alert-danger alert-dismissible fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Funcionário Já Desligado!</strong> O Funcionário que você tentou desligar já estava desativado.
+        </div>
+    {% endif %}
+
+
 
     <div id="alert2" class="alert alert-danger alert-dismissible fade in" style="display: none;">
         <a class="close" onclick="$('#alert2').hide()">&times;</a>
@@ -83,9 +132,15 @@
                 <h3 style="transform: translateY(-100%);"><small class="text-info">Para mais informações clique em "Visualizar Funcionário"</small></h3>
                 -->   
                 <div class="col-lg-8" style="font-weight: bold; padding: 10px;">
+
+                    {% if object.obs_desligamento %}
+                        <span class="text-danger" >Funcionário Previamente Desligado com Ocorrência !</span>
+                        <div class="spacer"></div>
+                    {% endif %}
+                    
                     <span style="float: left;">Nome:</span><span style="float: right;">{{object.primeiro_nome}} {{object.ultimo_nome}}</span>
                     </br>
-                    <span style="float: left;">CPF:</span><span style="float: right;">{{object.numero_documento_CPF}}</span>
+                    <span style="float: left;">CPF:</span><span id = "officialCPF" style="float: right;">{{object.numero_documento_CPF}}</span>
                     </br>
                     <span>Status:</span><span style="float: right;">
                         {% if not object.ativo %}
@@ -100,15 +155,28 @@
                     </span>
                     </br>
                     <span>ID:</span><span id="eid" style="float: right;">{{object.id}}</span>
+                    <br>
+                    {% if object.obs_desligamento %}
+                        <span>Observações da Ocorrencia:</span><br><br><span>{{object.obs_desligamento}}</span>
+                    {% endif %}
                     
                 </div>
                 <div class="col-lg-1"></div>
-                {% thumbnail imageObject.docscan_picture "250x250" as im %}
+                
+                {% if not object.ativo  %}
+                    {% thumbnail imageObject.docscan_picture "250x250" colorspace="GRAY" as im %}
                     <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." class="col-lg-3" src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
-                {% empty %}
-                    <p>Sem Imagem</p>
-                {% endthumbnail %}
-
+                    {% empty %}
+                        <p>Sem Imagem</p>
+                    {% endthumbnail %}    
+                {% else %}
+                    {% thumbnail imageObject.docscan_picture "250x250" as im %}
+                    <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." class="col-lg-3" src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
+                    {% empty %}
+                        <p>Sem Imagem</p>
+                    {% endthumbnail %}    
+                {% endif %}
+                    
             </div>
 
         </div>
@@ -120,30 +188,98 @@
             <div class="row">
 
                 <a href="/funcionario/cadastro">
-                <button class="col-lg-3 btn btnleft">
+                <button class="col-lg-3 btn btnleft" style="color:white;">
                     <span>Cadastrar Novo Funcionário</span>
                 </button>
                 </a>
 
-                <button class="col-lg-3 btn btnright" onclick="visualizeEmployee()">
-                    <span>Visualizar Funcionário</span>
-                </button>
-        
+                <button class="col-lg-3 btn btnright" data-toggle="modal" href="#modalTable" style="color:white;">
+                    <span>Visualizar Funcionários</span>
+                </button>        
             </div>
             
             <div class="spacer-xl"></div>
 
             <div class="row">
     
-                <button class="col-lg-3 btn btnleft">
+                <button class="col-lg-3 btn btnleft" data-toggle="modal" href="#modalShutDown" style="color:white;">
                     <span>Desligar Funcionário</span>
                 </button>
     
-                <button class="col-lg-3 btn btnright">
+                <button class="col-lg-3 btn btnright" style="color:white;">
                     <span>Outros</span>
                 </button>
             
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalTable">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Funcionarios Cadastrados</h4>
+                </div>
+                <div class="modal-body">
+                    {% render_table table 'django_tables2/bootstrap-responsive.html' %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal fade" id="modalShutDown">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Desligamento de Funcionário - {{ object.primeiro_nome }} {{ object.ultimo_nome }}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="/funcionario/">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            
+                            <br>
+
+                            <label class="radio-inline"><input type="radio" name="optradio" id="opt1" onclick="occurrenceShutDownRB()" checked>Demissão</label>
+                            <label class="radio-inline"><input type="radio" name="optradio" id="opt2" onclick="occurrenceShutDownRB()">Demissão Voluntária</label>
+                            <label class="radio-inline"><input type="radio" name="optradio" id="opt3" onclick="occurrenceShutDownRB()">Demissão com Ocorrência</label>
+                            
+                            <div class="spacer"></div>
+
+                            <div class="form-group" id="occurrenceShutDown" style="display:none;">
+                                <label for="occurrenceShutDown">Registro de Ocorrência:</label>
+                                <textarea class="form-control" name="occurrenceShutDown"  rows="5" style="resize: none;"></textarea>
+                            </div>
+
+                            <div class="spacer"></div>
+
+                            <label for="CPFConfirmation" class = "control-label">Para Confirmar o <u>Desligamento</u> do Funcionário, Digite o CPF</label>
+                            <input name = "CPFConfirmation" type="text" class = "form-control cpf" id = "CPFConfirmation" placeholder="000.000.000-00">
+                            <input name = "shutDownID" type="hidden" id = "shutDownID" value="">
+
+                            <br>
+
+                            <input id="submitShutDown" class="btn btn-sm btn-primary" type="submit" style="float:right;" value="Desligar Funcionário" disabled>
+                            
+                            <div class="spacer"></div>
+
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    
+
 {% endblock content %}

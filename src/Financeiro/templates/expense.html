@@ -1,0 +1,129 @@
+{% load widget_tweaks %}
+
+<div class="spacer"></div>
+
+<form action="" method="POST" class="form-horizontal">  {% csrf_token %}
+    
+    <div class="row">
+
+        <!--VALUE-->
+        <div class="form-group col-lg-4" style="transform:translateX(-2%)">
+            <label for="{{ formExpense.valor.id_for_label }}" class = "control-label col-lg-5 text-right">
+                {{ formExpense.valor.label }} (R$)
+            </label>
+            <div class="col-lg-7">
+                {% render_field formExpense.valor class="form-control money" placeholder="0,00" %}
+            </div>
+        </div>
+
+        <!--DISCOUNT PERCENTAGE-->
+        <div class="form-group col-lg-5">
+            <label for="{{ formExpense.percentual_desconto.id_for_label }}" class = "control-label col-lg-7 text-right">
+                {{ formExpense.percentual_desconto.label }} (%)
+            </label>
+            <div class="col-lg-5">
+                {% render_field formExpense.percentual_desconto class="form-control money" placeholder="0,00" %}
+            </div>
+        </div>
+
+        <!--RECURRING EXPENSE TOGGLE-->
+        <label class="col-lg-2 col-sm-6 text-right" style="transform: translateY(25%);"> {{ formExpense.despesa_fixa.label }} </label>
+        <div class="form-group col-lg-2 col-sm-6">
+            <div class="checkbox">
+                <label for="EIT" class = "checkbox control-label switch" style="transform: translateY(-25%);">
+                    {% render_field formExpense.despesa_fixa id="EIT" name="EIT" class="form-control" placeholder=formExpense.despesa_fixa.label %}
+                    <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                </label>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="row">
+
+        <!--PRODUCTS-->
+        <div class="form-group col-lg-5">
+            <label for="{{ formExpense.produto.id_for_label }}" class = "control-label col-lg-5 text-right">
+                {{ formExpense.produto.label }}
+            </label>
+            <div class="col-lg-7">
+                {% render_field formExpense.produto class="form-control" placeholder=formExpense.produto.label %}
+            </div>
+        </div>
+        
+        <!--EXPENSE CLASSIFICATION-->
+        <div class="form-group col-lg-7">
+            <label for="{{ formExpense.classificacao_despesa.id_for_label }}" class = "control-label col-lg-5 text-right">
+                {{ formExpense.classificacao_despesa.label }}
+            </label>
+            <div class="col-lg-7">
+                {% render_field formExpense.classificacao_despesa class="form-control" placeholder=formExpense.classificacao_despesa.label %}
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+
+        <!--PRODUCTS QUANTITY-->
+        <div class="form-group col-lg-5">
+            <label for="{{ formExpense.quantidade_produto.id_for_label }}" class = "control-label col-lg-5 text-right">
+                {{ formExpense.quantidade_produto.label }}
+            </label>
+            <div class="col-lg-7">
+                {% render_field formExpense.quantidade_produto class="form-control" placeholder="0" %}
+            </div>
+        </div>
+        
+        <!--DUE DATE-->
+        <div class="form-group col-lg-7">
+            <label for="{{ formExpense.data_vencimento.id_for_label }}" class = "control-label col-lg-5 text-right">
+                {{ formExpense.data_vencimento.label }}
+            </label>
+            <div class="col-lg-7">
+                {% render_field formExpense.data_vencimento class="form-control date" placeholder="DD/MM/YYYY" %}
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        
+        <!--OBSERVATIONS-->
+        <div class="form-group col-lg-8" style="transform:translateX(-0,5%);">
+            <label for="{{ formExpense.observacao.id_for_label }}" class = "control-label col-lg-3 text-right">
+                {{ formExpense.observacao.label }}
+            </label>
+            <div class="col-lg-9">
+                {% render_field formExpense.observacao rows="5" style="resize:none;" class="form-control" placeholder=formExpense.observacao.label %}
+            </div>
+        </div>
+
+        <!--PAYMENT METHOD-->
+        <div class="form-group col-lg-4">
+            <div class="row">
+                <div class="col-lg-1"></div>
+                <label for="{{ formExpense.forma_pagamento.id_for_label }}" class = "control-label text-left" style="float:left;">
+                    {{ formExpense.forma_pagamento.label }}
+                </label>
+                <div class="col-lg-1"></div>
+                <div class="col-lg-11">
+                    {% render_field formExpense.forma_pagamento class="form-control" placeholder=formExpense.forma_pagamento.label %}
+                </div>
+                
+                <div class="">
+                    <div class="col-lg-3"></div>
+                    <button name="expenseform" class="btn btn-success col-lg-5" type="submit" style="margin-left:20px; margin-top:40px; background: RGB(255, 163, 26); color:white; border-color: RGB(255, 163, 26);">Salvar</button>
+                </div>
+                        
+            </div>
+        </div>
+        
+    </div>
+
+    
+</form>
