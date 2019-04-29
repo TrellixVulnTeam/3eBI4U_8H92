@@ -6,6 +6,7 @@ from .utilities import (
     funcionario_media_path_CPF, funcionario_media_path_TE, funcionario_media_path_CTPS, funcionario_media_path_RESERVISTA,
     funcionario_media_path_CV, funcionario_media_path_COMPROVANTERESIDENCIA, funcionario_media_path_VACINACAO, funcionario_media_path_RG,
     funcionario_media_path_PICTURE)
+from ControleAdministrativo.models import FuncionarioCargo, FuncionarioNivel
 
 # App Logic ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -57,18 +58,7 @@ intern_schooling_choices    = [
     ('Técnico', 'Técnico'),
     ('Superior', 'Superior')      
 ]
-position_choices            = [
-    ('Supervisor 1', 'Supervisor 1'),
-    ('Supervisor 2', 'Supervisor 2'),
-    ('Supervisor 3', 'Supervisor 3'),
-    ('Seguranca 1', 'Seguranca 1'),
-    ('Seguranca 2', 'Seguranca 2'),
-    ('Seguranca 3', 'Seguranca 3'),
-    ('Aux Limpeza', 'Aux Limpeza'),
-    ('Aux administrativo', 'Aux administrativo'),
-    ('Gerente', 'Gerente'),
-    ('Diretor', 'Diretor')
-]
+
 grau_parentesco_choices     = [
     ('1', 'Cônjuge'),
     ('2','Companheiro (a) com o (a) qual tenha filhos ou viva a mais de 05 anos ou possua Declaração de união Estável '),
@@ -87,7 +77,6 @@ phoneRegex = RegexValidator(
     regex=r'^(\+\d{0,4})?(\(\d{0,3}\))?([0-9\-]{7,15})$',
     message="Entre Telefone no Formato: '(DDD)99999-9999'."
 )
-
 # Models --------------------------------------------------------------------------------------------------------------------------------------------
 
 # 1 - Basic Info
@@ -102,7 +91,7 @@ class BasicInfo(models.Model):
     nacionalidade               =   models.CharField(max_length = 200, null = True, blank = True)
     estado_nascimento           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     municipio_nascimento        =   models.CharField(max_length = 200, null = True, blank = True)
-    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF], error_messages={'unique':"CPF Já Registrado"})
+    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF])
     numero_inscricao_NIS        =   models.IntegerField(null = True, blank = True)
     numero_PIS_PASEP            =   models.IntegerField(null = True, blank = True)
     numero_NIT_INSS             =   models.IntegerField(null = True, blank = True)
@@ -254,8 +243,8 @@ class PositionInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    funcao_cargo                =   models.CharField(max_length = 200, choices = position_choices, null = True, blank = True)
-    funcao_nivel                =   models.CharField(max_length = 1, choices = [('1','1'), ('2','2'), ('3','3')], null = True, blank = True)
+    funcao_cargo                =   models.CharField(max_length = 100, null = True, blank = True)
+    funcao_nivel                =   models.CharField(max_length = 100, null = True, blank = True)
     funcao_gestor               =   models.BooleanField(null = True, blank = True)
     funcao_CBO                  =   models.CharField(max_length = 50, null = True, blank = True)
     funcao_descricao            =   models.CharField(max_length = 3000, null = True, blank = True)
@@ -267,7 +256,7 @@ class ContractualInfo(models.Model):
 
     contrat_data_admissao       =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     contrat_data_inicio         =   models.DateField(null = True, blank = True)
-    contrat_cargo_inicial       =   models.CharField(max_length = 200, choices = position_choices, null = True, blank = True)
+    contrat_cargo_inicial       =   models.CharField(max_length = 100, null = True, blank = True)
     contrat_vale_alim           =   models.BooleanField(null = True, blank = True)
     contrat_vale_alim_valor     =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_vale_ref            =   models.BooleanField(null = True, blank = True)

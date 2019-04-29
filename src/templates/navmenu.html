@@ -1,0 +1,110 @@
+<!-- RGB(18,43,65) == #122B41 && RGB(255,163,26) == #FFA31A-->
+{% load static %}
+<script>
+    
+    function openCloseNav() {
+        if (document.getElementById("mySidenav").style.height != "80px") {
+            openNav();
+        } else {
+            closeNav();
+        }
+    }
+    
+    /* Set the width of the side navigation to 250px and the left margin of the page content to 250px */
+    function openNav() {
+        document.getElementById("mySidenav").style.height = "80px";
+        document.getElementById("mySidenav").style.marginTop = "70px";
+    }
+
+    /* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+        document.getElementById("mySidenav").style.height = "0";
+        document.getElementById("main").style.marginTop = "0";
+    } 
+</script>
+
+<style>
+    /* The side navigation menu */
+    .sidenav {
+    height: 0; /* 100% Full-height */
+    width: 100%; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #111; /* Black*/
+    overflow-y: hidden; /* Disable horizontal scroll */
+    padding-right: 60px; /* Place content 60px from the right */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    }
+
+    /* The navigation menu links */
+    .sidenav li {
+    padding: 25px 25px;
+    font-size: 20px;
+
+    display: inline-block;
+    transition: 0.3s;
+    cursor: pointer;
+    }
+    .sidenav li a {
+    text-decoration: none;
+    color: #818181;
+
+    }
+
+    /* When you mouse over the navigation links, change their color */
+    .sidenav li a:hover {
+    color: #f1f1f1;
+    }
+
+    /* Position and style the close button (top right corner) */
+    .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    }
+
+    /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+    #main {
+    transition: margin-left .5s;
+    padding: 20px;
+    }
+
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+    } 
+</style>
+
+
+<div id="mySidenav" class="sidenav">
+    <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
+    <ul>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'funcionario/menu' %}">Funcionários</a></li>
+            <li><a href="{% url 'financeiro/menu' %}">Financeiro</a></li>
+            <li><a href="#">Clientes</a></li>
+            <li><a href="#">Estoque</a></li>
+            <li><a href="#">Agenda</a></li>
+            <li class="text-nowrap" style="float:right;"><a href="{% url 'logout' %}">Sair</a></li>
+        {% else %}
+        <li class="text-nowrap" style="float:right;"><a href="{% url 'login' %}">Entrar</a></li>
+        {% endif %}
+    </ul>
+  </div>
+
+<div class = "row" style="height: 70px; margin: 0; float:right; z-index: 10; padding:0px; background-color: #122B41; box-shadow: rgba(0, 0, 0, 0.16) 0px 2px 5px 0px, rgba(0, 0, 0, 0.12) 0px 2px 10px 0px ; position: fixed; width: 100%;">
+
+    <div class="col-lg-1"></div>
+    <div class="col-lg-1"><img src="{% static 'strucimg/Logo_3e.svg' %}" style="width:100%; height: auto; margin-left:-100%; cursor: pointer;" onclick="openCloseNav()"/></div>
+    <div class="col-lg-8"></div>
+    <div class="col-lg-1"><img src="{% static 'strucimg/Logo_3e.svg' %}" style="width:100%; height: auto; float: right; margin-right:-100%;"/></div>
+    <div class="col-lg-1"></div>
+
+</div>
+    

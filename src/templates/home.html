@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - BI4U{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="col-sm-3 col-sm-offset-9 text-right" style="transform:translateY(-500%);">
+      {% if user.is_authenticated %}
+        Seja bem-vindo {{user.username}} !
+      {% else %}
+        Você esta em modo anônimo. Faça <a href="{% url 'login' %}" style="text-decoration: none; color: black;"><strong>login !</strong></a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

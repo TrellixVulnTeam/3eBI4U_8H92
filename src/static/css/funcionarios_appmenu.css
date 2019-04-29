@@ -1,3 +1,33 @@
+.modal-content {
+    background-color: #FFFFFF;
+}
+
+.first-row {
+    border: 2px solid black; 
+    border-bottom: none;
+}
+
+.middle-row {
+    border: 2px solid black; 
+    border-bottom: none;
+    border-top: none;
+}
+.last-row {
+    border: 2px solid black; 
+    border-top: none;
+}
+
+.panel-heading {
+    color:white;
+    border: none;
+    background-color: #122b41;
+    transition: background-color 0.5s ease
+}
+
+.panel-heading:hover {
+    background-color: #258fed;
+}
+
 .btnsubmenu {
     height: 100px;
     width: 100px;

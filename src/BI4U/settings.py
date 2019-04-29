@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     # CUSTOM
     'Funcionario',
     'Financeiro',
-    'Cliente'
+    'Cliente',
+    'ControleAdministrativo'
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,7 @@ MEDIA_URL  = '/media/'
 
 # Tables Settings
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap.html"
+
+# Authentication Variables
+LOGIN_REDIRECT_URL = '/home/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'

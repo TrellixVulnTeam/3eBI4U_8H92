@@ -7,6 +7,10 @@
         overflow-x:hidden;
       }
 
+      #main {
+        background-color: inherit;
+      }      
+
       .spacer {
         margin-top:30px;
       }
@@ -33,10 +37,10 @@
     {% block linked_refs %}     <!--LINKED REFERENCES HERE-->     {% endblock linked_refs %}
     {% block custom_scripts %}     <!--CUSTOM PAGE SCRIPTS HERE-->     {% endblock custom_scripts %}
   </head>
-  <body>
+  <body style="background-color: #F1F1F1;">
     {% block custom_page_style %}     <!--CUSTOM PAGE STYLE HERE-->     {% endblock custom_page_style %}
-    {% include 'row_of_logos.html' %}
-    <div id="main">
+    {% include 'navmenu.html' %}
+    <div id="main" style="padding-top: 200px;">
       {% block content %}     <!--BODY CONTENT HERE-->     {% endblock content %}
     </div>
   </body>

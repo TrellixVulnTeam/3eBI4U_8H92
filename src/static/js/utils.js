@@ -42,7 +42,7 @@ function displayField(x, y) {
     var elem     = document.getElementById(y);
 
     if (checkbox.checked == true){
-        elem.style.display = "inline-block";
+        elem.style.display = "block";
     } else{
         elem.style.display = "none";
     }

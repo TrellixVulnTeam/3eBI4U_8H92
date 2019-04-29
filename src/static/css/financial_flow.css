@@ -1,0 +1,48 @@
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.row-offset-y-sm {
+    transform: translateY(-10%);
+}
+
+.row-offset-y-md {
+    transform: translateY(-100%);
+}
+
+.row-offset-y-lg {
+    transform: translateY(-200%);
+}
+
+.month-selector {
+    transform: translateX(50%);
+    z-index: 3;
+}
+
+.btn-orange {
+    background-color: #FFA31A;
+    color: white;
+}
+
+.btn-orange:hover {
+    background-color: #905C0E;
+    color: white;
+}
+
+.first-row {
+    border: 2px solid black; 
+    border-bottom: none;
+}
+
+.middle-row {
+    border: 2px solid black; 
+    border-bottom: none;
+    border-top: none;
+}
+.last-row {
+    border-top: 2px solid black; 
+}

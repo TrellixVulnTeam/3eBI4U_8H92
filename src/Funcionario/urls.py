@@ -57,7 +57,7 @@ urlpatterns = [
                                                             'Another Job Info'  :   outro_emprego_form_condition,
                                                             'Intern Info'       :   estagiario_form_condition,
                                                             }
-                                                        )
+                                                        ), name = 'funcionario/cadastro'
     ),
     path('visualizar/<int:id>', CadastroFuncionarioWizard.as_view(
                                                         create_funcionario_forms,
@@ -67,10 +67,10 @@ urlpatterns = [
                                                             'Another Job Info'  :   outro_emprego_form_condition,
                                                             'Intern Info'       :   estagiario_form_condition,
                                                             }
-                                                        )
+                                                        ), name = 'funcionario/visualizar'
     ),
 
-    path('', appMenu),
-    path('lista/', funcionariosListing, name='funcionariosListingName'),
+    path('', appMenu, name = 'funcionario/menu'),
+    path('lista/', funcionariosListing, name='funcionario/lista'),
     
     ]

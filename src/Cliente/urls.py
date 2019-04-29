@@ -24,14 +24,7 @@ create_cliente_forms = [
 
 urlpatterns = [
 
-    path('cadastro/', CadastroClienteWizard.as_view(
-                                                        create_cliente_forms
-                                                        )
-    ),
-    path('visualizar/<int:id>', CadastroClienteWizard.as_view(
-                                                        create_cliente_forms
-                                                        
-                                                        )
-    ),
+    path('cadastro/', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/cadastro'),
+    path('visualizar/<int:id>', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/visualizar'),
     
     ]

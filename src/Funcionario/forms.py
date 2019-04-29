@@ -11,6 +11,7 @@ from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 
+from ControleAdministrativo.models import FuncionarioCargo, FuncionarioNivel
 
 from .models import (
     BasicInfo,
@@ -27,6 +28,17 @@ from .models import (
     DocumentAttachments,
     Dependente
 )
+
+# SubClassing ModelChoiceFields for Custom Representation of label_from_instance
+class ReadableModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        try:
+            return obj.cargo
+        except:
+            return obj.nivel
+
+
+# Forms
 
 class BasicInfoForm(forms.ModelForm):
     class Meta():
@@ -362,6 +374,14 @@ class InternInfoForm(forms.ModelForm):
         }
 
 class PositionInfoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(PositionInfoForm, self).__init__(*args, **kwargs)
+        self.fields['funcao_cargo'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo')
+        self.fields['funcao_nivel'] = ReadableModelChoiceField(queryset = FuncionarioNivel.objects.all(), label = 'Nivel')
+
+
+
     class Meta():
         model = PositionInfo
         fields = [
@@ -384,6 +404,11 @@ class PositionInfoForm(forms.ModelForm):
         }
 
 class ContractualInfoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ContractualInfoForm, self).__init__(*args, **kwargs)
+        self.fields['contrat_cargo_inicial'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo Inicial')
+
     class Meta():
         model = ContractualInfo
 

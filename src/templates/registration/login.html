@@ -1,0 +1,77 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>BI4U - Home</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel='stylesheet' href='{% static "css/slider.css" %}'>
+    <link rel='stylesheet' href='{% static "css/animations.css" %}'>
+    <link rel='stylesheet' href='{% static "css/home.css" %}'>
+    <script src='{% static "js/jquery-3.3.1.min.js" %}'></script>
+    <script src='{% static "js/utils.js" %}'></script>
+    <script src='{% static "js/custom_masks.js" %}'></script>
+    <script src='{% static "js/bootstrap.min.js" %}'></script> 
+    <script src='{% static "js/jquery.mask.min.js" %}'></script>
+    <script>
+      
+      function openLogin() {
+        $('.login-container').fadeIn(500);
+      }
+      function closeLogin() {
+        $('.login-container').fadeOut(500, function(){
+          document.forms["login-form"].reset();
+        });
+      }
+
+      $(document).ready(function (){
+        $('.login-nav').click(function (){
+          if ($('.login-container').css('display') == 'none') {
+            openLogin();
+          } else {
+            closeLogin();
+          }
+        });
+        $('.login-container').click(function(e) {
+          e.stopPropagation();
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+
+      {% if form.errors %}
+        <div id="alert" class="alert alert-danger alert-dismissible fade in" style="position: absolute; left: 30%; top:80%; width: 40%;">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>Usuario ou senha Inválidos !</strong> Informe credenciais válidas ou registre-se.
+        </div>
+        <script>$(document).ready(function (){openLogin();});</script>
+     {% endif %}
+
+    <!--FROST GLASS EFFECT DIV-->
+    <div class="col-sm-4 col-sm-offset-4 login-nav" style="height:100vh;">
+      <div class="login-container">
+        <div class="login-content">
+          {% render_field form.username.hints %}
+          <form action="" method="POST" class="form-horizontal" id='login-form'>{% csrf_token %}
+            <div class="form-group">
+              <label for="username" class="control-label" style="color:white;">Usuario</label>
+              <!--<input name="username" type="text" class="form-control username">-->
+              {% render_field form.username class="form-control username" name="username" %}
+            </div>
+            <div class="form-group">
+              <label for="password" class="control-label" style="color:white;">Senha</label>
+              <!--<input name="password" type="password" class="form-control password">-->
+              {% render_field form.password class="form-control password" name="password" %}
+            </div>
+            <div class="text-right"><button type="submit" class="btn btn-success">Entrar</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

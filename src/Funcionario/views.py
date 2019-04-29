@@ -3,7 +3,9 @@ from django.utils import timezone
 from .models import Dependente, BasicInfo, DocumentAttachments
 from .forms import DependenteForm
 from .tables import FuncionarioBasicInfoTable
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def appMenu(request, *args, **kwargs):
     
     table = FuncionarioBasicInfoTable(BasicInfo.objects.all())
@@ -74,7 +76,7 @@ def appMenu(request, *args, **kwargs):
     else:
         return render(request, 'app_menu.html', {"table"  :  table})
 
-
+@login_required
 def funcionariosListing(request, *args, **kwargs):
     table = FuncionarioBasicInfoTable(BasicInfo.objects.all())
 

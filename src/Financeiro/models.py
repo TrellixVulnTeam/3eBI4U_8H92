@@ -3,7 +3,7 @@ from Cliente.models import BasicInfo
 
 # CHOICE LISTS
 
-payment_method_choices  =   [('Débito', 'Débito'), ('Crédito', 'Crédito'), ('Boleto', 'Boleto'), ('Dinheiro', 'Dinheiro')]
+payment_method_choices  =   [('Débito', 'Cartão de Débito'), ('Crédito', 'Cartão de Crédito'), ('Boleto', 'Boleto'), ('Depósito', 'Depósito'), ('Transferência', 'Transferência'), ('Dinheiro', 'Dinheiro')]
 
 # Create your models here.
 class Entrada(models.Model):
@@ -26,7 +26,6 @@ class Entrada(models.Model):
     observacao              =   models.CharField(max_length = 100, null = True, blank = True)
     
     datahora_registro       =   models.DateTimeField()
-
 
 class Saida(models.Model):
 
@@ -54,3 +53,20 @@ class Balanco(models.Model):
 
     datahora_registro       =   models.DateTimeField()
     balanco                 =   models.DecimalField(max_digits = 17, decimal_places = 2)
+
+class LancamentosFixos(models.Model):
+
+    flag_receita                    =   models.BooleanField(null = True, blank = True)
+    flag_despesa                    =   models.BooleanField(null = True, blank = True)
+
+    valor                           =   models.CharField(max_length = 20)
+
+    periodicidade_diaria            =   models.BooleanField(null = True, blank = True)
+    periodicidade_semanal           =   models.BooleanField(null = True, blank = True)
+    periodicidade_quinzenal         =   models.BooleanField(null = True, blank = True)
+    periodicidade_mensal            =   models.BooleanField(null = True, blank = True)
+    periodicidade_trimestral        =   models.BooleanField(null = True, blank = True)
+    periodicidade_semestral         =   models.BooleanField(null = True, blank = True)
+    periodicidade_anual             =   models.BooleanField(null = True, blank = True)
+
+    data_vencimento_inicial         =   models.DateField()

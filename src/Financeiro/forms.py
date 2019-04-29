@@ -49,7 +49,6 @@ class EntradaForm(forms.ModelForm):
         self.fields['cliente'].queryset = ClientBasicInfo.objects.all()
         self.fields['cliente'].label_from_instance = lambda obj: "%s %s" % (obj.primeiro_nome, obj.ultimo_nome)
 
-
 class SaidaForm(forms.ModelForm):
     class Meta():
         model   =   Saida
@@ -88,7 +87,3 @@ class SaidaForm(forms.ModelForm):
             'despesa_fixa'              :   widgets.CheckboxInput,
             'observacao'                :   widgets.Textarea
         }
-
-
-
-

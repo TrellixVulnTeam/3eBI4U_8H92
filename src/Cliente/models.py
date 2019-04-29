@@ -189,8 +189,6 @@ class ContactInfo(models.Model):
 # 5 - Banking Info
 class BankingInfo(models.Model):
 
-    id                          =   models.BigAutoField(primary_key = True)
-
     basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
 
     banco_numero_codigo         =   models.DecimalField(max_digits = 4, decimal_places = 0, null = True, blank = True)
