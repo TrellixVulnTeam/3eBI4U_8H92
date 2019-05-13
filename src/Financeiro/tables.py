@@ -6,9 +6,7 @@ class FinancialMovementTable(tables.Table):
     # Columns
     
     cliente                 =   tables.columns.Column()
-    classificacao           =   tables.columns.Column(verbose_name = "Classificação")
-    produto                 =   tables.columns.Column()
-    quantidade_produto      =   tables.columns.Column(verbose_name = "Qtd. Produtos")
+    identificador           =   tables.columns.Column(verbose_name = "Identificador de Transação")
     valor                   =   tables.columns.Column(verbose_name = "Valor (R$)")
     percentual_desconto     =   tables.columns.Column(verbose_name = "Pct. Desconto (%)")
     forma_pagamento         =   tables.columns.Column(verbose_name = "Forma de Pagamento")

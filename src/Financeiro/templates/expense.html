@@ -8,75 +8,42 @@
 </div>
 <div class="modal-body">
 
-    <form action="{% url 'lancamentosDespesa' %}" method="POST" class="form-horizontal">  {% csrf_token %}
+    <form id="outForm" data-done-ref="{% url 'lancamentosDespesa' %}" action="{% url 'lancamentosDespesa' %}" method="POST" class="form-horizontal">  {% csrf_token %}
         
         <div class="row">
-
-            <!--VALUE-->
+            <!--EXPENSE IDENTIFIER-->
             <div class="form-group col-lg-5">
-                <label for="{{ formExpense.valor.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.valor.label }} (R$)
+                <label for="{{ formExpense.identificador_despesa.id_for_label }}" class = "control-label col-lg-7 text-right">
+                    {{ formExpense.identificador_despesa.label }}
                 </label>
-                <div class="col-lg-7">
-                    {% render_field formExpense.valor class="form-control money" placeholder="0,00" %}
-                </div>
             </div>
-
-            <!--DISCOUNT PERCENTAGE-->
             <div class="form-group col-lg-7">
-                <label for="{{ formExpense.percentual_desconto.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.percentual_desconto.label }} (%)
-                </label>
-                <div class="col-lg-7">
-                    {% render_field formExpense.percentual_desconto class="form-control money" placeholder="0,00" %}
+                <div class="col-lg-12">
+                    {% render_field formExpense.identificador_despesa class="form-control" placeholder="Identificador da Despesa" %}
                 </div>
             </div>
-
-            <!--PRODUCTS-->
-            <div class="form-group col-lg-5">
-                <label for="{{ formExpense.produto.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.produto.label }}
-                </label>
-                <div class="col-lg-7">
-                    {% render_field formExpense.produto class="form-control" placeholder=formExpense.produto.label %}
-                </div>
-            </div>
-            
-            <!--EXPENSE CLASSIFICATION-->
-            <div class="form-group col-lg-7">
-                <label for="{{ formExpense.classificacao_despesa.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.classificacao_despesa.label }}
-                </label>
-                <div class="col-lg-7">
-                    {% render_field formExpense.classificacao_despesa class="form-control" placeholder=formExpense.classificacao_despesa.label %}
-                </div>
-            </div>
-
 
         </div>
 
         <div class="row">
 
-            <!--PRODUCTS QUANTITY-->
-            <div class="form-group col-lg-5">
-                <label for="{{ formExpense.quantidade_produto.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.quantidade_produto.label }}
-                </label>
-                <div class="col-lg-7">
-                    {% render_field formExpense.quantidade_produto class="form-control" placeholder="0" %}
+            <div class="form-group">
+                <!--PAYMENT METHOD LABEL-->
+                <div class="form-group col-lg-5">
+                    <label for="{{ formExpense.forma_pagamento.id_for_label }}" class = "control-label col-lg-7 text-right">
+                        {{ formExpense.forma_pagamento.label }}
+                    </label>
                 </div>
-            </div>
-            
-            <!--DUE DATE-->
-            <div class="form-group col-lg-7">
-                <label for="{{ formExpense.data_vencimento.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.data_vencimento.label }}
-                </label>
-                <div class="col-lg-7">
-                    {% render_field formExpense.data_vencimento class="form-control date" placeholder="DD/MM/YYYY" %}
+
+                <!--PAYMENT METHOD-->
+                <div class="form-group col-lg-7">
+                    <div class="col-lg-12">
+                        {% render_field formExpense.forma_pagamento class="form-control" %}
+                    </div>
                 </div>
             </div>
 
+            <!--PERIOD SELECTOR-->
             <div class=" form-group col-lg-5" style="visibility: hidden;" id="period_selector_expense">
                 <label for="periodicidade" class="control-label col-lg-5 text-right">Periodicidade</label>
                 <div class="col-lg-7">
@@ -92,21 +59,19 @@
                     </select>
                 </div>
             </div>
-
-
-            <!--PAYMENT METHOD-->
+            
+            <!--DUE DATE-->
             <div class="form-group col-lg-7">
-                <label for="{{ formExpense.forma_pagamento.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.forma_pagamento.label }}
+                <label for="{{ formExpense.data_vencimento.id_for_label }}" class = "control-label col-lg-5 text-right">
+                    {{ formExpense.data_vencimento.label }}
                 </label>
                 <div class="col-lg-7">
-                    {% render_field formExpense.forma_pagamento class="form-control" %}
+                    {% render_field formExpense.data_vencimento class="form-control date" placeholder="DD/MM/YYYY" %}
                 </div>
             </div>
 
 
         </div>
-
 
         <div class="row">
             
@@ -137,16 +102,32 @@
                 
                 <div class="row" style="transform: translateY(100%);">
                     <div class="">
-                        <button name="expenseform" class="btn btn-success col-lg-10" type="submit" style="background: #FFA31A; color:white; border-color: #FFA31A;">Salvar</button>
+                        <button name="expenseform" class="btn btn-success col-lg-10" type="submit" style="background: #FFA31A; color:white; border-color: #FFA31A;">Adicionar Produtos</button>
                     </div>             
                 </div>
             </div>
             
         </div>
-
-        
     </form>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
 </div>
+
+<script>
+    var frm = $('#outForm');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $(".modal-body").html(data);
+            },
+            error: function(data) {
+                $(".modal-body").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>

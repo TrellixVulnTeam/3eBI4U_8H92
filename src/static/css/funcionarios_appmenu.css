@@ -1,19 +1,24 @@
+.table{
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
 .modal-content {
     background-color: #FFFFFF;
 }
 
-.first-row {
-    border: 2px solid black; 
+/*.first-row {
+    border-top: 2px solid black; 
     border-bottom: none;
-}
+}*/
 
-.middle-row {
+/*.middle-row {
     border: 2px solid black; 
     border-bottom: none;
     border-top: none;
-}
+}*/
 .last-row {
-    border: 2px solid black; 
+    border-bottom: 2px solid black; 
     border-top: none;
 }
 
@@ -21,51 +26,51 @@
     color:white;
     border: none;
     background-color: #122b41;
-    transition: background-color 0.5s ease
+    transition: background-color 0.5s ease;
+    font-size: 1.3em;
 }
 
 .panel-heading:hover {
     background-color: #258fed;
 }
 
+.panel-right{
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
 .btnsubmenu {
-    height: 100px;
-    width: 100px;
-    border-radius: 100%;
+    border-radius: none;
+    border-radius: 15px;
     background-color: #FFA31A;
     color:white;
     transition: background-color 0.5s ease
-
 }
 
-.btnleft {
-    height:200px;
-    width:200px;
-    border-radius: 100%;
+.btnmenu {
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
     background-color: #122b41;
     color:white;
-    transition: background-color 0.5s ease
-}
-
-.btnright {
-    height:200px;
-    width:200px;
-    border-radius: 100%;
-    float: right;
-    background-color: #122b41;
-    color:white;
-    transition: background-color 0.5s ease
+    transition: 0.5s ease;
 }
 
 .btnsubmenu:hover {
     background-color: #905c0e;
 }
 
-.btnleft:hover, .btnright:hover {
+.btnmenu:hover {
     background-color: #258fed;
+    color:white;
+    transform: translateX(5%);
+}
+
+.btnmenu:active, .btnsubmenu:active, .btnmenu:visited, .btnsubmenu:visited {
     color:white;
 }
 
-.btnleft:active, .btnright:active, .btnsubmenu:active, .btnleft:visited, .btnright:visited, .btnsubmenu:visited {
-    color:white;
+a {
+    text-decoration:none;
 }
+

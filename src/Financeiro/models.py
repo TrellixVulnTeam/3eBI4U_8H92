@@ -11,41 +11,52 @@ class Entrada(models.Model):
     id                      =   models.BigAutoField(primary_key = True)
 
     cliente                 =   models.ForeignKey(BasicInfo, on_delete=models.CASCADE)
-
-    classificacao_receita   =   models.CharField(max_length = 100)
-    produto                 =   models.CharField(max_length = 100, null = True, blank = True)
-    quantidade_produto      =   models.CharField(max_length = 100, null = True, blank = True)
     
-    valor                   =   models.CharField(max_length = 20)
+    valor                   =   models.CharField(max_length = 20, null = True, blank = True)
     percentual_desconto     =   models.CharField(max_length = 5, null = True, blank = True)
     forma_pagamento         =   models.CharField(max_length = 100, choices = payment_method_choices)    
     data_vencimento         =   models.DateField()
 
     receita_fixa            =   models.BooleanField()
 
-    observacao              =   models.CharField(max_length = 100, null = True, blank = True)
+    identificador_receita   =   models.CharField(max_length = 100)
+    observacao              =   models.CharField(max_length = 500, null = True, blank = True)
     
     datahora_registro       =   models.DateTimeField()
+
+class EntradaProd(models.Model):
+
+    id_entrada              =   models.ForeignKey(Entrada, on_delete=models.CASCADE, related_name="products")
+    
+    classificacao_receita   =   models.CharField(max_length = 100)
+    produto                 =   models.CharField(max_length = 100)
+    quantidade_produto      =   models.CharField(max_length = 100)
+    valor_unitario          =   models.CharField(max_length = 20)
 
 class Saida(models.Model):
 
     id                      =   models.BigAutoField(primary_key = True)
-
-    classificacao_despesa   =   models.CharField(max_length = 100)
-    produto                 =   models.CharField(max_length = 100, null = True, blank = True)
     
-    quantidade_produto      =   models.CharField(max_length = 100, null = True, blank = True)
-    
-    valor                   =   models.CharField(max_length = 20)
+    valor                   =   models.CharField(max_length = 20, null = True, blank = True)
     percentual_desconto     =   models.CharField(max_length = 5, null = True, blank = True)
     forma_pagamento         =   models.CharField(max_length = 100, choices = payment_method_choices)    
     data_vencimento         =   models.DateField()
 
     despesa_fixa            =   models.BooleanField()
 
+    identificador_despesa   =   models.CharField(max_length = 100)
     observacao              =   models.CharField(max_length = 100, null = True, blank = True)
 
     datahora_registro       =   models.DateTimeField()
+
+class SaidaProd(models.Model):
+    
+    id_saida = models.ForeignKey(Saida, on_delete = models.CASCADE, related_name = 'expense_produts')
+
+    classificacao_despesa   =   models.CharField(max_length = 100)
+    produto                 =   models.CharField(max_length = 100)
+    quantidade_produto      =   models.CharField(max_length = 100)
+    valor_unitario          =   models.CharField(max_length = 20)
 
 class Balanco(models.Model):
 
@@ -70,3 +81,5 @@ class LancamentosFixos(models.Model):
     periodicidade_anual             =   models.BooleanField(null = True, blank = True)
 
     data_vencimento_inicial         =   models.DateField()
+
+    

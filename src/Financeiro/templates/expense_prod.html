@@ -1,0 +1,170 @@
+{% load widget_tweaks %}
+{% load static %}
+<head>
+    <title>BI4U</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href='{% static "css/bootstrap.min.css" %}'>
+    <link rel='stylesheet' href='{% static "css/slider.css" %}'>
+    <link rel='stylesheet' href='{% static "css/animations.css" %}'>
+    <script src='{% static "js/jquery-3.3.1.min.js" %}'></script>
+    <script src='{% static "js/utils.js" %}'></script>
+    <script src='{% static "js/custom_masks.js" %}'></script>
+    <script src='{% static "js/bootstrap.min.js" %}'></script> 
+    <script src='{% static "js/jquery.mask.min.js" %}'></script> 
+</head>
+<body>
+
+    <form class="form-horizontal" method="POST" action="{% url 'lancamentosDespesaProd' %}" id="outProdForm">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for form in formset %}
+        <h3>Produtos</h3>
+        <div class="row form-row spacer">
+            <div class="col-sm-3 form-group">
+                <div class="col-sm-12">
+                    {% render_field form.classificacao_despesa class="form-control" %}
+                </div>
+            </div>
+            <div class="col-sm-3 form-group">
+                <div class="col-sm-12">
+                    {% render_field form.produto class="form-control" %}
+                </div>
+            </div>
+            <div class="col-sm-3 form-group">
+                <div class="col-sm-12">
+                    {% render_field form.valor_unitario class="form-control value" %}
+                </div>
+            </div>
+
+            <div class="col-sm-3 form-group">
+                <div class="col-sm-12">
+                    {% render_field form.quantidade_produto class="form-control quantity" %}
+                </div>
+            </div>
+
+
+            <button class="btn btn-success add-form-row">+</button>
+            
+
+
+        </div>
+        {% endfor %}
+        <div class="row spacer">
+            <div class="col-sm-5">
+                <input type="text" hidden id="totalValue" name="totalValue">
+                <label>Valor Total: <span id="total"></span> </label>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3 form-group">
+                <div class="col-sm-12">
+                    <input type="text" name="discount" id="discount" class="form-control percent discount" placeholder="Desconto Percentual">
+                </div>
+            </div>    
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-block btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function updateElementIndex(el, prefix, ndx) {
+            var id_regex = new RegExp('(' + prefix + '-\\d+)');
+            var replacement = prefix + '-' + ndx;
+            if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+            if (el.id) el.id = el.id.replace(id_regex, replacement);
+            if (el.name) el.name = el.name.replace(id_regex, replacement);
+        }
+        function cloneMore(selector, prefix) {
+            var newElement = $(selector).clone(true);
+            var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+            newElement.find(':input').each(function() {
+                if ($(this).attr('name')){
+                    var name = $(this).attr('name').replace('-' + (total-1) + '-', '-' + total + '-');
+                    var id = 'id_' + name;
+                    $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+                }
+            });
+            total++;
+            $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+            $(selector).after(newElement);
+            var conditionRow = $('.form-row:not(:last)');
+            conditionRow.find('.btn.add-form-row')
+            .removeClass('btn-success').addClass('btn-danger')
+            .removeClass('add-form-row').addClass('remove-form-row')
+            .html('-');
+            return false;
+        }
+        function deleteForm(prefix, btn) {
+            var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            if (total > 1){
+                btn.closest('.form-row').remove();
+                var forms = $('.form-row');
+                $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+                for (var i=0, formCount=forms.length; i<formCount; i++) {
+                    $(forms.get(i)).find(':input').each(function() {
+                        updateElementIndex(this, prefix, i);
+                    });
+                }
+            }
+            return false;
+        }
+        $(document).ready(function(){
+            $(document).on('click', '.add-form-row', function(e){
+            e.preventDefault();
+            cloneMore('.form-row:last', 'form');
+            
+            });
+            $(document).on('click', '.remove-form-row', function(e){
+                e.preventDefault();
+                deleteForm('form', $(this));
+                return false;
+            });
+            
+            //Calculating Total Value
+            $('.value').keyup(function(){
+                var v = $(this).val();
+                v=v.replace(/\D/g,'');
+                v=v.replace(/(\d{1,2})$/, ',$1');  
+                v=v.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');  
+                v = v != ''?'R$ '+v:'';
+                $(this).val(v);
+            });
+            $('#total').change(function(){
+                var v = $(this).val();
+                v=v.replace(/\D/g,'');
+                v=v.replace(/(\d{1,2})$/, ',$1');  
+                v=v.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');  
+                v = v != ''?'R$ '+v:'';
+                $(this).val(v);
+            });
+
+            $(".value, .discount, .quantity").change(function() {
+                var sum = 0.0;
+
+                var valuesList = $(".value").map(function(){
+                    return parseFloat($(this).val().replace('.', '').replace(',','.').replace('R$ ', ''));
+                }).get();
+                    
+                var quantityList = $(".quantity").map(function(){
+                    return parseFloat($(this).val());
+                }).get();
+
+                for(var i=0; i< valuesList.length; i++) {
+                    sum += valuesList[i] * (quantityList[i] || 0);
+                }
+                
+                var discount = parseFloat($('#discount').val().replace(',', '.')) || 0;
+
+                sum = sum - (sum * (discount/100))
+
+                var totalResult = 'R$ ' + sum
+                $('#total').html(totalResult.replace('.', ','));
+                $('#totalValue').val(sum);
+            });   
+            });
+        
+    </script>
+    
+</body>

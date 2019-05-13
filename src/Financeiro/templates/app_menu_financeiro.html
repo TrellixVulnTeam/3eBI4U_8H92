@@ -10,7 +10,7 @@
 
     $(document).ready(function () {
 
-        $('#balanco_visor').html(Math.abs(parseFloat($('#BalanceValue').text().replace(',','.'))).toFixed(2).replace('.', ','));
+        $('#balanco_visor').html($('#BalanceValue').text().replace('-',''));
 
         if (parseFloat($('#BalanceValue').text()) > 0) {
             $('#CollapseBodyBalance').addClass('text-success bg-success');
@@ -20,19 +20,36 @@
             $('#CollapseBodyBalance').addClass('text-danger bg-danger');
         }
 
-       
+        var timer, keepOpen = false;
 
-    })
+        $("#btn_lancamento").on("mouseenter", function() {
+            clearTimeout(timer);
+            $('.btnsubmenu').fadeIn(1000);
+        }).on("mouseleave", function() {
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                $('.btnsubmenu').fadeOut();
+            }, 1000);
+        });
+
+        $('.submenu').on("mouseenter", function() {
+            keepOpen = true;
+            clearTimeout(timer);
+            setTimeout(function() {
+                keepOpen = false;
+            }, 1000);
+        }).on("mouseleave", function() {
+            keepOpen = false;
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                $('.btnsubmenu').fadeOut();
+            }, 1000);
+        });
 
 
-    function showLancamentoSubMenu (){
-        if ($('.btnsubmenu').css('display') == 'none') {
-        $('.btnsubmenu').fadeIn(1000);
-        } else {
-            $('.btnsubmenu').fadeOut(1000);
-        }
+    });
 
-    }
+
 
 
 </script>{% endblock custom_scripts %}
@@ -43,92 +60,78 @@
 {% block content %}
     <div class="container" style="transform: translateX(-5%);">
         
-        <div class="col-lg-3" style="transform:translateX(-25%);">
+        <div class="col-lg-3" style="transform: translateX(-60%);">
+
+            <div class="row">
+
+                    <button class="btn-block btnmenu panel-heading" id="btn_lancamento" onclick="subMenuLancamentos()" style="color:white; margin: 75px 0;">
+                        Lançamentos <span class="glyphicon glyphicon-triangle-right" style="float:right;"></span>
+                    </button>
+
+                    <div class="submenu">
+                        <button class="col-lg-6 btn btnsubmenu panel-heading" style=" color:white; position: absolute; transform:translate(220%, -260%); display: none;" data-toggle="modal" href="{% url 'lancamentosReceita' %}" data-target="#modalIncome">
+                            <span>Receitas</span>
+                        </button>
+                        
+                        <button class="col-lg-6 btn btnsubmenu panel-heading" style=" color:white; position: absolute; transform:translate(220%, -130%); display: none;" data-toggle="modal" href="{% url 'lancamentosDespesa' %}" data-target="#modalExpense">
+                            <span>Despesas</span>
+                        </button>
+                    </div>
+
+                <button onclick="location.href='/financeiro/lancamentos/'" type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 75px 0;">
+                    <span>Visualizar Lançamentos</span>
+                </button>        
+
+                <button onclick="location.href='/financeiro/fluxo/'" type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 75px 0;">
+                    <span>Fluxo de Caixa</span>
+                </button>
             
-            <div id="BalanceValue" style="position: absolute; display: none;" hidden>{{obj_balancoatual.balanco}}</div>
-            <div class="panel" style="box-shadow: none; box-sizing: none; border: none;">
-                <button class="panel-heading text-center btn-block" data-target="#CollapseBodyBalance" data-toggle="collapse" role="button">Saldo Atual</button>
-                <div id="CollapseBodyBalance" class="panel-body text-center collapse last-row"><h3>R$<span class="money" id="balanco_visor"></span></h3></div>
+            </div>
+        </div>
+
+        <div class="col-lg-3" style="transform:translateX(20%);">
+            
+            <div id="BalanceValue" style="position: absolute; display: none; background-color: inherit;" hidden>{{obj_balancoatual}}</div>
+            <div class="panel" style="box-shadow: none; box-sizing: none; border: none;background-color: inherit;" >
+                <button class="panel-heading text-center btn-block panel-right" data-target="#CollapseBodyBalance" data-toggle="collapse" role="button" style="border-radius:500px;">Saldo Atual</button>
+                <div id="CollapseBodyBalance" class="panel-body text-center collapse" style="border: solid black 3px; margin-top: 10px; border-radius:15px;"><h3>R$<span class id="balanco_visor" ></span></h3></div>
             </div>
         
         </div>
-        
-        <div class="col-lg-4" style="transform:translateX(-20%);">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-5" style="transform:translateX(20%);">
             
             <div class="panel" style="box-shadow: none; box-sizing: none; border: none; background-color: inherit;">
-                <button class="panel-heading text-center btn-block" data-target="#CollapseBody" data-toggle="collapse" role="button">Ultimos Lançamentos</button>
-                <div id="CollapseBody" class="panel-body collapse" style="box-shadow: none; box-sizing: none; border: none; padding: 0px; margin:0px;">
+                <button class="panel-heading text-center btn-block panel-right" data-target="#CollapseBody" data-toggle="collapse" role="button" style="border-radius:500px;">Ultimos Lançamentos</button>
+                <div id="CollapseBody" class="panel-body collapse" style="box-shadow: none; box-sizing: none; padding: 0px; border: solid black 3px; margin-top: 10px; border-radius:15px;">
                     <table class="table table-hover" style="padding:0px;">
-                        <thead><tr class="last-row"><td>Produto</td><td class="text-right">Valor</td><td class="text-right">Data da Transação</td></tr></thead>
+                        <thead><tr class="last-row"><td class="text-right">Identificador da Transação</td><td class="text-right">Valor</td><td class="text-right">Data da Transação</td></tr></thead>
                         {% if input_0 %}
-                        <tr {% if input_0.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{{input_0.produto}}</td><td class="text-right">{{input_0.valor}}</td><td class="text-right">{{input_0.datahora_registro|date:"d/m/y H:i"}}</td></tr>
+                        <tr {% if input_0.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{% if input_0.cliente %} {{input_0.identificador_receita}} {% else %} {{input_0.identificador_despesa}} {% endif %}</td><td class="text-right">{{input_0.valor}}</td><td class="text-right">{{input_0.datahora_registro|date:"d/m/y H:i"}}</td></tr>
                         {% endif %}
                         {% if input_1 %}
-                        <tr {% if input_1.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{{input_1.produto}}</td><td class="text-right">{{input_1.valor}}</td><td class="text-right">{{input_1.datahora_registro|date:"d/m/y H:i"}}</td></tr>
+                        <tr {% if input_1.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{% if input_1.cliente %} {{input_1.identificador_receita}} {% else %} {{input_1.identificador_despesa}} {% endif %}</td><td class="text-right">{{input_1.valor}}</td><td class="text-right">{{input_1.datahora_registro|date:"d/m/y H:i"}}</td></tr>
                         {% endif %}
                         {% if input_2 %}
-                        <tr {% if input_2.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{{input_2.produto}}</td><td class="text-right">{{input_2.valor}}</td><td class="text-right">{{input_2.datahora_registro|date:"d/m/y H:i"}}</td></tr>
+                        <tr {% if input_2.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{% if input_2.cliente %} {{input_2.identificador_receita}} {% else %} {{input_2.identificador_despesa}} {% endif %}</td><td class="text-right">{{input_2.valor}}</td><td class="text-right">{{input_2.datahora_registro|date:"d/m/y H:i"}}</td></tr>
                         {% endif %}
                         {% if input_3 %}
-                        <tr {% if input_3.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{{input_3.produto}}</td><td class="text-right">{{input_3.valor}}</td><td class="text-right">{{input_3.datahora_registro|date:"d/m/y H:i"}}</td></tr>
+                        <tr {% if input_3.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{% if input_3.cliente %} {{input_3.identificador_receita}} {% else %} {{input_3.identificador_despesa}} {% endif %}</td><td class="text-right">{{input_3.valor}}</td><td class="text-right">{{input_3.datahora_registro|date:"d/m/y H:i"}}</td></tr>
                         {% endif %}
                         {% if input_4 %}
-                        <tr {% if input_4.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger" {% endif %} ><td>{{input_4.produto}}</td><td class="text-right">{{input_4.valor}}</td><td class="text-right">{{input_4.datahora_registro|date:"d/m/y H:i"}}</td></tr>
+                        <tr {% if input_4.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{% if input_4.cliente %} {{input_4.identificador_receita}} {% else %} {{input_4.identificador_despesa}} {% endif %}</td><td class="text-right">{{input_4.valor}}</td><td class="text-right">{{input_4.datahora_registro|date:"d/m/y H:i"}}</td></tr>
                         {% endif %}
                         {% if input_5 %}
-                        <tr {% if input_5.cliente %} class="text-success bg-success last-row" {% else %} class="text-danger bg-danger last-row" {% endif %} ><td>{{input_5.produto}}</td><td class="text-right">{{input_5.valor}}</td><td class="text-right">{{input_5.datahora_registro|date:"d/m/y H:i"}}</td></tr>
+                        <tr {% if input_5.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{% if input_5.cliente %} {{input_5.identificador_receita}} {% else %} {{input_5.identificador_despesa}} {% endif %}</td><td class="text-right">{{input_5.valor}}</td><td class="text-right">{{input_5.datahora_registro|date:"d/m/y H:i"}}</td></tr>
                         {% endif %}
+                        {% if input_6 %}
+                        <tr {% if input_6.cliente %} class="text-success bg-success middle-row" {% else %} class="text-danger bg-danger middle-row" {% endif %} ><td>{% if input_6.cliente %} {{input_6.identificador_receita}} {% else %} {{input_6.identificador_despesa}} {% endif %}</td><td class="text-right">{{input_6.valor}}</td><td class="text-right">{{input_6.datahora_registro|date:"d/m/y H:i"}}</td></tr>
+                        {% endif %}
+                        
                     </table>
                 </div>
             </div>
         
-        </div>
-
-        <div class="col-lg-5" style="transform: translateX(20%);">
-
-            <div class="row">
-
-                <div class="submenu">
-                    <button class="col-lg-3 btn btnsubmenu" style=" color:white; position: absolute; transform:translate(10%, -100%); display: none;" data-toggle="modal" href="{% url 'lancamentosReceita' %}" data-target="#modalIncome">
-                        <span>Receitas</span>
-                    </button>
-                    
-                    <button class="col-lg-3 btn btnsubmenu" style=" color:white; position: absolute; transform:translate(-80%, -40%); display: none;" data-toggle="modal" href="{% url 'lancamentosDespesa' %}" data-target="#modalExpense">
-                        <span>Despesas</span>
-                    </button>
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <button class="col-lg-3 btn btnleft" id="btn_lancamento" onclick="showLancamentoSubMenu()" style="color:white;">
-                    <span>Lançamentos</span>
-                </button>
-
-                <a href="/financeiro/lancamentos/">
-                    <button class="col-lg-3 btn btnright" style="color:white;">
-                        <span>Visualizar Lançamentos</span>
-                    </button>        
-                </a>
-
-            </div>
-            
-            <div class="spacer-xl"></div>
-
-            <div class="row">
-                
-                <a href="/financeiro/fluxo/">
-                    <button class="col-lg-3 btn btnleft" style="color:white;">
-                        <span>Fluxo de Caixa</span>
-                    </button>
-                </a>
-
-                <button class="col-lg-3 btn btnright" style="color:white;">
-                    <span>Outros</span>
-                </button>
-            
-            </div>
         </div>
     </div>    
 

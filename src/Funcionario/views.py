@@ -61,7 +61,7 @@ def appMenu(request, *args, **kwargs):
             bi.ativo = False
             bi.data_ultimo_desligamento = timezone.localtime(timezone.now())
             bi.data_ultima_modificacao = timezone.localtime(timezone.now())
-            bi.obs_desligamento = str(timezone.localdate()) + ' - ' + request.POST.get('occurrenceShutDown') + "\n" + bi.obs_desligamento if request.POST.get('occurrenceShutDown') != "" else ""
+            bi.obs_desligamento = str(timezone.localdate()) + ' - ' + str(request.POST.get('occurrenceShutDown')) + "\n" + str(bi.obs_desligamento) if request.POST.get('occurrenceShutDown') != None or request.POST.get('occurrenceShutDown') != "" else ""
             bi.ferias = False
             bi.save()
             

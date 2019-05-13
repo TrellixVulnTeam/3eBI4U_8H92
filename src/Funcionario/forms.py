@@ -543,7 +543,6 @@ class CadastroFuncionarioWizard(SessionWizardView):
                 if k == 'Basic Info':
                     cdata = v.cleaned_data
                     basicinfo = BasicInfo.objects.get(id = eid)
-                    print(v.changed_data)
 
                     if 'ativo' in v.changed_data:
                         if cdata['ativo'] == True:
@@ -687,6 +686,8 @@ class CadastroFuncionarioWizard(SessionWizardView):
             for k, v in form_dict.items():
                 if k == 'Basic Info':
                     cdata = v.cleaned_data
+                    cdata['data_ultima_ativacao'] = timezone.localtime(timezone.now())
+                    cdata['data_ultima_modificacao'] = timezone.localtime(timezone.now())
                     basicinfo = BasicInfo.objects.create(**cdata)
                 elif k == 'Address Info':
                     cdata = v.cleaned_data

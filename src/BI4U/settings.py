@@ -25,7 +25,7 @@ SECRET_KEY = '6a1l84yf$j(br8v_@92gvb+(9^))m50uoc@hj3b+^s%1eb+4ua'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.254', 'localhost']
 
 
 # Application definition
@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'formtools',
     'sorl.thumbnail',
     'django_tables2',
+    'crispy_forms',
+    'dynamic_formsets',
 
     # STANDARD
     'django.contrib.admin',

@@ -26,7 +26,7 @@
         var CPF = $('#CPFConfirmation').val();
         var id = document.getElementById("eid").textContent;
 
-            if (ofCPF === CPF) {
+            if (ofCPF === CPF && ofCPF != "" && CPF != "") {
                 $('#submitShutDown').prop("disabled", false);
                 $('#shutDownID').val(id); 
             } else {
@@ -110,6 +110,28 @@
 
     <div class="container" style="transform: translateX(-5%);">
 
+        <div class="col-lg-3" style="transform: translateX(-60%);">
+
+            <div class="row">
+
+                
+                <button class="btn-block btnmenu panel-heading text-right" style="color:white; margin: 75px 0;" onclick="location.href = '/funcionario/cadastro';" type="button">
+                    Cadastrar Novo Funcionário
+                </button>
+
+                <button class="btn-block btnmenu panel-heading text-right" data-toggle="modal" href="#modalTable" style="color:white; margin: 75px 0;">
+                    Visualizar Funcionários
+                </button>        
+    
+                <button class="btn-block btnmenu panel-heading text-right" data-toggle="modal" href="#modalShutDown" style="color:white; margin: 75px 0;">
+                    Desligar Funcionário
+                </button>
+    
+            </div>
+        </div>
+
+        <div class="col-lg-3"></div>
+
         <div class="col-lg-6">
             <div class="row">
 
@@ -181,37 +203,7 @@
 
         </div>
 
-        <div class="col-lg-1" ></div>
 
-        <div class="col-lg-5" style="transform: translateX(20%);">
-
-            <div class="row">
-
-                <a href="/funcionario/cadastro">
-                <button class="col-lg-3 btn btnleft" style="color:white;">
-                    <span>Cadastrar Novo Funcionário</span>
-                </button>
-                </a>
-
-                <button class="col-lg-3 btn btnright" data-toggle="modal" href="#modalTable" style="color:white;">
-                    <span>Visualizar Funcionários</span>
-                </button>        
-            </div>
-            
-            <div class="spacer-xl"></div>
-
-            <div class="row">
-    
-                <button class="col-lg-3 btn btnleft" data-toggle="modal" href="#modalShutDown" style="color:white;">
-                    <span>Desligar Funcionário</span>
-                </button>
-    
-                <button class="col-lg-3 btn btnright" style="color:white;">
-                    <span>Outros</span>
-                </button>
-            
-            </div>
-        </div>
     </div>
 
     <div class="modal fade" id="modalTable">

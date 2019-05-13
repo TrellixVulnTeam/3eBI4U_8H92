@@ -13,12 +13,12 @@ def getLastInputs(querysetIncome, querysetExpense):
         QExpense = querysetExpense.order_by('datahora_registro')
         
         try:
-                lastincomes = list(QIncome)[:5]
+                lastincomes = list(QIncome)[:7]
         except IndexError:
                 lastincomes = list(QIncome)
         
         try:
-                lastexpenses = list(QExpense)[:5]
+                lastexpenses = list(QExpense)[:7]
         except IndexError:
                 lastexpenses = list(QExpense)
         
