@@ -73,10 +73,31 @@
 
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Estagio</small></h2>
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <small class="pull-right hidden-xs">Informações de Estágio</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações de Estágio</small>
+        </h2>
+
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
+            
+            <!--REQUIRED INTERNSHIP XS-->
+            <div class="form-group hidden-sm hidden-md hidden-lg">
+                <label class="col-xs-8">{{wizard.form.estag_obrigatorio.label}} </label>
+                <div class="checkbox">
+                    <label for="required-internship-xs" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                        {% render_field wizard.form.estag_obrigatorio placeholder=wizard.form.estag_obrigatorio.label id="required-internship-xs" %}
+                        <span class="slider round"><span class="on text-left">SIM</span><span class="off text-right">NÃO</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="spacer-lg"></div>
             
             <div class="row">   <!--ROW 1 STARTS-->
                 
@@ -103,12 +124,12 @@
                 <div class="col-lg-1"></div>
                 
                 <!--REQUIRED INTERNSHIP-->
-                <div class="form-group col-lg-2" style="transform:translate(30%, -10%);">
+                <div class="form-group col-lg-2 hidden-xs" style="transform:translate(30%, -10%);">
                 <div style="transform:translate(-10%,-75%)">{{wizard.form.estag_obrigatorio.label}}</div>
                     <div class="checkbox">
                         <label for="{{ wizard.form.estag_obrigatorio.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.estag_obrigatorio placeholder=wizard.form.estag_obrigatorio.labe %}
-                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                            {% render_field wizard.form.estag_obrigatorio placeholder=wizard.form.estag_obrigatorio.label %}
+                            <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                         </label>
                     </div>
                 </div>
@@ -218,6 +239,7 @@
 
             </div>  <!--ROW 3 ENDS-->
 
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

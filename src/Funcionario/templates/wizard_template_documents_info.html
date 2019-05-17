@@ -121,7 +121,15 @@
     {% endif %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Documentos</small></h2>
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <small class="pull-right hidden-xs">Informações de Documentos</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações de Documentos</small>
+        </h2>
+
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
@@ -177,7 +185,8 @@
 
             </div>  <!--ROW 1 ENDS-->
 
-            <div class="spacer"></div>
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+            <div class="spacer hidden-xs"></div>
 
             <div class="row">   <!--ROW 2 STARTS-->
                 <div class="col-lg-4">  <!--COL 1 STARTS-->
@@ -214,6 +223,8 @@
 
 
                 </div>  <!--COL 1 ENDS-->
+
+                <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
                 <div class="col-lg-4">  <!--COL 2 STARTS-->
                     
@@ -259,6 +270,8 @@
 
                 </div>  <!--COL 2 ENDS-->
                 
+                <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+
                 <div class="col-lg-4">  <!--COL 3 STARTS-->
                     <!--RNE MAIN NUMBER-->
                     <div class="form-group">
@@ -303,7 +316,8 @@
                 </div>  <!--COL 3 ENDS-->
             </div>  <!--ROW 2 ENDS-->
             
-            <div class="spacer"></div>
+            <div class="spacer hidden-xs"></div>
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
             <div class="row">   <!--ROW 3 STARTS-->
                 <div class="col-lg-4">  <!--COL 1 STARTS-->
@@ -349,6 +363,9 @@
                     </div>
 
                 </div>  <!--COL 1 ENDS-->
+
+                <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+                
                 <div class="col-lg-4">  <!--COL 2 STARTS-->
 
                     <!--CNH MAIN NUMBER-->
@@ -424,6 +441,8 @@
                     </div>
                 </div>  <!--COL 3 ENDS-->
             </div>  <!--ROW 3 ENDS-->
+
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

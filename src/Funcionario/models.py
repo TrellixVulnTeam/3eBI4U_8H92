@@ -91,7 +91,7 @@ class BasicInfo(models.Model):
     nacionalidade               =   models.CharField(max_length = 200, null = True, blank = True)
     estado_nascimento           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     municipio_nascimento        =   models.CharField(max_length = 200, null = True, blank = True)
-    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF])
+    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF]) # REQUIRED
     numero_inscricao_NIS        =   models.IntegerField(null = True, blank = True)
     numero_PIS_PASEP            =   models.IntegerField(null = True, blank = True)
     numero_NIT_INSS             =   models.IntegerField(null = True, blank = True)
@@ -108,9 +108,9 @@ class BasicInfo(models.Model):
     estagiario                  =   models.BooleanField(null = True, blank = True)
     deficiente                  =   models.BooleanField(null = True, blank = True)
 
-    SEG                         =   models.BooleanField(default = True) # SEG == True, Eireli == False
-    ativo                       =   models.BooleanField(default = True)
-    ferias                      =   models.BooleanField(default=False)
+    SEG                         =   models.BooleanField(default = True) # SEG == True, Eireli == False REQUIRED
+    ativo                       =   models.BooleanField(default = True) # REQUIRED
+    ferias                      =   models.BooleanField(default=False)  # REQUIRED
     obs_desligamento            =   models.TextField(null = True, blank = True)
 
     data_ultima_ativacao        =   models.DateTimeField(null = True, blank = True)
@@ -198,13 +198,11 @@ class HandicappedInfo(models.Model):
 # 7 - Banking Info
 class BankingInfo(models.Model):
 
-    id                          =   models.BigAutoField(primary_key = True)
-
     basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
 
     banco_numero_codigo         =   models.DecimalField(max_digits = 4, decimal_places = 0, null = True, blank = True)
     banco_nome                  =   models.CharField(max_length = 200, choices = bank_choices, null = True, blank = True)
-    banco_agencia               =   models.IntegerField(null = True, blank = True)
+    banco_agencia               =   models.CharField(max_length = 10, null = True, blank = True)
     banco_tipo_conta            =   models.CharField(max_length = 200, choices = [('Corrente', 'C. Corrente'), ('Poupança', 'Poupança')], null = True, blank = True)
     banco_numero_conta_root     =   models.CharField(max_length = 10, null = True, blank = True)
 

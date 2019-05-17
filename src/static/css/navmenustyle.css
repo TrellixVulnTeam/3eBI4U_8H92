@@ -1,0 +1,61 @@
+ /* VARIABLES */
+@media (max-width: 575px) {
+    :root {
+        --navbarsize: 70px;
+        --navmenucolor: #3c3c3c
+    }        
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    :root {
+        --navbarsize: 70px;
+        --navmenucolor: #3c3c3c
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    :root {
+        --navbarsize: 70px;
+        --navmenucolor: #3c3c3c
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    :root {
+        --navbarsize: 70px;
+        --navmenucolor: #3c3c3c
+    }
+}
+
+@media (min-width: 1200px) {
+    :root {
+        --navbarsize: 75px;
+        --navmenucolor: #3c3c3c
+    }
+}
+
+/* CSS */
+.navbar {
+    background-color: var(--navmenucolor);
+    border-color: var(--navmenucolor);
+}
+
+.navbarspacer {
+    margin-top: calc(var(--navbarsize) * 1.5);
+}
+
+.navbar-brand, .navbar-nav > li > a {
+    line-height: var(--navbarsize);
+    height: var(--navbarsize);
+    padding-top: 0;
+}
+
+.navbar-toggle {
+    line-height: var(--navbarsize);
+    height: calc(var(--navbarsize) / 2);
+    top: calc((var(--navbarsize) / 7));
+}
+
+.navbar-right > li > .disabled {
+    color: #fff !important;
+}

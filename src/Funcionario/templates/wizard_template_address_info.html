@@ -32,16 +32,36 @@
 
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-5">Informações de Endereço</small></h2>
+
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <small class="pull-right hidden-xs">Informações de Endereço</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações de Endereço</small>
+        </h2>
+
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
 
             <div class="row">   <!--ROW 1 STARTS-->
                 
+
+                <!--RESIDENT ABROAD XS-->
+                <div class="form-group hidden-sm hidden-md hidden-lg">
+                    <label class="col-xs-8">{{wizard.form.end_residente_exterior.label}} </label>
+                    <div class="checkbox" onclick='showField("checkbox_abroad_xs", "country_selector")'>
+                        <label for="checkbox_abroad_xs" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.end_residente_exterior id="checkbox_abroad_xs"%}
+                            <span class="slider round"><span class="on text-left">SIM</span><span class="off text-right">NÃO</span></span>
+                        </label>
+                    </div>
+                </div>
+
                 <!--RESIDENT ABROAD-->
-                <div class="col-lg-2 col-sm-6" style= "right:0%;"> {{wizard.form.end_residente_exterior.label}} </div>
-                <div class="form-group col-lg-2 col-sm-6">
+                <div class="col-lg-2 col-sm-6 hidden-xs" style= "right:0%;"> {{wizard.form.end_residente_exterior.label}} </div>
+                <div class="form-group col-lg-2 col-sm-6 hidden-xs">
                     <div class="checkbox" onclick='showField("checkbox_abroad", "country_selector")'>
                         <label for="checkbox_abroad" class = "checkbox control-label switch" style="transform: translateY(-50%);">
                             {% render_field wizard.form.end_residente_exterior id="checkbox_abroad"%}
@@ -62,7 +82,7 @@
 
             </div>
 
-            <div class= "spacer"></div>
+            <div class="spacer hidden-xs"></div>
 
             <div class="row">   <!--ROW 2 STARTS-->
 
@@ -144,7 +164,7 @@
             <div class="row">
                 
                 <!--OWN RESIDENCE-->
-                <div class="form-group col-lg-3">
+                <div class="form-group col-lg-3 col-xs-4">
                     <div class="col-lg-offset-1 col-lg-9">
                         <div class="checkbox">
                             <label for="{{ wizard.form.end_residencia_propria.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
@@ -156,7 +176,7 @@
                 </div>
                     
                 <!--BOUGHT ON FGTS-->
-                <div class="form-group col-lg-4">
+                <div class="form-group col-lg-4 col-xs-8 pull-right">
                     <div class="col-lg-9">
                         <div class="checkbox">
                             <label for="{{ wizard.form.end_comprado_FGTS.id_for_label }}" class = "checkbox control-label" style="transform: translateY(-25%); float:left;">
@@ -178,6 +198,8 @@
                 </div>
 
             </div>  <!--ROW 2 ENDS-->
+
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

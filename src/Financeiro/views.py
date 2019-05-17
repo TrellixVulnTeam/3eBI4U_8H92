@@ -25,7 +25,6 @@ def lancamentosReceita(request, *args, **kwargs):
         }
 
         if request.is_ajax():
-
                 filledform = EntradaForm(request.POST)
                 if filledform.is_valid():
 
@@ -34,32 +33,18 @@ def lancamentosReceita(request, *args, **kwargs):
                         data_vencimento = savingform.data_vencimento
                         savingform.save()
                         
-                        # UPDATE NEW FIX INCOME
+                        # LOG FIX INCOME IN SESSION
                         if 'receita_fixa' in request.POST:
                                 if request.POST['receita_fixa'] == 'on':
-                                        newfixobj       =       LancamentosFixos()
-                                        newfixobj.valor = request.POST['valor']
-                                        newfixobj.flag_receita = True
-                                        newfixobj.data_vencimento_inicial = data_vencimento
-
-                                        if request.POST['periodicidade'] == '1':
-                                                newfixobj.periodicidade_diaria = True
-                                        if request.POST['periodicidade'] == '2':
-                                                newfixobj.periodicidade_semanal = True
-                                        if request.POST['periodicidade'] == '3':
-                                                newfixobj.periodicidade_quinzenal = True
-                                        if request.POST['periodicidade'] == '4':
-                                                newfixobj.periodicidade_mensal = True
-                                        if request.POST['periodicidade'] == '5':
-                                                newfixobj.periodicidade_trimestral = True
-                                        if request.POST['periodicidade'] == '6':
-                                                newfixobj.periodicidade_semestral = True
-                                        if request.POST['periodicidade'] == '7':
-                                                newfixobj.periodicidade_anual = True
-                                        newfixobj.save()
+                                        request.session['receita_fixa'] = True
+                                        request.session['periodicidade'] = request.POST['periodicidade']
+                                        request.session['data_vencimento'] = str(data_vencimento)
+                                        request.session['identificador_lancamento'] = request.POST['identificador_receita']
+                                        request.session['observacao'] = request.POST['observacao']
 
                         id_venda = Entrada.objects.latest('id').id
                         request.session['id_venda'] = id_venda
+                        
 
                         return redirect(lancamentosReceitaProd)
         return render(request, template_name, context)
@@ -76,7 +61,7 @@ def lancamentosReceitaProd(request, *args, **kwargs):
                         'heading_message' : heading_message,
                         })
         elif request.method == 'POST':
-
+                
                 formset = EntradaProdFormSet(request.POST)
                 for form in formset:
                         
@@ -96,13 +81,45 @@ def lancamentosReceitaProd(request, *args, **kwargs):
                 # UPDATE AND LOG ACCOUNT BALANCE
                 lastbalance  = Balanco.objects.all().latest('id').balanco
                 lastmovement = request.POST.get('totalValue')
-                lastmovement = Decimal(lastmovement.replace('.', '').replace(',', '.'))
+                lastmovement = Decimal(lastmovement)
                 newbalance   = lastbalance + lastmovement
-                
+
                 newbalanceobj                       = Balanco()
                 newbalanceobj.datahora_registro     = timezone.localtime(timezone.now())
                 newbalanceobj.balanco               = newbalance
                 newbalanceobj.save()
+
+                # UPDATE NEW FIX INCOME
+                if 'receita_fixa' in request.session:
+                        if request.session.get('receita_fixa') == True:
+                                data_vencimento = request.session.get('data_vencimento')
+                                
+                                newfixobj       =       LancamentosFixos()
+                                newfixobj.valor = request.POST.get('totalValue')
+                                newfixobj.flag_receita = True
+                                newfixobj.data_vencimento_inicial = data_vencimento
+                                newfixobj.identificador_lancamento = request.session.get('identificador_lancamento')
+                                newfixobj.observacao = request.session.get('observacao')
+
+
+                                if request.session['periodicidade'] == '1':
+                                        newfixobj.periodicidade_diaria = True
+                                if request.session['periodicidade'] == '2':
+                                        newfixobj.periodicidade_semanal = True
+                                if request.session['periodicidade'] == '3':
+                                        newfixobj.periodicidade_quinzenal = True
+                                if request.session['periodicidade'] == '4':
+                                        newfixobj.periodicidade_mensal = True
+                                if request.session['periodicidade'] == '5':
+                                        newfixobj.periodicidade_trimestral = True
+                                if request.session['periodicidade'] == '6':
+                                        newfixobj.periodicidade_semestral = True
+                                if request.session['periodicidade'] == '7':
+                                        newfixobj.periodicidade_anual = True
+                                newfixobj.save()
+
+
+
 
 
                 return redirect(appMenuFinanceiro)
@@ -125,29 +142,16 @@ def lancamentosDespesa(request, *args, **kwargs):
                 data_vencimento = savingform.data_vencimento
                 savingform.save()        
                 
-                # UPDATE NEW FIX EXPENSE 
+
+                # LOG FIX INCOME IN SESSION
                 if 'despesa_fixa' in request.POST:
                         if request.POST['despesa_fixa'] == 'on':
-                                newfixobj       =       LancamentosFixos()
-                                newfixobj.valor = request.POST['valor']
-                                newfixobj.flag_despesa = True
-                                newfixobj.data_vencimento_inicial = data_vencimento
+                                request.session['despesa_fixa'] = True
+                                request.session['periodicidade'] = request.POST['periodicidade']
+                                request.session['data_vencimento'] = str(data_vencimento)
+                                request.session['identificador_lancamento'] = request.POST['identificador_despesa']
+                                request.session['observacao'] = request.POST['observacao']
 
-                                if request.POST['periodicidade'] == '1':
-                                        newfixobj.periodicidade_diaria = True
-                                if request.POST['periodicidade'] == '2':
-                                        newfixobj.periodicidade_semanal = True
-                                if request.POST['periodicidade'] == '3':
-                                        newfixobj.periodicidade_quinzenal = True
-                                if request.POST['periodicidade'] == '4':
-                                        newfixobj.periodicidade_mensal = True
-                                if request.POST['periodicidade'] == '5':
-                                        newfixobj.periodicidade_trimestral = True
-                                if request.POST['periodicidade'] == '6':
-                                        newfixobj.periodicidade_semestral = True
-                                if request.POST['periodicidade'] == '7':
-                                        newfixobj.periodicidade_anual = True
-                                newfixobj.save()
 
                 id_venda = Saida.objects.latest('id').id
                 request.session['id_venda'] = id_venda
@@ -170,8 +174,6 @@ def lancamentosDespesaProd(request, *args, **kwargs):
         elif request.method == 'POST':
                 formset = SaidaProdFormSet(request.POST)
                 for form in formset:
-                        
-                        
                         if form.is_valid():
                                 if form.cleaned_data.get('classificacao_despesa'):
                                         SaidaObj = Saida.objects.filter(id = request.session.get('id_venda'))[0]
@@ -184,11 +186,41 @@ def lancamentosDespesaProd(request, *args, **kwargs):
                                         savingform.id_saida = Saida.objects.filter(id = request.session.get('id_venda'))[0]
                                         savingform.save()
 
+                # UPDATE NEW FIX EXPENSE 
+                if 'despesa_fixa' in request.session:
+                        if request.session.get('despesa_fixa') == True:
+                                data_vencimento = request.session.get('data_vencimento')
+
+                                newfixobj       =       LancamentosFixos()
+                                newfixobj.valor = request.POST['totalValue']
+                                newfixobj.flag_receita = False
+                                newfixobj.flag_despesa = True
+                                print(newfixobj.flag_despesa, newfixobj.flag_receita)
+                                newfixobj.data_vencimento_inicial = data_vencimento
+                                newfixobj.identificador_lancamento = request.session.get('identificador_lancamento')
+                                newfixobj.observacao = request.session.get('observacao')                                
+
+                                if request.session['periodicidade'] == '1':
+                                        newfixobj.periodicidade_diaria = True
+                                if request.session['periodicidade'] == '2':
+                                        newfixobj.periodicidade_semanal = True
+                                if request.session['periodicidade'] == '3':
+                                        newfixobj.periodicidade_quinzenal = True
+                                if request.session['periodicidade'] == '4':
+                                        newfixobj.periodicidade_mensal = True
+                                if request.session['periodicidade'] == '5':
+                                        newfixobj.periodicidade_trimestral = True
+                                if request.session['periodicidade'] == '6':
+                                        newfixobj.periodicidade_semestral = True
+                                if request.session['periodicidade'] == '7':
+                                        newfixobj.periodicidade_anual = True
+                                newfixobj.save()
+
                 # UPDATE AND LOG ACCOUNT BALANCE
                 lastbalance  = Balanco.objects.all().latest('id').balanco
                 lastmovement = request.POST.get('totalValue')
-                lastmovement = Decimal(lastmovement.replace('.', '').replace(',', '.'))
-                newbalance   = lastbalance + lastmovement
+                lastmovement = Decimal(lastmovement)
+                newbalance   = lastbalance - lastmovement
                 
                 newbalanceobj                       = Balanco()
                 newbalanceobj.datahora_registro     = timezone.localtime(timezone.now())
@@ -272,33 +304,6 @@ def lancamentosFinanceiro(request, *args, **kwargs):
         return render(request, template_name, context)
 
 @login_required
-def appMenuFinanceiro(request, *args, **kwargs):
-        form        =   EntradaForm()    
-        formExpense =   SaidaForm()
-
-        template_name   =   'app_menu_financeiro.html'
-        
-        lastTransactions = getLastInputs(Entrada.objects.all().reverse(), Saida.objects.all().reverse())
-        idx = 0
-        lastTransactionsDict = {}
-
-        for item in lastTransactions:
-                lastTransactionsDict['input_' + str(idx)] = item
-                idx += 1    
-        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-        obj_balancoatual = locale.currency(Balanco.objects.all().latest('id').balanco, grouping = True, symbol = None)
-        
-
-        context = {
-                'form' : form,
-                'formExpense' : formExpense,
-                'obj_balancoatual' : obj_balancoatual,
-                **lastTransactionsDict
-                }
-                
-        return render(request, template_name, context)
-
-@login_required
 def fluxoFinanceiro(request, *args, **kwargs):
 
         template_name = 'financial_flow.html'
@@ -336,11 +341,26 @@ def fluxoFinanceiro(request, *args, **kwargs):
                         income_pairs = list(zip(income_days, income_values))
                         expense_pairs = list(zip(expense_days, expense_values))
 
+                        total_income_per_day = {}
+                        for key, value in income_pairs:
+                                total_income_per_day[key] = total_income_per_day.get(key, Decimal(0)) + Decimal(value)
+                        
+                        total_expense_per_day = {}
+                        for key, value in expense_pairs:
+                                total_expense_per_day[key] = total_expense_per_day.get(key, Decimal(0)) + Decimal(value)
+                        
+                        total_per_day = {}
+                        if len(total_income_per_day) > len(total_expense_per_day):
+                                for key, value in total_income_per_day.items():
+                                        total_per_day[key] = total_income_per_day.get(key, Decimal(0)) + total_expense_per_day.get(key, Decimal(0))
+                        else:
+                                for key, value in total_expense_per_day.items():
+                                        total_per_day[key] = total_income_per_day.get(key, Decimal(0)) + total_income_per_day.get(key, Decimal(0))
+
                         income_dict = {}
                         expense_dict = {}
 
                         for k, v in income_pairs:
-                                v = v.replace('.', '').replace(',', '.')
                                 k = 'income_' + str(k) 
                                 if k not in income_dict.keys():
                                         try:
@@ -353,26 +373,44 @@ def fluxoFinanceiro(request, *args, **kwargs):
                                         except:
                                                 income_dict[k] += Decimal('0.0')
                         for k, v in expense_pairs:
-                                v = v.replace('.', '').replace(',', '.')
                                 k = 'expense_' + str(k) 
                                 if k not in expense_dict.keys():
                                         expense_dict[k] = Decimal(v)
                                 else:
                                         expense_dict[k] += Decimal(v)
-                        
+
+                        total_per_day = {'total_' + str(key): total_per_day.get(key) for key in total_per_day.keys()}
+
+
                         locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
                         for k, v in income_dict.items():
                                 income_dict[k] = locale.currency(v, grouping = True, symbol = None)
                         for k, v in expense_dict.items():
                                 expense_dict[k] = locale.currency(v, grouping = True, symbol = None)
+                        for k, v in total_per_day.items():
+                                total_per_day[k] = locale.currency(v, grouping = True, symbol = None)
 
                         # Calculating Totals
 
+                        totalincome = sum(map(Decimal, map(lambda s: s.replace('.', '').replace(',', '.'), income_dict.values())))
+                        totalexpense = sum(map(Decimal, map(lambda s: s.replace('.', '').replace(',', '.'), expense_dict.values())))
+                        finaltotal = totalincome - totalexpense
+
+                        totalincome = locale.currency(totalincome, grouping = True, symbol = None)
+                        totalexpense = locale.currency(totalexpense, grouping = True, symbol = None)
+                        finaltotal = locale.currency(finaltotal, grouping = True, symbol = None)
+
                         context.update({
                                 **income_dict,
-                                **expense_dict
-                                })
+                                **expense_dict,
+                                **total_per_day
+                        })
+                        context.update({
+                                'total_income' : totalincome,
+                                'total_expense' : totalexpense,
+                                'final_total' : finaltotal
+                        })
 
                         return render(request, template_name, context)
                 else:
@@ -390,3 +428,34 @@ def fluxoFinanceiro(request, *args, **kwargs):
                                 })
 
         return render(request, template_name, context)
+
+@login_required
+def appMenuFinanceiro(request, *args, **kwargs):
+        form        =   EntradaForm()    
+        formExpense =   SaidaForm()
+
+        template_name   =   'app_menu_financeiro.html'
+        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
+        lastTransactions = getLastInputs(Entrada.objects.all().reverse(), Saida.objects.all().reverse())
+        idx = 0
+        lastTransactionsDict = {}
+        lastTransactionsValueDict = {}
+
+        for item in lastTransactions:
+                lastTransactionsDict['input_' + str(idx)] = item
+                lastTransactionsValueDict['input_' + str(idx) + '_value'] = locale.currency(Decimal(item.valor), grouping = True, symbol = None)
+                idx += 1    
+        
+        obj_balancoatual = locale.currency(Balanco.objects.all().latest('id').balanco, grouping = True, symbol = None)
+
+        context = {
+                'form' : form,
+                'formExpense' : formExpense,
+                'obj_balancoatual' : obj_balancoatual,
+                **lastTransactionsDict,
+                **lastTransactionsValueDict,
+                }
+
+        return render(request, template_name, context)
+

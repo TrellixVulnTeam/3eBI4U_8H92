@@ -7,6 +7,28 @@
     {{ wizard.form.media }}
 {% endblock head %}
 
+{% block custom_scripts %}
+<script>
+    $(document).ready(function(){
+        
+        var elements = document.getElementsByClassName("emailvalidation");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].oninvalid = function(e) {
+                e.target.setCustomValidity("");
+                if (!e.target.validity.valid) {
+                    e.target.setCustomValidity("E-mail invalido");
+                }
+            };
+            elements[i].oninput = function(e) {
+                e.target.setCustomValidity("");
+            };
+        }
+    });
+
+
+</script>
+{% endblock custom_scripts %}
+
 {% block content %}
 
     {% if wizard.form.cont_tel_fixo.errors or wizard.form.end_numero.errors %}
@@ -33,7 +55,15 @@
     {% endif %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações de Contato</small></h2>
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <small class="pull-right hidden-xs">Informações de Contato</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações de Contato</small>
+        </h2>
+
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
@@ -82,13 +112,14 @@
                         {{wizard.form.cont_email.label}}
                     </label>
                     <div class="col-lg-6">
-                        {% render_field wizard.form.cont_email class="form-control" placeholder=wizard.form.cont_email.label %}
+                        {% render_field wizard.form.cont_email class="form-control emailvalidation" placeholder=wizard.form.cont_email.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" %}
                     </div>
                 </div>
 
 
             </div>  <!--ROW 2 ENDS-->
 
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

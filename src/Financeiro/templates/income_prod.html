@@ -24,23 +24,23 @@
         <div class="row form-row spacer">
             <div class="col-sm-3 form-group">
                 <div class="col-sm-12">
-                    {% render_field form.classificacao_receita class="form-control" %}
+                    {% render_field form.classificacao_receita class="form-control fmsetfield" %}
                 </div>
             </div>
             <div class="col-sm-3 form-group">
                 <div class="col-sm-12">
-                    {% render_field form.produto class="form-control" %}
+                    {% render_field form.produto class="form-control fmsetfield" %}
                 </div>
             </div>
             <div class="col-sm-3 form-group">
                 <div class="col-sm-12">
-                    {% render_field form.valor_unitario class="form-control value" %}
+                    {% render_field form.valor_unitario class="form-control value fmsetfield" %}
                 </div>
             </div>
 
             <div class="col-sm-3 form-group">
                 <div class="col-sm-12">
-                    {% render_field form.quantidade_produto class="form-control quantity" %}
+                    {% render_field form.quantidade_produto class="form-control quantity fmsetfield" %}
                 </div>
             </div>
 
@@ -63,7 +63,7 @@
                 </div>
             </div>    
             <div class="col-sm-2">
-                <button type="submit" class="btn btn-block btn-primary">Create</button>
+                <button type="submit" class="btn btn-block btn-primary savebtn" disabled>Salvar</button>
             </div>
         </div>
     </form>
@@ -111,9 +111,41 @@
             return false;
         }
         $(document).ready(function(){
+
+            $('.fmsetfield').keyup(
+                function disabebutton() {
+
+                var empty = false;
+                $('.fmsetfield').each(function() {
+                    if ($(this).val().length == 0) {
+                        empty = true;
+                    }
+                });
+
+                if (empty) {
+                    $('.savebtn').attr('disabled', 'disabled');
+                } else {
+                    $('.savebtn').removeAttr('disabled');
+                }
+            });
+
+
             $(document).on('click', '.add-form-row', function(e){
             e.preventDefault();
             cloneMore('.form-row:last', 'form');
+
+            var empty = false;
+                $('.fmsetfield').each(function() {
+                    if ($(this).val().length == 0) {
+                        empty = true;
+                    }
+                });
+
+                if (empty) {
+                    $('.savebtn').attr('disabled', 'disabled');
+                } else {
+                    $('.savebtn').removeAttr('disabled');
+                }
             
             });
             $(document).on('click', '.remove-form-row', function(e){
@@ -122,7 +154,7 @@
                 return false;
             });
             
-            //Clculating Total Value
+            //Calculating Total Value
             $('.value').keyup(function(){
                 var v = $(this).val();
                 v=v.replace(/\D/g,'');
@@ -146,7 +178,9 @@
                 var valuesList = $(".value").map(function(){
                     return parseFloat($(this).val().replace('.', '').replace(',','.').replace('R$ ', ''));
                 }).get();
-                    
+                
+                console.log(valuesList);
+                
                 var quantityList = $(".quantity").map(function(){
                     return parseFloat($(this).val());
                 }).get();
@@ -159,6 +193,8 @@
 
                 sum = sum - (sum * (discount/100))
 
+                console.log(sum);
+                
                 var totalResult = 'R$ ' + sum
                 $('#total').html(totalResult.replace('.', ','));
                 $('#totalValue').val(sum);

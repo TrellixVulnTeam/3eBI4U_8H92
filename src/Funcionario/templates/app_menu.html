@@ -17,6 +17,75 @@
 
     $(document).ready(function(){
 
+        // TEXTBOX PAGINATION
+        var x = document.getElementById('contents').innerHTML;
+
+        x = x.replace(/(((.|\n){300,}?\b)|((.|\n){1,299}(?!.)))/mg, '<div class="individual-page">$1</div>');
+
+        document.getElementById('contents').innerHTML = x;
+
+        $('#contents > .individual-page').each(function () {
+            if ($(this).is(':first-child')) {
+            $("#currentPage").html($(this).index());
+        } else {
+            $(this).hide()
+            $("#totalPages").html($(this).index());
+        }
+        });
+
+        if(parseInt($('#totalPages')) == 0){
+            $('#next').hide();
+            $('#prev').hide();
+        } else {
+            $('#next').show();
+            $('#prev').show();
+        }
+            
+
+        $('#next').on('click', function() {
+            var currentPage = $('#currentPage').html()
+            var totalPages = $('#totalPages').html()
+            $($("#contents").children().get().reverse()).each(function() {
+            if($(this).index() == parseInt(currentPage) + 1){
+                $('#currentPage').html(parseInt(currentPage) + 1)
+            $('#currentPage').trigger('change');
+                $(this).show()
+            } else if ($(this).index() == currentPage){
+                $(this).hide()
+            }  
+        })
+        })
+
+        $('#prev').on('click', function() {
+            var currentPage = $('#currentPage').html()
+            var totalPages = $('#totalPages').html()
+            if (!parseInt(currentPage) == 0){
+                $(this).show();
+                $($("#contents").children().get()).each(function() {
+                if($(this).index() == parseInt(currentPage) - 1){
+                    $('#currentPage').html(parseInt(currentPage) - 1)
+                    $('#currentPage').trigger('change');
+                    $(this).show()
+                } else if ($(this).index() == currentPage){
+                    $(this).hide()
+                }  
+                })
+            }
+        })
+
+        $('#currentPage').on('change', function() {
+
+            if ($(this).html() == $('#totalPages').html()){
+            $('#next').hide();
+            } else {
+                $('#next').show();
+            }
+            if (parseInt($(this).html()) == 0){
+                $('#prev').prop('disabled', true);
+            } else {
+                $('#prev').prop('disabled', false);
+            }   
+        })
 
         // Enabling and Disabling Submit Button on ShutDown Form
         const selectElement = document.querySelector('#CPFConfirmation');
@@ -66,105 +135,80 @@
             OSDTA.style.display = "none";
         }
     }
-
-
-
-
 </script>
 
 {% endblock custom_scripts %}
 
-{% block linked_refs %}     
+{% block customcss %}     
 
-    <link rel="stylesheet" href='{% static "css/funcionarios_appmenu.css" %}'>
+    <link rel="stylesheet" href='{% static "css/appmenu_funcionario.css" %}'>
 
-{% endblock linked_refs %}
+{% endblock customcss %}
 
 
 {% block content %}
-
-    {% if ERROR == 1 %}
-        <div id="alert" class="alert alert-warning alert-dismissible fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Funcionário Não Encontrado!</strong> A busca pelo CPF do funcionário não retornou nenhum resultado.
-        </div>
-    {% endif %}
-
-    {% if ERROR == 3 %}
-        <div id="alert" class="alert alert-danger alert-dismissible fade in">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Funcionário Já Desligado!</strong> O Funcionário que você tentou desligar já estava desativado.
-        </div>
-    {% endif %}
-
-
-
-    <div id="alert2" class="alert alert-danger alert-dismissible fade in" style="display: none;">
-        <a class="close" onclick="$('#alert2').hide()">&times;</a>
-        <strong>Nenhum Funcionario Pesquisado!</strong> Favor Preencher o Campo Buscar Funcionário com um CPF válido.
-    </div>
-
-
-
-    <div class="spacer"></div>
-
-    <div class="container" style="transform: translateX(-5%);">
-
-        <div class="col-lg-3" style="transform: translateX(-60%);">
-
-            <div class="row">
-
-                
-                <button class="btn-block btnmenu panel-heading text-right" style="color:white; margin: 75px 0;" onclick="location.href = '/funcionario/cadastro';" type="button">
-                    Cadastrar Novo Funcionário
-                </button>
-
-                <button class="btn-block btnmenu panel-heading text-right" data-toggle="modal" href="#modalTable" style="color:white; margin: 75px 0;">
-                    Visualizar Funcionários
-                </button>        
-    
-                <button class="btn-block btnmenu panel-heading text-right" data-toggle="modal" href="#modalShutDown" style="color:white; margin: 75px 0;">
-                    Desligar Funcionário
-                </button>
-    
+    <div class="row"> <!--ERROR ROW BEGINS-->
+        
+        {% if ERROR == 1 %}
+            <div id="alert" class="alert alert-warning alert-dismissible fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Funcionário Não Encontrado!</strong> A busca pelo CPF do funcionário não retornou nenhum resultado.
             </div>
-        </div>
+        {% endif %}
 
-        <div class="col-lg-3"></div>
+        {% if ERROR == 3 %}
+            <div id="alert" class="alert alert-danger alert-dismissible fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Funcionário Já Desligado!</strong> O Funcionário que você tentou desligar já estava desativado.
+            </div>
+        {% endif %}
+        
+    </div> <!--ERROR ROW ENDS-->
 
-        <div class="col-lg-6">
-            <div class="row">
-
-                <label for="Funcionario">Buscar Funcionário:</label>
-                <form method="GET" action="/funcionario#load">
-                    <div class="input-group">
-                        <input name="CPF" id="Funcionario" type="text" class="form-control cpf" placeholder="Insira o CPF do Funcionário">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-                        </div>
+    <div class="row"> <!--CONTENT ROW BEGINS-->
+        <div class="col-lg-5 col-md-push-6"> <!--EMPLOYEE INFORMATION BEGINS-->
+            <div class="spacer"></div>
+            <label for="Funcionario">Buscar Funcionário:</label>
+            <form method="GET" action="/funcionario#load">
+                <div class="input-group">
+                    <input name="CPF" id="Funcionario" type="text" class="form-control cpf" placeholder="Insira o CPF do Funcionário">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
                     </div>
-                </form> 
-
-            </div>
-                
-            <div class="spacer-xl"></div>
+                </div>
+            </form> 
 
             <div class="row" style="display:none;" id="employee_preview">
-                 <!--
-                <h3 style="transform: translateY(-100%);"><small class="text-info">Para mais informações clique em "Visualizar Funcionário"</small></h3>
-                -->   
-                <div class="col-lg-8" style="font-weight: bold; padding: 10px;">
+                <div class="spacer hidden-xs"></div>
+                <div class="hidden-sm hidden-md hidden-lg spacer-xl"></div>
+                <div class="col-sm-3 col-sm-push-8 col-sm-offset-1 col-xs-offset-3">
+                    <div class="spacer"></div>
+                    {% if not object.ativo  %}
+                        {% thumbnail imageObject.docscan_picture "250x250" colorspace="GRAY" as im %}
+                        <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
+                        {% empty %}
+                            <p>Sem Imagem</p>
+                        {% endthumbnail %}    
+                    {% else %}
+                        {% thumbnail imageObject.docscan_picture "250x250" as im %}
+                        <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
+                        {% empty %}
+                            <p>Sem Imagem</p>
+                        {% endthumbnail %}    
+                    {% endif %}
+                </div>
+
+                <div class="col-sm-8 col-sm-pull-4 bold-text employee-info">
 
                     {% if object.obs_desligamento %}
-                        <span class="text-danger" >Funcionário Previamente Desligado com Ocorrência !</span>
+                        <span class="text-danger">Funcionário Previamente Desligado com Ocorrência !</span>
                         <div class="spacer"></div>
                     {% endif %}
                     
-                    <span style="float: left;">Nome:</span><span style="float: right;">{{object.primeiro_nome}} {{object.ultimo_nome}}</span>
-                    </br>
-                    <span style="float: left;">CPF:</span><span id = "officialCPF" style="float: right;">{{object.numero_documento_CPF}}</span>
-                    </br>
-                    <span>Status:</span><span style="float: right;">
+                    <div>Nome:<span class="pull-right">{{object.primeiro_nome}} {{object.ultimo_nome}}</span></div>
+                    <div>CPF:<span class="pull-right" id="officialCPF" >{{object.numero_documento_CPF}}</span></div>
+                    <div>Status:
+                    <span class="pull-right">
                         {% if not object.ativo %}
                             Funcionário Desligado
                         {% else %}
@@ -175,38 +219,84 @@
                             {% endif %}
                         {% endif %}
                     </span>
-                    </br>
-                    <span>ID:</span><span id="eid" style="float: right;">{{object.id}}</span>
-                    <br>
+                    </div>
+                    <div>ID:<span class="pull-right" id="eid">{{object.id}}</span></div>
                     {% if object.obs_desligamento %}
-                        <span>Observações da Ocorrencia:</span><br><br><span>{{object.obs_desligamento}}</span>
+                    <div id="currentPage" hidden></div>
+                    <div id="totalPages" hidden></div>
+                    <div class="row">
+                            <span class="col-md-4 col-sm-12 pull-left">Observações da Ocorrencia:</span>
+                            <span class="col-md-1 col-xs-12 text-justify" id="contents">{{object.obs_desligamento}}</span>
+                            
+                            <div class="btn-group col-md-offset-10 col-xs-offset-8">
+                                <button class="custom-paginator" id="prev" style="width:30px; height: 30px; border-radius:50%;">-</button>
+                                <button class="custom-paginator" id="next">+</button>
+                            </div>
+                    </div>
                     {% endif %}
-                    
+                        
                 </div>
-                <div class="col-lg-1"></div>
+            </div>
+        </div><!--EMPLOYEE INFORMATION ENDS-->
+
+        <div class="col-lg-6 col-md-pull-5">
+            
+            <div class="col-md-10 hidden-xs"> <!--FUNCIONÁRIO MENU-->
                 
-                {% if not object.ativo  %}
-                    {% thumbnail imageObject.docscan_picture "250x250" colorspace="GRAY" as im %}
-                    <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." class="col-lg-3" src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
-                    {% empty %}
-                        <p>Sem Imagem</p>
-                    {% endthumbnail %}    
-                {% else %}
-                    {% thumbnail imageObject.docscan_picture "250x250" as im %}
-                    <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." class="col-lg-3" src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
-                    {% empty %}
-                        <p>Sem Imagem</p>
-                    {% endthumbnail %}    
-                {% endif %}
-                    
+                <div class="spacer-lg"></div>
+
+                <div class="col-md-8">
+                    <button class="btn-block btnmenu panel-heading" onclick="location.href = '/funcionario/cadastro';" type="button">
+                        <span>Cadastrar Novo Funcionário</span>
+                    </button>
+                </div>
+
+                <div class="col-md-8">
+                    <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#modalTable">
+                        <span>Visualizar Funcionários </span>
+                    </button>        
+                </div>
+
+                <div class="col-md-8">
+                    <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#modalShutDown">
+                        <span>Desligar Funcionário</span>
+                    </button>
+                </div>
+                
             </div>
 
+            <div class="hidden-sm hidden-md hidden-lg"> <!--FUNCIONÁRIO MENU - XS-SCREEN-->
+                
+                <div class="spacer-lg"></div>
+
+                <div class="btn-group btn-group-justified">
+            
+                    <button class="btn-block btnmenu" onclick="location.href = '/funcionario/cadastro';" type="button">
+                        <span>Cadastrar Novo Funcionário</span>
+                    </button>
+                
+                    <button class="btn-block btnmenu" data-toggle="modal" href="#modalTable">
+                        <span>Visualizar Funcionários </span>
+                    </button>        
+                
+                    <button class="btn-block btnmenu lastbtn" data-toggle="modal" href="#modalShutDown">
+                        <span>Desligar Funcionário</span>
+                    </button>
+            
+                </div>
+            
+            </div>    
         </div>
 
+    </div> <!--CONTENT ROW ENDS-->
 
-    </div>
-
-    <div class="modal fade" id="modalTable">
+    
+    
+    
+    
+    
+    <!--MODALS-->
+    <div class="modal fade" id="modalTable"> <!--FUNCIONARIOS LISTING MODAL BEGINS-->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -219,12 +309,12 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
+            </div>
+        </div>
+    </div> <!--FUNCIONARIOS LISTING MODAL ENDS-->
 
 
-    <div class="modal fade" id="modalShutDown">
+    <div class="modal fade" id="modalShutDown"> <!--FUNCIONARIO SHUTDOWN MODAL BEGINS-->
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -269,9 +359,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
-    
+            </div>
+        </div>
+    </div> <!--FUNCIONARIO SHUTDOWN MODAL ENDS-->
 
 {% endblock content %}

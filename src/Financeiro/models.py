@@ -70,8 +70,6 @@ class LancamentosFixos(models.Model):
     flag_receita                    =   models.BooleanField(null = True, blank = True)
     flag_despesa                    =   models.BooleanField(null = True, blank = True)
 
-    valor                           =   models.CharField(max_length = 20)
-
     periodicidade_diaria            =   models.BooleanField(null = True, blank = True)
     periodicidade_semanal           =   models.BooleanField(null = True, blank = True)
     periodicidade_quinzenal         =   models.BooleanField(null = True, blank = True)
@@ -80,6 +78,9 @@ class LancamentosFixos(models.Model):
     periodicidade_semestral         =   models.BooleanField(null = True, blank = True)
     periodicidade_anual             =   models.BooleanField(null = True, blank = True)
 
-    data_vencimento_inicial         =   models.DateField()
+    # INFO NEEDED TO MAKE FINANCIAL RELEASES
 
-    
+    valor                           =   models.CharField(max_length = 20)
+    data_vencimento_inicial         =   models.DateField()
+    identificador_lancamento        =   models.CharField(max_length = 100)
+    observacao                      =   models.CharField(max_length = 500, null = True, blank = True)

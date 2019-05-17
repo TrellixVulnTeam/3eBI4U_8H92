@@ -37,7 +37,6 @@ class ReadableModelChoiceField(forms.ModelChoiceField):
         except:
             return obj.nivel
 
-
 # Forms
 
 class BasicInfoForm(forms.ModelForm):
@@ -304,8 +303,6 @@ class BankingInfoForm(forms.ModelForm):
             'banco_numero_conta_root' : 'Número da Conta'
         }
         widgets = {
-            'banco_numero_codigo' : widgets.TextInput,
-            'banco_agencia' : widgets.TextInput,
         }
 
 class AnotherJobInfoForm(forms.ModelForm):
@@ -377,8 +374,8 @@ class PositionInfoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PositionInfoForm, self).__init__(*args, **kwargs)
-        self.fields['funcao_cargo'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo')
-        self.fields['funcao_nivel'] = ReadableModelChoiceField(queryset = FuncionarioNivel.objects.all(), label = 'Nivel')
+        self.fields['funcao_cargo'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo', required = False)
+        self.fields['funcao_nivel'] = ReadableModelChoiceField(queryset = FuncionarioNivel.objects.all(), label = 'Nivel', required = False)
 
 
 
@@ -407,7 +404,7 @@ class ContractualInfoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ContractualInfoForm, self).__init__(*args, **kwargs)
-        self.fields['contrat_cargo_inicial'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo Inicial')
+        self.fields['contrat_cargo_inicial'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo Inicial', required = False)
 
     class Meta():
         model = ContractualInfo

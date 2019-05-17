@@ -38,7 +38,15 @@
 
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações Bancárias</small></h2>
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <small class="pull-right hidden-xs">Informações Bancárias</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações Bancárias</small>
+        </h2>
+
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
@@ -52,7 +60,7 @@
                             {{wizard.form.banco_numero_codigo.label}}
                         </label>
                         <div class="col-lg-7">
-                            {% render_field wizard.form.banco_numero_codigo class="form-control" placeholder=wizard.form.banco_numero_codigo.label  %}
+                            {% render_field wizard.form.banco_numero_codigo class="form-control" placeholder=wizard.form.banco_numero_codigo.label type="text" %}
                         </div>
                     </div>
     
@@ -115,7 +123,7 @@
                 </div>  <!--COL 3 ENDS-->
             </div>  <!--ROW 2 ENDS-->
 
-
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

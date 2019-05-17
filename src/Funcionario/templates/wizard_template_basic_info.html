@@ -43,12 +43,30 @@
     {% endif %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">    
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-6">Informações Básicas</small></h2>
-        <!--<h2 class="col-lg-offset-11" style="margin-bottom:40px;"><small class="col-lg-offset-6"> 1/11</small></h2>-->
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <small class="pull-right hidden-xs">Informações Básicas</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações Básicas</small>
+        </h2>
+
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
             <div class="row">
+
+                <!--SEG TOGGLE XS-->
+                <div class="form-group hidden-sm hidden-md hidden-lg">
+                    <label class="col-xs-8">Escolha a Empresa: </label>
+                    <div class="checkbox">
+                        <label for="SEGXS" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                                {% render_field wizard.form.SEG id="SEGXS" %}
+                            <span class="slider round"><span class="on text-left">SEG</span><span class="off text-right">EIRELI</span></span>
+                        </label>
+                    </div>
+                </div>
 
                 <!--TEXT INPUT FIELDS-->
                 <div class="col-lg-8" >
@@ -118,15 +136,15 @@
                 <!--BOOLEAN INPUT FIELDS-->
                 <div class="col-lg-4">
 
-                    <!--SEG TOGGLE-->
-                    <div class="form-group col-lg-12">
-                        <div class="checkbox col-lg-offset-6">
-                            <label for="SEG" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                                    {% render_field wizard.form.SEG id="SEG" %}
-                                <span class="slider round"><span class="on">SEG</span><span class="off">EIRELI</span></span>
-                            </label>
-                        </div>
+                <!--SEG TOGGLE-->
+                <div class="form-group hidden-xs">
+                    <div class="checkbox">
+                        <label for="SEG" class = "checkbox control-label switch col-lg-offset-6" style="transform: translateY(-50%);">
+                                {% render_field wizard.form.SEG id="SEG" %}
+                            <span class="slider round"><span class="on text-left">SEG</span><span class="off text-right">EIRELI</span></span>
+                        </label>
                     </div>
+                </div>
     
                     <!--FIRST JOB-->
                     <div class="form-group">
@@ -208,7 +226,7 @@
                     <!--CPF NUMBER-->
                     <div class="form-group">
                         <label for="{{ wizard.form.numero_documento_CPF.id_for_label }}" class = "control-label col-lg-6 text-right">
-                            {{wizard.form.numero_documento_CPF.label}}
+                            {{wizard.form.numero_documento_CPF.label}} * 
                         </label>
                         <div class="col-lg-6">
                             {% render_field wizard.form.numero_documento_CPF class="form-control cpf" placeholder="000.000.000-00" %}
@@ -324,9 +342,6 @@
                             {% render_field wizard.form.escolaridade class="form-control" placeholder=wizard.form.escolaridade.label%}
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
             

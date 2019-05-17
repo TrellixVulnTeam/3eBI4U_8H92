@@ -1,0 +1,107 @@
+/* VARIABLES */
+@media (max-width: 575px) {
+    :root {
+        --spacer: 20px;
+        --spacermd: calc(var(--spacer) * 1.5);
+        --spacerlg: calc(var(--spacer) * 2);
+        --spacerxl: calc(var(--spacer) * 3);
+        --backgroundcolor: #F1F1F1;
+        --blue: ;
+        --darkblue: #122B41;
+        --orange: #FFA31A;
+    }        
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    :root {
+        --spacer: 20px;
+        --spacermd: calc(var(--spacer) * 1.5);
+        --spacerlg: calc(var(--spacer) * 2);
+        --spacerxl: calc(var(--spacer) * 3);
+        --backgroundcolor: #F1F1F1;
+        --blue: ;
+        --darkblue: #122B41;
+        --orange: #FFA31A;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    :root {
+        --spacer: 30px;
+        --spacermd: calc(var(--spacer) * 1.5);
+        --spacerlg: calc(var(--spacer) * 2);
+        --spacerxl: calc(var(--spacer) * 3);
+        --backgroundcolor: #F1F1F1;
+        --blue: ;
+        --darkblue: #122B41;
+        --orange: #FFA31A;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    :root {
+        --spacer: 40px;
+        --spacermd: calc(var(--spacer) * 1.5);
+        --spacerlg: calc(var(--spacer) * 2);
+        --spacerxl: calc(var(--spacer) * 3);
+        --backgroundcolor: #F1F1F1;
+        --blue: ;
+        --darkblue: #122B41;
+        --orange: #FFA31A;
+    }
+}
+
+@media (min-width: 1200px) {
+    :root {
+        --spacer: 50px;
+        --spacermd: calc(var(--spacer) * 1.5);
+        --spacerlg: calc(var(--spacer) * 2);
+        --spacerxl: calc(var(--spacer) * 3);
+        --backgroundcolor: #F1F1F1;
+        --blue: ;
+        --darkblue: #122B41;
+        --orange: #FFA31A;
+    }
+}
+
+/* CSS */
+body {
+    background-color: var(--backgroundcolor);
+    overflow-x:hidden;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+#main {
+    background-color: inherit;
+}      
+
+.spacer {
+    margin-top: var(--spacer);
+}
+
+.spacer-md {
+    margin-top: var(--spacermd);
+}
+
+.spacer-lg {
+    margin-top:  var(--spacerlg);
+}
+
+.spacer-xl {
+    margin-top:  var(--spacerxl);
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.bordered {
+    padding: 15px;
+    border: 2px solid black;
+    border-radius: 5px;
+}

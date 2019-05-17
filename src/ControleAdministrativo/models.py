@@ -4,8 +4,8 @@ from django.db import models
 
 class FuncionarioCargo(models.Model):
     
-    cargo   =    models.CharField(max_length = 100)
+    cargo   =    models.CharField(max_length = 100, null = True, blank = True)
 
 class FuncionarioNivel(models.Model):
 
-    nivel       =   models.CharField(max_length = 100)
+    nivel       =   models.CharField(max_length = 100, null = True, blank = True)

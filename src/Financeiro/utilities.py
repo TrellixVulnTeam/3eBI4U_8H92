@@ -21,17 +21,26 @@ def getLastInputs(querysetIncome, querysetExpense):
                 lastexpenses = list(QExpense)[:7]
         except IndexError:
                 lastexpenses = list(QExpense)
-        
+
         resultlist = []
 
-        while len(lastincomes) != 0 and len(lastexpenses) != 0:
-                if lastincomes[0].datahora_registro > lastexpenses[0].datahora_registro:
-                        lastincome = lastincomes.pop(0)
-                        resultlist.append(lastincome)
-                else:
-                        lastexpense = lastexpenses.pop(0)
-                        resultlist.append(lastexpense)
-        
+        while len(lastincomes) or len(lastexpenses):
+                try:
+                        if lastincomes[0].datahora_registro > lastexpenses[0].datahora_registro:
+                                lastincome = lastincomes.pop(0)
+                                resultlist.append(lastincome)
+                        else:
+                                lastexpense = lastexpenses.pop(0)
+                                resultlist.append(lastexpense)
+                except IndexError:
+                        if len(lastincomes) == 0:
+                                for lastexpense in lastexpenses:
+                                        resultlist.append(lastexpense)
+                                break
+                        if len(lastexpenses) == 0:
+                                for lastincome in lastincomes:
+                                        resultlist.append(lastincome)
+                                break
         return resultlist
 
 

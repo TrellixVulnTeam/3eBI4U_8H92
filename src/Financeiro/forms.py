@@ -3,7 +3,6 @@ from .models import Entrada, Saida, Balanco, EntradaProd, SaidaProd
 from Cliente.models import BasicInfo as ClientBasicInfo
 from django.forms import widgets, modelformset_factory
 
-
 class EntradaForm(forms.ModelForm):
     class Meta():
         model   =   Entrada
@@ -88,7 +87,7 @@ EntradaProdFormSet = modelformset_factory(
             })
         },
 
-    extra = 1
+    extra = 1,
     )
 
 SaidaProdFormSet = modelformset_factory(

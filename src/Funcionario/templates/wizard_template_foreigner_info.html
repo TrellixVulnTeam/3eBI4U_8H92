@@ -26,7 +26,15 @@
     {% endif %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
-        <h2 class="page-header" style="margin-bottom: 40px">Cadastro De Funcionário<small class="col-lg-offset-4">Informações de Funcionario Estrangeiro</small></h2>
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <small class="pull-right hidden-xs">Informações de Funcionário Estrangeiro</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg" style="font-size: 0.54em;">Informações de Funcionário Estrangeiro</small>
+        </h2>
+        
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
@@ -35,8 +43,19 @@
 
             <div class="row">   <!--ROW 1 STARTS-->
                 
+                <!--CITIZENSHIP TOGGLE XS-->
+                <div class="form-group hidden-sm hidden-md hidden-lg">
+                    <label class="col-xs-9">{{wizard.form.estr_naturalizado.label}}</label>
+                    <div class="checkbox" onclick='displayField("citizenship-xs", "citizenship_date"); showField("citizenship-xs", "citizenship_date")'>
+                        <label for="citizenship-xs" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.estr_naturalizado id="citizenship-xs" %}
+                            <span class="slider round"><span class="on text-left">SIM</span><span class="off text-right">NÃO</span></span>
+                        </label>
+                    </div>
+                </div>
+
                 <!--CITIZENSHIP TOGGLE-->
-                <div class="form-group col-lg-2">
+                <div class="form-group col-lg-2 hidden-xs">
                     <div class="checkbox col-lg-offset-6" onclick='showField("citizenship", "citizenship_date")'>
                         <label for="citizenship" class = "checkbox control-label switch" style="transform: translateY(-50%);">
                                 {% render_field wizard.form.estr_naturalizado id="citizenship" %}
@@ -44,32 +63,48 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-lg-3" style= "right:0%;"> {{wizard.form.estr_naturalizado.label}} </div>
+                <div class="col-lg-3 hidden-xs" style= "right:0%;"> {{wizard.form.estr_naturalizado.label}} </div>
 
                 <!--CITIZENSHIP DATE-->
                 <div class="form-group col-lg-7"  style="visibility: hidden; transform: translateY(-25%);" id = "citizenship_date">
-                    <label for="{{ wizard.form.estr_data_naturalizacao.id_for_label }}" class = "control-label col-lg-4 text-right">
+                    <label for="{{ wizard.form.estr_data_naturalizacao.id_for_label }}" class = "control-label col-lg-4 hidden-xs text-right">
                         {{wizard.form.estr_data_naturalizacao.label}}
                     </label>
-                    <div class="col-lg-4">
+                    <label for="{{ wizard.form.estr_data_naturalizacao.id_for_label }}" class = "control-label col-xs-6 hidden-sm hidden-md hidden-lg text-left" style="transform:translateY(50%);">
+                        Data
+                    </label>
+                    <div class="col-lg-4 col-xs-6">
                         {% render_field wizard.form.estr_data_naturalizacao class="form-control date" placeholder="DD/MM/YYYY" %}
                     </div>
                 </div>
     
             </div>  <!--ROW 1 ENDS-->
 
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+
             <div class="row">   <!--ROW 2 STARTS-->                    
-                                
-                <!--MARRIED TOGGLE-->
-                <div class="form-group col-lg-2">
-                    <div class="checkbox col-lg-offset-6">
-                        <label for="{{ wizard.form.estr_casado_brasileiro.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.estr_casado_brasileiro %}
-                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                            
+                <!--MARRIED TOGGLE XS-->
+                <div class="form-group hidden-sm hidden-md hidden-lg">
+                    <label class="col-xs-9">{{wizard.form.estr_casado_brasileiro.label}}</label>
+                    <div class="checkbox">
+                        <label for="marriedtobrazilian-xs" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.estr_casado_brasileiro id="marriedtobrazilian-xs" %}
+                            <span class="slider round"><span class="on text-left">SIM</span><span class="off text-right">NÃO</span></span>
                         </label>
                     </div>
                 </div>
-                <div class="col-lg-3" style= "right:0%;"> {{wizard.form.estr_casado_brasileiro.label}} </div>
+
+                <!--MARRIED TOGGLE-->
+                <div class="form-group col-lg-2 hidden-xs">
+                    <div class="checkbox col-lg-offset-6">
+                        <label for="{{ wizard.form.estr_casado_brasileiro.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.estr_casado_brasileiro %}
+                            <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-3 hidden-xs" style= "right:0%;"> {{wizard.form.estr_casado_brasileiro.label}} </div>
                 
                 <!--ARRIVAL DATE-->
                 <div class="form-group col-lg-7">
@@ -82,7 +117,9 @@
                 </div>              
 
             </div>  <!--ROW 2 ENDS-->
-
+            
+            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+            
             {% include 'wizard_template_buttons.html' %}
         </form>
     </div>
