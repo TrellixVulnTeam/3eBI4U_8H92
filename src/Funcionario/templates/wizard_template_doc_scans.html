@@ -7,7 +7,7 @@
     {{ wizard.form.media }}
 {% endblock head %}
 
-{% block custom_page_style %}
+{% block customcss %}
 <style>
 
     .notsel {
@@ -26,11 +26,11 @@
         padding: 0;
         position: absolute !important;
         white-space: nowrap;
-        width: 1px;  
+        width: 1px;
     }
 
     [type="file"] + label {
-        
+
         border-radius: 4rem;
         color: #fff;
         cursor: pointer;
@@ -44,11 +44,11 @@
         padding-right: 2rem;
         transition: background-color 0.3s;
     }
- 
+
 [type="file"]:focus + label, [type="file"] + label:hover {
         background-color: #f15d22;
     }
- 
+
 [type="file"]:focus + label {
         outline: 1px dotted #000;
         outline: -webkit-focus-ring-color auto 5px;
@@ -56,7 +56,7 @@
 
 
 </style>
-{% endblock custom_page_style %}
+{% endblock customcss %}
 
 {% block custom_scripts %}
 <script>
@@ -131,7 +131,7 @@ $(document).ready(function(){
 {% block content %}
 
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
-        
+
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
             <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
             <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
@@ -139,11 +139,11 @@ $(document).ready(function(){
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
             <small class="hidden-sm hidden-md hidden-lg">Anexo de Documentos</small>
         </h2>
-        
+
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
             {% csrf_token %}
             {{ wizard.management_form }}
-            
+
             <div class="hidden-sm hidden-md hidden-lg  text-justify">
                 Anexar documentos via mobile ainda não está disponível.
                 <br><br>
@@ -191,10 +191,10 @@ $(document).ready(function(){
                 <!--DOCSCAN CV-->
                 {% render_field wizard.form.docscan_CV id="tgt9" %}
                 <label for="tgt9" class="col-lg-3 notsel" id="tgtlbl9"> Curriculum Vitae </label>
-                
+
 
             </div>  <!--ROW 1 ENDS-->
-            
+
             <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
 
             {% include 'wizard_template_buttons.html' %}

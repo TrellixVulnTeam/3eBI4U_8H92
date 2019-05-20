@@ -31,7 +31,7 @@ def validateCNPJ(value):
 
 # CPF Validator That Prevents Invalid Verification Digits
 def validateCPF(value):
-        
+
         CPF = re.sub(r'[\-\.\/\\]', '', value)
         CPF = [int(x) for x in list(str(CPF))]
         CPF_root, CPF_VD, weights = CPF[:9], CPF[-2:], [10, 9, 8, 7, 6, 5, 4, 3, 2]
@@ -46,7 +46,7 @@ def validateCPF(value):
 
         if ((VD_1, VD_2) != (CPF_VD[0], CPF_VD[1])) or len(value) < 11:
                 raise ValidationError('CPF Inválido')
- 
+
         return None
 
 # Date Validator That Prevents Future Dates
@@ -82,76 +82,77 @@ def funcionario_media_path_CPF(instance, filename):
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_TE(instance, filename):
         return 'funcionario_{0}/TE_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_CTPS(instance, filename):
         return 'funcionario_{0}/CTPS_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_RESERVISTA(instance, filename):
         return 'funcionario_{0}/RESERVISTA_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_CERTIDAONASCIMENTO(instance, filename):
         return 'funcionario_{0}/CERTIDAONASCIMENTO_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_CERTIDAOCASAMENTO(instance, filename):
         return 'funcionario_{0}/CERTIDAOCASAMENTO_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_COMPROVANTERESIDENCIA(instance, filename):
         return 'funcionario_{0}/COMPROVANTERESIDENCIA_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_COMPROVANTEESCOLAR(instance, filename):
         return 'funcionario_{0}/COMPROVANTEESCOLAR_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_CV(instance, filename):
         return 'funcionario_{0}/CV_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_VACINACAO(instance, filename):
         return 'funcionario_{0}/VACINACAO_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_RG(instance, filename):
         return 'funcionario_{0}/RG_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path_PICTURE(instance, filename):
+        print('got called')
         return 'funcionario_{0}/PICTURE_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
 def funcionario_media_path(instance, filename):
         return 'funcionario_{0}/{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename
-        ) 
+        )
