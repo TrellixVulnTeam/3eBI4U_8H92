@@ -1,8 +1,80 @@
 {% extends 'base.html' %}
+{% load static %}
+
 
 {% block title %}Home - BI4U{% endblock %}
 
 {% block content %}
-  <div class="spacer-md"></div>
-  <div class="col-md-3 col-md-offset-9 col-xs-12 text-right"></div>
+  
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="col-md-offset-3 col-xs-offset-3">
+        <a href="{% url 'funcionario/menu' %}">
+          <img src="{% static 'strucimg/Home Icons/EmployeesHomeIcon.svg' %}" alt="Financeiro" >
+        </a>
+      </div>
+    </div>
+
+    <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+
+    <div class="col-md-4">
+      <div class="col-md-offset-4 col-xs-offset-3">
+        <a href="{% url 'financeiro/menu' %}">
+          <img src="{% static 'strucimg/Home Icons/FinancesHomeIcon.svg' %}" alt="Financeiro" >
+        </a>
+      </div>
+    </div>
+
+    <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+
+    <div class="col-md-4">
+      <div class="col-md-offset-5 col-xs-offset-3">
+        <a href="#">
+          <img src="{% static 'strucimg/Home Icons/ReportsHomeIcon.svg' %}" alt="Financeiro" >
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="spacer-lg hidden-xs"></div>
+  <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+
+  <div class="row">
+
+    <div class="col-md-4">
+      <div class="col-md-offset-3 col-xs-offset-3">
+        <a href="#">
+          <img src="{% static 'strucimg/Home Icons/CustomerHomeIcon.svg' %}" alt="Financeiro" >
+        </a>
+      </div>
+    </div>
+
+    <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+
+    <div class="col-md-4">
+      <div class="col-md-offset-4 col-xs-offset-3">
+        <a href="#">
+          <img src="{% static 'strucimg/Home Icons/StockHomeIcon.svg' %}" alt="Financeiro" >
+        </a>
+      </div>
+    </div>
+
+    <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+
+    <div class="col-md-4">
+      <div class="col-md-8 col-md-offset-5 col-xs-offset-3">
+        <a href="#">
+          <img src="{% static 'strucimg/Home Icons/ManagementHomeIcon.svg' %}" alt="Financeiro" >
+        </a>
+      </div>
+    </div>
+  
+  </div>
+  
+  <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+
+  </div>
+
 {% endblock %}

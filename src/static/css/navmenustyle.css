@@ -44,10 +44,16 @@
     margin-top: calc(var(--navbarsize) * 1.5);
 }
 
-.navbar-brand, .navbar-nav > li > a {
+.navbar-nav > li > a {
     line-height: var(--navbarsize);
     height: var(--navbarsize);
     padding-top: 0;
+}
+
+.navbar-brand {
+    line-height: var(--navbarsize);
+    height: var(--navbarsize);
+    padding-top: 7px;
 }
 
 .navbar-toggle {
