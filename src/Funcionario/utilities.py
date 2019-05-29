@@ -78,7 +78,7 @@ def deficiente_form_condition(wizard):
 # Media Files Path Creating Functions - file will be uploaded to MEDIA_ROOT/Funcionario/funcionario_<BASICINFO.ID>/<DOCTYPE>_<DATE>_<FILENAME>
 
 def funcionario_media_path_CPF(instance, filename):
-        return 'funcionario_{0}/CPF_{1}_{2}'.format(
+        return 'funcionario_{0}/CPF-CNH_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
                 filename

@@ -117,6 +117,9 @@ class BasicInfo(models.Model):
     data_ultima_modificacao     =   models.DateTimeField(null = True, blank = True)
     data_ultimo_desligamento    =   models.DateTimeField(null = True, blank = True)
 
+    def __str__(self):
+        return self.primeiro_nome + ' ' + self.ultimo_nome
+
 # 2 - Address Info
 class AddressInfo(models.Model):
 

@@ -3,22 +3,17 @@ from django.urls import path
 from Cliente.forms import (
     BasicInfoForm,
     AddressInfoForm,
-    DocumentsInfoForm,
     ContactInfoForm,
-    BankingInfoForm,
     ContractualInfoForm,
-    DocScansForm,
     CadastroClienteWizard
     )
-
+from Cliente import views
+    
 create_cliente_forms = [
     ('Basic Info', BasicInfoForm),
     ('Address Info', AddressInfoForm),
-    ('Documents Info', DocumentsInfoForm),
     ('Contact Info', ContactInfoForm),
-    ('Banking Info', BankingInfoForm),
     ('Contractual Info', ContractualInfoForm),
-    ('Doc Scans', DocScansForm)
 ]
 
 
@@ -26,5 +21,5 @@ urlpatterns = [
 
     path('cadastro/', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/cadastro'),
     path('visualizar/<int:id>', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/visualizar'),
-    
+    path('', views.appMenu, name = 'cliente/menu')
     ]

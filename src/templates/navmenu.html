@@ -52,6 +52,7 @@
         {% if 'home' in request.path %}<li class="active">{% else %}<li>{% endif %}<a href="{% url 'home' %}">Home</a></li>
         {% if 'funcionario' in request.path %}<li class="active">{% else %}<li>{% endif %}<a href="{% url 'funcionario/menu' %}">Funcionários</a></li>
         {% if 'financeiro' in request.path %}<li class="active">{% else %}<li>{% endif %}<a href="{% url 'financeiro/menu' %}">Financeiro</a></li>
+        {% if 'cliente' in request.path %}<li class="active">{% else %}<li>{% endif %}<a href="{% url 'cliente/menu' %}">Clientes</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}

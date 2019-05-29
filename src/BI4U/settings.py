@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'crispy_forms',
     'dynamic_formsets',
+    'chosen',
 
     # STANDARD
     'django.contrib.admin',

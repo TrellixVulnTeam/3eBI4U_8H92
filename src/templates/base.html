@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
-    {% block head %}      <!--HEAD CONTENT HERE-->      {% endblock head %}
     <title>BI4U</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +13,7 @@
     <link rel='stylesheet' href='{% static "css/slider.css" %}'>
     <link rel='stylesheet' href='{% static "css/base.css" %}'>
     <link rel="stylesheet" href='{% static "css/navmenustyle.css" %}'>
+    
     {% block customcss %} <!--CUSTOM CSS HERE-->  {% endblock customcss %}
     <!--JS-->
     <script src='{% static "js/jquery-3.3.1.min.js" %}'></script>
@@ -22,6 +22,8 @@
     <script src='{% static "js/bootstrap.min.js" %}'></script> 
     <script src='{% static "js/jquery.mask.min.js" %}'></script> 
     <script src='{% static "js/bootstrap-dropdownhover.min.js" %}'></script> 
+
+    {% block head %}      <!--HEAD CONTENT HERE-->      {% endblock head %}
     {% block customjs %} <!--CUSTOM JS HERE-->  {% endblock customjs %}
     {% block linked_refs %}     <!--LINKED REFERENCES HERE-->     {% endblock linked_refs %}
     {% block custom_scripts %}     <!--CUSTOM PAGE SCRIPTS HERE-->     {% endblock custom_scripts %}

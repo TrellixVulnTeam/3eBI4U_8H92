@@ -1,11 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from .utilities import (
-    validateCPF, validateCNPJ, validateCEP, validateNoFutureDates, funcionario_media_path_CERTIDAOCASAMENTO,
-    funcionario_media_path_CERTIDAONASCIMENTO, funcionario_media_path_COMPROVANTEESCOLAR,
-    funcionario_media_path_CPF, funcionario_media_path_TE, funcionario_media_path_CTPS, funcionario_media_path_RESERVISTA,
-    funcionario_media_path_CV, funcionario_media_path_COMPROVANTERESIDENCIA, funcionario_media_path_VACINACAO, funcionario_media_path_RG,
-    funcionario_media_path_PICTURE)
+from .utilities import validateCPF, validateCNPJ, validateCEP, validateNoFutureDates
+from Funcionario.models import BasicInfo as Funcionario
+
 
 # App Logic ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -93,145 +90,68 @@ phoneRegex = RegexValidator(
 # 1 - Basic Info
 class BasicInfo(models.Model):
 
-    id                          =   models.BigAutoField(primary_key = True)
+    id                                  =   models.BigAutoField(primary_key = True)
 
-    primeiro_nome               =   models.CharField(max_length = 100, null = True, blank = True)
-    ultimo_nome                 =   models.CharField(max_length = 100, null = True, blank = True)
-    data_nascimento             =   models.DateField(null = True, blank = True, validators = [validateNoFutureDates])
-    genero                      =   models.CharField(max_length = 200, choices = gender_choices, null = True, blank = True)
-    nacionalidade               =   models.CharField(max_length = 200, null = True, blank = True)
-    estado_nascimento           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    municipio_nascimento        =   models.CharField(max_length = 200, null = True, blank = True)
-    numero_documento_CPF        =   models.CharField(max_length = 14, validators = [validateCPF], error_messages={'unique':"CPF Já Registrado"})
-    numero_inscricao_NIS        =   models.IntegerField(null = True, blank = True)
-    numero_PIS_PASEP            =   models.IntegerField(null = True, blank = True)
-    numero_NIT_INSS             =   models.IntegerField(null = True, blank = True)
-    numero_codigo_NIT           =   models.IntegerField(null = True, blank = True)
-    raca_cor                    =   models.CharField(max_length = 200, choices = race_choices, null = True, blank = True)
-    nome_completo_mae           =   models.CharField(max_length = 200, null = True, blank = True)
-    nome_completo_pai           =   models.CharField(max_length = 200, null = True, blank = True)
-    estado_civil                =   models.CharField(max_length = 200, choices = civil_state_choices, null = True, blank = True)
-    escolaridade                =   models.CharField(max_length = 200, null = True, blank = True, choices = intern_schooling_choices)
-    
-    primeiro_emprego            =   models.BooleanField(null = True, blank = True)
-    estrangeiro                 =   models.BooleanField(null = True, blank = True)
-    outro_emprego               =   models.BooleanField(null = True, blank = True)
-    estagiario                  =   models.BooleanField(null = True, blank = True)
-    deficiente                  =   models.BooleanField(null = True, blank = True)
+    nome                                =   models.CharField(max_length = 100, null = True, blank = True)
+    nome_responsavel                    =   models.CharField(max_length = 100, null = True, blank = True)
+    nome_local_servico                  =   models.CharField(max_length = 100, null = True, blank = True)
 
-    ativo                       =   models.BooleanField(default = True)
-    ferias                      =   models.BooleanField(default=False)
-    obs_desligamento            =   models.TextField(null = True, blank = True)
+    tipo_pessoa                         =   models.CharField(max_length = 1, null = True, blank = True, choices = [('F', 'Física'), ('J', 'Jurídica')])
 
-    data_ultima_ativacao        =   models.DateTimeField(null = True, blank = True)
-    data_ultima_modificacao     =   models.DateTimeField(null = True, blank = True)
-    data_ultimo_desligamento    =   models.DateTimeField(null = True, blank = True)    
+    numero_documento_CPF                =   models.CharField(max_length = 14, validators = [validateCPF], null = True, blank = True)
+    numero_documento_CNPJ               =   models.CharField(max_length = 18, validators = [validateCNPJ], null = True, blank = True)
+
+    servico_ativo                       =   models.BooleanField(default = True)
+
+    quantidade_funcionarios_alocados    =   models.IntegerField(default = 1)
+
+    observacoes                         =   models.TextField(null = True, blank = True)
+
+    data_cadastro                       =   models.DateTimeField(null = True, blank = True)
+    data_ultima_modificacao             =   models.DateTimeField(null = True, blank = True)
+
+    data_inicio_servico                 =   models.DateTimeField(null = True, blank = True)
+    data_fim_servico                    =   models.DateTimeField(null = True, blank = True)
 
 # 2 - Address Info
 class AddressInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    end_residente_exterior      =   models.BooleanField(null = True, blank = True)
-    end_geral                   =   models.CharField(max_length = 500, null = True, blank = True)
-    end_numero                  =   models.IntegerField(null = True, blank = True)
-    end_bairro                  =   models.CharField(max_length = 200, null = True, blank = True)
-    end_complemento             =   models.CharField(max_length = 100, null = True, blank = True)
-    end_municipio               =   models.CharField(max_length = 200, null = True, blank = True)
-    end_estado                  =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    end_CEP                     =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
-    end_pais                    =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
-    end_residencia_propria      =   models.BooleanField(null = True, blank = True)
-    end_comprado_FGTS           =   models.BooleanField(null = True, blank = True)
+    end_fiscal_CEP              =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
+    end_fiscal                  =   models.CharField(max_length = 500, null = True, blank = True)
+    end_fiscal_numero           =   models.IntegerField(null = True, blank = True)
+    end_fiscal_bairro           =   models.CharField(max_length = 200, null = True, blank = True)
+    end_fiscal_complemento      =   models.CharField(max_length = 100, null = True, blank = True)
+    end_fiscal_municipio        =   models.CharField(max_length = 200, null = True, blank = True)
+    end_fiscal_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
+    end_fiscal_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
+    
+    end_servico_CEP              =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
+    end_servico                  =   models.CharField(max_length = 500, null = True, blank = True)
+    end_servico_numero           =   models.IntegerField(null = True, blank = True)
+    end_servico_bairro           =   models.CharField(max_length = 200, null = True, blank = True)
+    end_servico_complemento      =   models.CharField(max_length = 100, null = True, blank = True)
+    end_servico_municipio        =   models.CharField(max_length = 200, null = True, blank = True)
+    end_servico_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
+    end_servico_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
 
-# 3 - Documents Info (No Attachments)
-class DocumentsInfo(models.Model):
-
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
-
-    docs_CTPS_numero_geral      =   models.IntegerField(null = True, blank = True)
-    docs_CTPS_numero_serie      =   models.IntegerField(null = True, blank = True)
-    docs_CTPS_UF                =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_CTPS_data_emissao      =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    docs_TE_numero_geral        =   models.DecimalField(max_digits = 12, decimal_places = 0, null = True, blank = True)
-    docs_TE_secao               =   models.CharField(max_length = 10, null = True, blank = True)
-    docs_TE_zona                =   models.CharField(max_length = 10, null = True, blank = True)
-    docs_RG_numero_geral        =   models.DecimalField(max_digits = 11, decimal_places = 0, null = True, blank = True)
-    docs_RG_emissor             =   models.CharField(max_length = 5, null = True, blank = True)
-    docs_RG_UF                  =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_RG_data_emissao        =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    docs_RNE_numero_geral       =   models.CharField(max_length = 15, null = True, blank = True)
-    docs_RNE_emissor            =   models.CharField(max_length = 5, null = True, blank = True)
-    docs_RNE_UF                 =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_RNE_data_emissao       =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    docs_OC_numero_geral        =   models.CharField(max_length = 15, null = True, blank = True)
-    docs_OC_emissor             =   models.CharField(max_length = 15, null = True, blank = True)
-    docs_OC_UF                  =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_OC_data_emissao        =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    docs_CNH_numero_geral       =   models.CharField(max_length = 15, null = True, blank = True)
-    docs_CNH_emissor            =   models.CharField(max_length = 10, null = True, blank = True)
-    docs_CNH_UF                 =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    docs_CNH_data_emissao       =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    docs_CNH_categoria          =   models.CharField(max_length = 1, choices = CNH_category_choices, null = True, blank = True)
-    docs_CNH_data_primeira      =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    docs_CNH_data_validade      =   models.DateField(null = True, blank = True) 
-
-# 4 - Contact Info
+# 3 - Contact Info
 class ContactInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
     cont_tel_fixo               =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    cont_tel_fixo_adicional     =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
     cont_tel_cel                =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
-    cont_tel_recado             =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    cont_tel_cel_adicional      =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    
     cont_email                  =   models.EmailField(null = True, blank = True)
+    cont_email_adicional        =   models.EmailField(null = True, blank = True)
 
-# 5 - Banking Info
-class BankingInfo(models.Model):
-
-    basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
-
-    banco_numero_codigo         =   models.DecimalField(max_digits = 4, decimal_places = 0, null = True, blank = True)
-    banco_nome                  =   models.CharField(max_length = 200, choices = bank_choices, null = True, blank = True)
-    banco_agencia               =   models.IntegerField(null = True, blank = True)
-    banco_tipo_conta            =   models.CharField(max_length = 200, choices = [('Corrente', 'C. Corrente'), ('Poupança', 'Poupança')], null = True, blank = True)
-    banco_numero_conta_root     =   models.CharField(max_length = 10, null = True, blank = True)
-
-# 6 - Contractual Info
+# 4 - Contractual Info
 class ContractualInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    contrat_data_admissao       =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    contrat_data_inicio         =   models.DateField(null = True, blank = True)
-    contrat_cargo_inicial       =   models.CharField(max_length = 200, choices = position_choices, null = True, blank = True)
-    contrat_vale_alim           =   models.BooleanField(null = True, blank = True)
-    contrat_vale_alim_valor     =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_vale_ref            =   models.BooleanField(null = True, blank = True)
-    contrat_vale_ref_valor      =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_cesta               =   models.BooleanField(null = True, blank = True)
-    contrat_cesta_valor         =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_vale_comb           =   models.BooleanField(null = True, blank = True)
-    contrat_vale_comb_valor     =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_vale_transp         =   models.BooleanField(null = True, blank = True)
-    contrat_vale_transp_valor   =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_salario_atual       =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_salario_base        =   models.CharField(max_length = 20, null = True, blank = True)
-
-# 7 - Document File Attachments
-class DocumentAttachments(models.Model):
-
-    #   upload_to  =    os.path.join(str(basicinfo.numero_documento_cpf), %Y%m)
-
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
-
-    docscan_picture             =   models.ImageField(upload_to = funcionario_media_path_PICTURE, null = True, blank = True)
-    docscan_CPF                 =   models.ImageField(upload_to = funcionario_media_path_CPF, null = True, blank = True)
-    docscan_TE                  =   models.ImageField(upload_to = funcionario_media_path_TE, null = True, blank = True)
-    docscan_CTPS                =   models.ImageField(upload_to = funcionario_media_path_CTPS, null = True, blank = True)   
-    docscan_reservista          =   models.ImageField(upload_to = funcionario_media_path_RESERVISTA, null = True, blank = True)   
-    docscan_certidao_nascimento =   models.ImageField(upload_to = funcionario_media_path_CERTIDAONASCIMENTO, null = True, blank = True)   
-    docscan_certidao_casamento  =   models.ImageField(upload_to = funcionario_media_path_CERTIDAOCASAMENTO, null = True, blank = True)   
-    docscan_comprovante_resid   =   models.ImageField(upload_to = funcionario_media_path_COMPROVANTERESIDENCIA, null = True, blank = True)   
-    docscan_comprovante_escolar =   models.ImageField(upload_to = funcionario_media_path_COMPROVANTEESCOLAR, null = True, blank = True)   
-    docscan_CV                  =   models.FileField(upload_to  = funcionario_media_path_CV, null = True, blank = True)
+    funcionario_atrib           =   models.ManyToManyField(Funcionario, related_name = "funcionarios_atribuidos")

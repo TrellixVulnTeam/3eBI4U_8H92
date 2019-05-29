@@ -34,7 +34,7 @@ class EntradaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EntradaForm, self).__init__(*args, **kwargs)
         self.fields['cliente'].queryset = ClientBasicInfo.objects.all()
-        self.fields['cliente'].label_from_instance = lambda obj: "%s %s" % (obj.primeiro_nome, obj.ultimo_nome)
+        self.fields['cliente'].label_from_instance = lambda obj: "%s" % (obj.nome)
 
 class SaidaForm(forms.ModelForm):
     class Meta():

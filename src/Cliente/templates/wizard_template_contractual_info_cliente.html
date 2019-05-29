@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block customjs %}
+    <script>
+        $(document).ready(function(){
+            $(".chosen-select").chosen({width: "600%", rtl: true});            
+        });
+    </script>
+{% endblock customjs %}
+
+
+{% block content %}
+
+    {% if wizard.form.cont_tel_fixo.errors or wizard.form.end_numero.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        
+        {% if wizard.form.cont_tel_fixo.errors %}
+            <div><strong>Residêncial:</strong> {{ wizard.form.cont_tel_fixo.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.cont_tel_cel.errors %}
+            <div><strong>Celular:</strong> {{ wizard.form.cont_tel_cel.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.cont_tel_recado.errors %}
+            <div><strong>Recados:</strong> {{ wizard.form.cont_tel_recado.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.cont_email.errors %}
+            <div><strong>E-Mail:</strong> {{ wizard.form.cont_email.errors }}</div>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Cliente</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Cliente</span>
+            <small class="pull-right hidden-xs">Informações de Contrato</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações de Contrato</small>
+        </h2>
+
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            {{ wizard.form.management_form }}
+            
+            <div class="col-md-8">
+                <h2><small>Escolha os Funcionários</small></h1>
+                {% render_field wizard.form.funcionario_atrib  style="width : 100%;" data-placeholder="Procure por Funcionários..." %}
+            </div>
+            <div class="spacer-xl"></div>
+            {% include 'wizard_template_buttons.html' %}
+        </form>
+    </div>
+
+{% endblock content %}
+

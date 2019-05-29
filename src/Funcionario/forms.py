@@ -471,7 +471,7 @@ class DocScansForm(forms.ModelForm):
         ]
         labels = {
             'docscan_picture' : 'Foto',
-            'docscan_CPF' : 'CPF',
+            'docscan_CPF' : 'CPF ou CNH',
             'docscan_TE' : 'Título de Eleitor',
             'docscan_CTPS' : 'Carteira de Trabalho - CTPS',
             'docscan_reservista' : 'Reservista',

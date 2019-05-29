@@ -1,0 +1,314 @@
+<!--RGB(18,43,65) - RGB(255,163,26)-->
+
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+{% load thumbnail %}
+
+{% block head %}
+    <title>BI4U - Cliente</title>
+{% endblock head %}
+
+{% block custom_scripts %}
+
+<script>
+
+    $(document).ready(function(){
+
+        // LISTEN TO EID ND MAKE EMPLOYEE LINKS
+        $(".eid").each(function(){
+            var id = $(this).text()
+            if (id !== '') {
+                $(this).prev().on("click", function(e){
+                    e.preventDefault();
+                    visualizeEmployee(id)
+                });
+            }
+        });
+
+
+        // TEXTBOX PAGINATION
+        console.log($('#contents').contents().text())
+        if (1 == 1){
+            console.log('got in');
+            var x = $('#contents').text();
+
+            x = x.replace(/(((.|\n){300,}?\b)|((.|\n){1,299}(?!.)))/mg, '<div class="individual-page">$1</div>');
+
+            $('#contents').html(x);
+
+            $('#contents > .individual-page').each(function () {
+                if ($(this).is(':first-child')) {
+                $("#currentPage").html($(this).index());
+            } else {
+                $(this).hide()
+                $("#totalPages").html($(this).index());
+            }
+            });
+
+            if(parseInt($('#totalPages')) == 0){
+                $('#next').hide();
+                $('#prev').hide();
+            } else {
+                $('#next').show();
+                $('#prev').show();
+            }
+
+
+            $('#next').on('click', function() {
+                var currentPage = $('#currentPage').html()
+                var totalPages = $('#totalPages').html()
+                $($("#contents").children().get().reverse()).each(function() {
+                if($(this).index() == parseInt(currentPage) + 1){
+                    $('#currentPage').html(parseInt(currentPage) + 1)
+                $('#currentPage').trigger('change');
+                    $(this).show()
+                } else if ($(this).index() == currentPage){
+                    $(this).hide()
+                }
+            })
+            })
+
+            $('#prev').on('click', function() {
+                var currentPage = $('#currentPage').html()
+                var totalPages = $('#totalPages').html()
+                if (!parseInt(currentPage) == 0){
+                    $(this).show();
+                    $($("#contents").children().get()).each(function() {
+                    if($(this).index() == parseInt(currentPage) - 1){
+                        $('#currentPage').html(parseInt(currentPage) - 1)
+                        $('#currentPage').trigger('change');
+                        $(this).show()
+                    } else if ($(this).index() == currentPage){
+                        $(this).hide()
+                    }
+                    })
+                }
+            })
+
+            $('#currentPage').on('change', function() {
+
+                if ($(this).html() == $('#totalPages').html()){
+                $('#next').hide();
+                } else {
+                    $('#next').show();
+                }
+                if (parseInt($(this).html()) == 0){
+                    $('#prev').prop('disabled', true);
+                } else {
+                    $('#prev').prop('disabled', false);
+                }
+            })
+        }
+
+        // Adding Popover Event to Picture
+        $('[data-toggle="popover"]').popover();
+
+        //  Makes Employee Preview Visible
+        console.log(window.location.hash);
+        
+        if (window.location.hash === "#load") {
+            console.log("YATTA");
+            
+            $("#customer_preview").css('display', 'block');
+        }
+
+    })
+
+    // Creating Visualize Employee URL and Assigning Window Location
+    function visualizeClient() {
+        var id = document.getElementById("cid").textContent
+
+        if (id !== '') {
+            window.location.assign("/cliente/visualizar/" + id);
+        } else if (id == ''){
+            document.getElementById("alert2").style.display = "block";
+        }
+    }
+
+    function visualizeEmployee(id) {
+        window.location.assign("/funcionario/visualizar/" + id);
+    };
+
+
+
+
+    function occurrenceShutDownRB() {
+        var OSDRB = document.getElementById('opt3');
+        var OSDTA = document.getElementById('occurrenceShutDown');
+
+        if (OSDRB.checked) {
+            OSDTA.style.display = "block";
+        } else {
+            OSDTA.style.display = "none";
+        }
+    }
+</script>
+
+{% endblock custom_scripts %}
+
+{% block customcss %}
+
+    <link rel="stylesheet" href='{% static "css/appmenu_funcionario.css" %}'>
+
+{% endblock customcss %}
+
+
+{% block content %}
+    <div class="row"> <!--ERROR ROW BEGINS-->
+
+        {% if ERROR %}
+            <div id="alert" class="alert alert-danger alert-dismissible fade in">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>{{ERROR_HEADER}}</strong> {{ERROR_MSG}}
+            </div>
+        {% endif %}
+
+    </div> <!--ERROR ROW ENDS-->
+
+    <div class="row"> <!--CONTENT ROW BEGINS-->
+        <div class="col-lg-5 col-md-push-6"> <!--EMPLOYEE INFORMATION BEGINS-->
+            <div class="spacer"></div>
+            <label for="cliente">Buscar Cliente:</label>
+            <form method="GET" action="/cliente#load">
+                <div class="input-group">
+                    <input name="search-id" id="cliente" type="text" class="form-control" placeholder="Insira o CPF ou CNPJ do Cliente">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row" style="display:none;" id="customer_preview">
+                <div class="spacer hidden-xs"></div>
+                <div class="hidden-sm hidden-md hidden-lg spacer-xl"></div>
+                <div class="col-sm-3 col-sm-push-8 col-sm-offset-1 col-xs-offset-3">
+                    <div class="spacer"></div>
+                    {% if not SEARCH_OBJ.ativo  %}
+                        {% thumbnail imageObject.docscan_picture "250x250" colorspace="GRAY" as im %}
+                        <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o Cliente." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeClient()">
+                        {% empty %}
+                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeClient()">Editar Cadastro</button>
+                        {% endthumbnail %}
+                    {% else %}
+                        {% thumbnail imageObject.docscan_picture "250x250" as im %}
+                        <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o Cliente." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeClient()">
+                        {% empty %}
+                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeClient()">Editar Cadastro</button>
+                        {% endthumbnail %}
+                    {% endif %}
+                </div>
+
+                <div class="col-sm-8 col-sm-pull-4 bold-text employee-info">
+
+                    <div>Nome:<span class="pull-right">{{SEARCH_OBJ.nome}}</span></div>
+                    
+                    {% if SEARCH_OBJ.numero_documento_CPF %}
+                        <div>CPF:<span class="pull-right" id="officialCPF">{{SEARCH_OBJ.numero_documento_CPF}}</span></div>
+                    {% endif %}
+                    {% if SEARCH_OBJ.numero_documento_CNPJ %}
+                        <div>CNPJ:<span class="pull-right" id="officialCPF">{{SEARCH_OBJ.numero_documento_CNPJ}}</span></div>
+                    {% endif %}
+                        <div>Status:
+                    <span class="pull-right">
+                        {% if not SEARCH_OBJ.servico_ativo %}
+                            Serviço Inativo
+                        {% else %}
+                            Serviço Ativo
+                        {% endif %}
+                    </span>
+                    </div>
+                    <div>ID:<span class="pull-right" id="cid">{{SEARCH_OBJ.id}}</span></div>
+                    {% if SEARCH_OBJ.observacoes %}
+                    <div id="currentPage" hidden></div>
+                    <div id="totalPages" hidden></div>
+                    <div class="row">
+                            <span class="col-md-4 col-sm-12 pull-left">Observações:</span>
+                            <span class="col-md-1 col-xs-12 text-justify" id="contents">{{SEARCH_OBJ.observacoes}}</span>
+
+                            <div class="btn-group col-md-offset-10 col-xs-offset-8">
+                                <button class="custom-paginator" id="prev" style="width:30px; height: 30px; border-radius:50%;">-</button>
+                                <button class="custom-paginator" id="next">+</button>
+                            </div>
+                    </div>
+                    {% endif %}
+
+                    <span>Funcionários Atribuidos:</span><br/>
+                    <div class="spacer"></div>
+                    {% for employee in SEARCH_OBJ_EMPLOYEES.funcionario_atrib.all %}
+                        <button class="btn btnmenu" style="margin: 0;" onclick="visualizeEmployee(this)">{{ employee }}</button>
+                        <div class="hidden-xs hidden-sm hidden-md hidden-lg eid">{{employee.id}}</div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div><!--EMPLOYEE INFORMATION ENDS-->
+
+        <div class="col-lg-6 col-md-pull-5">
+
+            <div class="col-md-10 hidden-xs"> <!--Cliente MENU-->
+
+                <div class="spacer-lg"></div>
+
+                <div class="col-md-8">
+                    <button class="btn-block btnmenu panel-heading" onclick="location.href = '/cliente/cadastro';" type="button">
+                        <span>Cadastrar Novo Cliente</span>
+                    </button>
+                </div>
+
+                <div class="col-md-8">
+                    <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#modalTable">
+                        <span>Visualizar Clientes </span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="hidden-sm hidden-md hidden-lg"> <!--Cliente MENU - XS-SCREEN-->
+
+                <div class="spacer-lg"></div>
+
+                <div class="btn-group btn-group-justified">
+
+                    <button class="btn-block btnmenu hidden-xs" onclick="location.href = '/cliente/cadastro';" type="button">
+                        <span>Cadastrar Novo Cliente</span>
+                    </button>
+
+                    <button class="btn-block btnmenu" data-toggle="modal" href="#modalTable">
+                        <span>Visualizar Clientes </span>
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div> <!--CONTENT ROW ENDS-->
+
+
+
+
+
+
+    <!--MODALS-->
+    <div class="modal fade" id="modalTable"> <!--CLIENTES LISTING MODAL BEGINS-->
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Clientes Cadastrados</h4>
+                </div>
+                <div class="modal-body">
+                <!--RENDER TABLE-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!--CLIENTES LISTING MODAL ENDS-->
+
+
+
+{% endblock content %}

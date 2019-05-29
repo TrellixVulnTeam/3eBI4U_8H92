@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+<!--
+{% block customjs %}
+    <script>
+        $(document).ready(function(){
+            $(".chosen-select").chosen()
+        })
+    </script>
+{% endblock customjs %}
+-->
+
+{% block content %}
+
+    {% if wizard.form.numero_documento_CPF.errors or wizard.form.numero_documento_CNPJ.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+
+        {% if wizard.form.numero_documento_CPF.errors %}
+            <div><strong>CPF:</strong> {{ wizard.form.numero_documento_CPF.errors }}</div>
+        {% endif %}
+
+        {% if wizard.form.numero_documento_CNPJ.errors %}
+            <div><strong>CNPJ:</strong> {{ wizard.form.numero_documento_CNPJF.errors }}</div>
+        {% endif %}
+
+
+    </div>
+    {% endif %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">    
+        
+        <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Cliente</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Cliente</span>
+            <small class="pull-right hidden-xs">Informações Básicas</small>
+            <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+            <small class="hidden-sm hidden-md hidden-lg">Informações Básicas</small>
+        </h2>
+
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+            {% csrf_token %}
+            {{ wizard.management_form }}
+            <div class="row">
+
+                <!--ACTIVE CLIENT TOGGLE XS-->
+                <div class="form-group hidden-sm hidden-md hidden-lg">
+                    <label class="col-xs-8">Serviço Ativo: </label>
+                    <div class="checkbox">
+                        <label for="activeXS" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.servico_ativo id="activeXS" %}
+                            <span class="slider round"><span class="on text-left">SIM</span><span class="off text-right">NÃO</span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!--TEXT INPUT FIELDS-->
+                <div class="col-lg-8" >
+
+                    <!--NAME-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.nome.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.nome.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.nome class="form-control" placeholder=wizard.form.nome.label %}
+                        </div>
+                    </div>
+
+                    <!--RESPONSIBLE EMPLOYEE NAME-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.nome_responsavel.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.nome_responsavel.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.nome_responsavel class="form-control" placeholder=wizard.form.nome_responsavel.label %}
+                        </div>
+                    </div>
+
+                    <!--PLACE OF WORK NAME-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.nome_local_servico.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.nome_local_servico.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.nome_local_servico class="form-control" placeholder=wizard.form.nome_local_servico.label %}
+                        </div>
+                    </div>
+
+                    <!--KIND OF PERSON-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.tipo_pessoa.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.tipo_pessoa.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.tipo_pessoa class="form-control"%}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--BOOLEAN INPUT FIELDS-->
+                <div class="col-lg-4">
+
+                    <!--ACTIVE CLIENT TOGGLE XS-->
+                    <div class="form-group hidden-xs">
+                        <label class="col-sm-8">Serviço Ativo: </label>
+                        <div class="checkbox">
+                            <label for="active" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                                {% render_field wizard.form.servico_ativo id="active" %}
+                                <span class="slider round"><span class="on text-left">SIM</span><span class="off text-right">NÃO</span></span>
+                            </label>
+                        </div>
+                    </div>
+        
+                </div>
+
+            </div>
+            
+            <div class="row">
+
+                <div class="col-lg-4">
+
+                    <!--CPF NUMBER-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.numero_documento_CPF.id_for_label }}" class = "control-label col-lg-6 text-right">
+                            {{wizard.form.numero_documento_CPF.label}} * 
+                        </label>
+                        <div class="col-lg-6">
+                            {% render_field wizard.form.numero_documento_CPF class="form-control cpf" placeholder="000.000.000-00" %}
+                        </div>
+                    </div>
+
+                    <!--CNPJ NUMBER-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.numero_documento_CNPJ.id_for_label }}" class = "control-label col-lg-6 text-right">
+                            {{wizard.form.numero_documento_CNPJ.label}}
+                        </label>
+                        <div class="col-lg-6">
+                            {% render_field wizard.form.numero_documento_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00" %}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            
+            {% include 'wizard_template_buttons.html' %}
+        
+        </form>
+    </div>
+
+{% endblock content %}
+
