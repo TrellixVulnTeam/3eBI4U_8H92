@@ -9,7 +9,10 @@ class FuncionarioBasicInfoTable(tables.Table):
     class Meta:
         model = BasicInfo
         
-        fields = ["ultimo_nome", "data_nascimento", "genero", "numero_documento_CPF", "ativo", "ferias"]
+        fields = ["ultimo_nome", "data_nascimento", "genero", "numero_documento_CPF", "status"]
     
-        sequence = ("Nome", "ultimo_nome", "data_nascimento", "genero", "numero_documento_CPF", "ativo", "ferias")
+        sequence = ("Nome", "ultimo_nome", "data_nascimento", "genero", "numero_documento_CPF", "status")
         
+        attrs = {
+            'style' : 'font-size: 1em;'
+        }

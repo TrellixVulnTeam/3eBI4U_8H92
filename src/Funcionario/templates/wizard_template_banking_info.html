@@ -40,8 +40,8 @@
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
-            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
-            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro de Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Funcionário</span>
             <small class="pull-right hidden-xs">Informações Bancárias</small>
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
             <small class="hidden-sm hidden-md hidden-lg">Informações Bancárias</small>
@@ -79,37 +79,9 @@
 
                 </div>  <!--COL 2 ENDS-->
             </div>  <!--ROW 1 ENDS-->
-            <DIV class="spacer"></DIV>
+
             <div class="row">   <!--ROW 2 STARTS-->
                 <div class="col-lg-4"> <!--COL 1 STARTS-->
-                    
-                    <!--BANK AGENCY-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.banco_agencia.id_for_label }}" class = "control-label col-lg-6 text-right">
-                            {{wizard.form.banco_agencia.label}}
-                        </label>
-                        <div class="col-lg-6">
-                            {% render_field wizard.form.banco_agencia class="form-control" placeholder=wizard.form.banco_agencia.label  %}
-                        </div>
-                    </div>
-                        
-                </div>  <!--COL 1 ENDS-->
-                <div class="col-lg-4">  <!--COL 2 STARTS-->
-                    
-                    <!--BANK ACCOUNT-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.banco_numero_conta_root.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.banco_numero_conta_root.label}}
-                        </label>
-                        <div class="col-lg-7">
-                            {% render_field wizard.form.banco_numero_conta_root class="form-control" placeholder=wizard.form.banco_numero_conta_root.label  %}
-                        </div>
-                    </div>
-
-
-                </div>  <!--COL 2 ENDS-->
-                <div class="col-lg-4">  <!--COL 3 STARTS-->
-
                     <!--BANK ACCOUNT TYPE-->
                     <div class="form-group">
                         <label for="{{ wizard.form.banco_tipo_conta.id_for_label }}" class = "control-label col-lg-5 text-right">
@@ -119,11 +91,36 @@
                             {% render_field wizard.form.banco_tipo_conta class="form-control" placeholder=wizard.form.banco_tipo_conta.label  %}
                         </div>
                     </div>
+                    
+                        
+                </div>  <!--COL 1 ENDS-->
+                <div class="col-lg-4">  <!--COL 2 STARTS-->
+                    <!--BANK AGENCY-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.banco_agencia.id_for_label }}" class = "control-label col-lg-6 text-right">
+                            {{wizard.form.banco_agencia.label}}
+                        </label>
+                        <div class="col-lg-6">
+                            {% render_field wizard.form.banco_agencia class="form-control" placeholder=wizard.form.banco_agencia.label  %}
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-4">
+                    <!--BANK ACCOUNT-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.banco_numero_conta_root.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.banco_numero_conta_root.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.banco_numero_conta_root class="form-control" placeholder=wizard.form.banco_numero_conta_root.label  %}
+                        </div>
+                    </div>
 
                 </div>  <!--COL 3 ENDS-->
             </div>  <!--ROW 2 ENDS-->
 
-            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+            <div class="spacer"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

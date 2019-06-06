@@ -75,11 +75,11 @@
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
-            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
-            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
-            <small class="pull-right hidden-xs">Informações de Estágio</small>
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro de Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Funcionário</span>
+            <small class="pull-right hidden-xs">Trabalhador Sem Vínculo de Emprego - Estagiário</small>
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
-            <small class="hidden-sm hidden-md hidden-lg">Informações de Estágio</small>
+            <small class="hidden-sm hidden-md hidden-lg">Trabalhador Sem Vínculo de Emprego - Estagiário</small>
         </h2>
 
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
@@ -96,13 +96,11 @@
                     </label>
                 </div>
             </div>
-
-            <div class="spacer-lg"></div>
             
             <div class="row">   <!--ROW 1 STARTS-->
                 
                 <!--ACADEMIC LEVEL-->
-                <div class="form-group col-lg-5" style="transform:translateY(-25%);">
+                <div class="form-group col-lg-5">
                     <label for="{{ wizard.form.estag_escolaridade.id_for_label }}" class = "control-label col-lg-5 text-right">
                         {{wizard.form.estag_escolaridade.label}}
                     </label>
@@ -112,7 +110,7 @@
                 </div>
 
                 <!--SALARY-->
-                <div class="form-group col-lg-5" style="transform:translateY(-25%);">
+                <div class="form-group col-lg-5">
                     <label for="{{ wizard.form.estag_valor_bolsa.id_for_label }}" class = "control-label col-lg-5 text-right">
                         {{wizard.form.estag_valor_bolsa.label}}
                     </label>
@@ -124,7 +122,7 @@
                 <div class="col-lg-1"></div>
                 
                 <!--REQUIRED INTERNSHIP-->
-                <div class="form-group col-lg-2 hidden-xs" style="transform:translate(30%, -10%);">
+                <div class="form-group col-lg-2 hidden-xs" style="transform:translate(30%, 0);">
                 <div style="transform:translate(-10%,-75%)">{{wizard.form.estag_obrigatorio.label}}</div>
                     <div class="checkbox">
                         <label for="{{ wizard.form.estag_obrigatorio.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
@@ -133,32 +131,8 @@
                         </label>
                     </div>
                 </div>
-            </div>  <!--ROW 1 ENDS-->
-
-            <div class="row">   <!--ROW 2 STARTS-->
-                
-                <!--INTERNSHIP START DATE-->
-                <div class="form-group col-lg-4">
-                    <label for="{{ wizard.form.estag_data_inicio.id_for_label }}" class = "control-label col-lg-6 text-right">
-                        {{wizard.form.estag_data_inicio.label}}
-                    </label>
-                    <div class="col-lg-6">
-                        {% render_field wizard.form.estag_data_inicio class="form-control date" placeholder="DD/MM/YYYY"  %}
-                    </div>
-                </div>  
-                
-                <!--INTERNSHIP END DATE-->
-                <div class="form-group col-lg-4">
-                    <label for="{{ wizard.form.estag_data_fim.id_for_label }}" class = "control-label col-lg-6 text-right">
-                        {{wizard.form.estag_data_fim.label}}
-                    </label>
-                    <div class="col-lg-6">
-                        {% render_field wizard.form.estag_data_fim class="form-control date" placeholder="DD/MM/YYYY"  %}
-                    </div>
-                </div>
-
                 <!--ACADEMIC FIELD-->
-                <div class="form-group col-lg-4">
+                <div class="form-group col-lg-5">
                     <label for="{{ wizard.form.estag_area_atuacao.id_for_label }}" class = "control-label col-lg-5 text-right">
                         {{wizard.form.estag_area_atuacao.label}}
                     </label>
@@ -166,6 +140,26 @@
                         {% render_field wizard.form.estag_area_atuacao class="form-control" placeholder=wizard.form.estag_area_atuacao.label%}
                     </div>
                 </div>
+                <!--INTERNSHIP START DATE-->
+                <div class="form-group col-lg-5">
+                    <label for="{{ wizard.form.estag_data_inicio.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.estag_data_inicio.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.estag_data_inicio class="form-control date" placeholder="DD/MM/YYYY"  %}
+                    </div>
+
+                    <div class="spacer"></div>
+
+                    <!--INTERNSHIP END DATE-->
+                    <label for="{{ wizard.form.estag_data_fim.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.estag_data_fim.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.estag_data_fim class="form-control date" placeholder="DD/MM/YYYY"  %}
+                    </div>
+                </div>
+
 
             </div>  <!--ROW 2 ENDS-->
 
@@ -211,7 +205,7 @@
                         {{wizard.form.estag_instituto_end.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.estag_instituto_end class="form-control cnpj" placeholder=wizard.form.estag_instituto_end.label%}
+                        {% render_field wizard.form.estag_instituto_end class="form-control" placeholder=wizard.form.estag_instituto_end.label%}
                     </div>
                 </div>
 
@@ -239,7 +233,7 @@
 
             </div>  <!--ROW 3 ENDS-->
 
-            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+            <div class="spacer-md"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

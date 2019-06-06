@@ -9,7 +9,6 @@ from .models import (
     BankingInfo,
     AnotherJobInfo,
     InternInfo,
-    PositionInfo,
     ContractualInfo,
     DocumentAttachments,
     Dependente
@@ -25,6 +24,5 @@ admin.site.register(HandicappedInfo)
 admin.site.register(BankingInfo)
 admin.site.register(AnotherJobInfo)
 admin.site.register(InternInfo)
-admin.site.register(PositionInfo)
 admin.site.register(ContractualInfo)
 admin.site.register(DocumentAttachments)

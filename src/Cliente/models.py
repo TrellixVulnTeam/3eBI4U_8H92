@@ -92,26 +92,26 @@ class BasicInfo(models.Model):
 
     id                                  =   models.BigAutoField(primary_key = True)
 
-    nome                                =   models.CharField(max_length = 100, null = True, blank = True)
-    nome_responsavel                    =   models.CharField(max_length = 100, null = True, blank = True)
-    nome_local_servico                  =   models.CharField(max_length = 100, null = True, blank = True)
+    nome                                =   models.CharField(max_length = 100, null = True, blank = True, verbose_name = "Nome")
+    nome_responsavel                    =   models.CharField(max_length = 100, null = True, blank = True, verbose_name = "Nome do Responsável" )
+    nome_local_servico                  =   models.CharField(max_length = 100, null = True, blank = True, verbose_name = "Local do Serviço")
 
-    tipo_pessoa                         =   models.CharField(max_length = 1, null = True, blank = True, choices = [('F', 'Física'), ('J', 'Jurídica')])
+    tipo_pessoa                         =   models.CharField(max_length = 1, null = True, blank = True, choices = [('F', 'Física'), ('J', 'Jurídica')], verbose_name = "Tipo de Pessoa")
 
-    numero_documento_CPF                =   models.CharField(max_length = 14, validators = [validateCPF], null = True, blank = True)
-    numero_documento_CNPJ               =   models.CharField(max_length = 18, validators = [validateCNPJ], null = True, blank = True)
+    numero_documento_CPF                =   models.CharField(max_length = 14, validators = [validateCPF], null = True, blank = True, verbose_name = "Número de CPF")
+    numero_documento_CNPJ               =   models.CharField(max_length = 18, validators = [validateCNPJ], null = True, blank = True, verbose_name = "Número de CNPJ")
 
-    servico_ativo                       =   models.BooleanField(default = True)
+    servico_ativo                       =   models.BooleanField(default = True, verbose_name = "Serviço Ativo")
 
-    quantidade_funcionarios_alocados    =   models.IntegerField(default = 1)
+    quantidade_funcionarios_alocados    =   models.IntegerField(default = 1, verbose_name = "Qtd. Funcionários Alocados")
 
-    observacoes                         =   models.TextField(null = True, blank = True)
+    observacoes                         =   models.TextField(null = True, blank = True, verbose_name = "Observações")
 
-    data_cadastro                       =   models.DateTimeField(null = True, blank = True)
-    data_ultima_modificacao             =   models.DateTimeField(null = True, blank = True)
+    data_cadastro                       =   models.DateTimeField(null = True, blank = True, verbose_name = "Data de Cadastro")
+    data_ultima_modificacao             =   models.DateTimeField(null = True, blank = True, verbose_name = "Data Ultima Modificação")
 
-    data_inicio_servico                 =   models.DateTimeField(null = True, blank = True)
-    data_fim_servico                    =   models.DateTimeField(null = True, blank = True)
+    data_inicio_servico                 =   models.DateTimeField(null = True, blank = True, verbose_name = "Data Início de Serviço")
+    data_fim_servico                    =   models.DateTimeField(null = True, blank = True, verbose_name = "Data Fim de Serviço")
 
 # 2 - Address Info
 class AddressInfo(models.Model):

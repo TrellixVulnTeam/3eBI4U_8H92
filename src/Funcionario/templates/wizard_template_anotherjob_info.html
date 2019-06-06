@@ -30,11 +30,11 @@
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
-            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
-            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
-            <small class="pull-right hidden-xs">Informações de Outro Emprego</small>
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro de Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Funcionário</span>
+            <small class="pull-right hidden-xs">Outros Vínculos de Relação de Emprego</small>
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
-            <small class="hidden-sm hidden-md hidden-lg" style="font-size: 0.54em;">Informações de Outro Emprego</small>
+            <small class="hidden-sm hidden-md hidden-lg" style="font-size: 0.54em;">Outros Vínculos de Relação de Emprego</small>
         </h2>
 
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
@@ -42,7 +42,7 @@
             {{ wizard.management_form }}
             
             <div class="row">   <!--ROW 1 STARTS-->
-                <div class="col-lg-3">  <!--COL 1 STARTS-->
+                <div class="col-lg-4">  <!--COL 1 STARTS-->
                     
                     <!--EMPLOYEE-->
                     <div class="form-group">
@@ -70,56 +70,95 @@
                 
                 </div> <!--COL 1 ENDS-->
 
-                <div class="col-lg-6">  <!--COL 2 STARTS-->
+                <div class="col-lg-8">  <!--COL 2 STARTS-->
                 
-                    <!--COMPANY NAME-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.vinc_outra_emp_nome.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.vinc_outra_emp_nome.label}}
-                        </label>
-                        <div class="col-lg-7">
-                            {% render_field wizard.form.vinc_outra_emp_nome class="form-control" placeholder=wizard.form.vinc_outra_emp_nome.label  %}
-                        </div>
-                    </div>
-                
-                    <!--COMPANY CNPJ-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.vinc_outra_emp_CNPJ.label}}
-                        </label>
-                        <div class="col-lg-7">
-                            {% render_field wizard.form.vinc_outra_emp_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00"  %}
-                        </div>
-                    </div>
-
                     <!--COMMENTS-->
                     <div class="form-group">
-                        <label for="{{ wizard.form.vinc_comentarios.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        <label for="{{ wizard.form.vinc_comentarios.id_for_label }}" class = "control-label col-lg-2 text-right">
                             {{wizard.form.vinc_comentarios.label}}
                         </label>
-                        <div class="col-lg-7">
+                        <div class="col-lg-10">
                             {% render_field wizard.form.vinc_comentarios class="form-control" placeholder=wizard.form.vinc_comentarios.label style="resize:none;" %}
                         </div>
                     </div>
 
 
                 </div>  <!--COL 2 ENDS-->
-                <div class="col-lg-3">  <!--COL 3 ENDS-->
-                    
-                    <!--COMPANY PAYMENT-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-3 text-right">
-                            {{wizard.form.vinc_outra_emp_salario.label}}
+            </div>  <!--ROW 1 ENDS-->
+
+            <div class="spacer"></div>
+
+            <div class="row">
+
+                <legend class="text-right">CLT</legend>
+                <!--COMPANY NAME-->
+                <div class="form-group col-lg-5">
+                    <label for="{{ wizard.form.vinc_outra_emp_nome.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.vinc_outra_emp_nome.label}}
+                    </label>
+                    <div class="col-lg-7">
+                        {% render_field wizard.form.vinc_outra_emp_nome class="form-control" placeholder=wizard.form.vinc_outra_emp_nome.label  %}
+                    </div>
+                </div>
+            
+                <!--COMPANY CNPJ-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-2 text-right">
+                        {{wizard.form.vinc_outra_emp_CNPJ.label}}
+                    </label>
+                    <div class="col-lg-10">
+                        {% render_field wizard.form.vinc_outra_emp_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00"  %}
+                    </div>
+                </div>
+
+                <!--COMPANY PAYMENT-->
+                <div class="form-group col-lg-3">
+                    <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-5 text-right">
+                        {{wizard.form.vinc_outra_emp_salario.label}}
+                    </label>
+                    <div class="col-lg-7">
+                        {% render_field wizard.form.vinc_outra_emp_salario class="form-control money" placeholder="0,00"  %}
+                    </div>
+                </div>
+                
+            </div>  <!--ROW 2 ENDS-->
+            <div class="spacer"></div>
+            <div class="row">
+
+                    <legend class="text-right">Sociedade</legend>
+                    <!--COMPANY NAME-->
+                    <div class="form-group col-lg-5">
+                        <label for="{{ wizard.form.vinc_outra_emp_nome.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.vinc_outra_emp_nome.label}}
                         </label>
-                        <div class="col-lg-9">
-                            {% render_field wizard.form.vinc_outra_emp_salario class="form-control money" placeholder="0,00"  %}
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.vinc_outra_emp_nome_soc class="form-control" placeholder=wizard.form.vinc_outra_emp_nome.label  %}
                         </div>
                     </div>
                 
-                </div>  <!--COL 3 ENDS-->
-            </div>  <!--ROW 1 ENDS-->
+                    <!--COMPANY CNPJ-->
+                    <div class="form-group col-lg-4">
+                        <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-2 text-right">
+                            {{wizard.form.vinc_outra_emp_CNPJ.label}}
+                        </label>
+                        <div class="col-lg-10">
+                            {% render_field wizard.form.vinc_outra_emp_CNPJ_soc class="form-control cnpj" placeholder="00.000.000/0000-00"  %}
+                        </div>
+                    </div>
+    
+                    <!--COMPANY PAYMENT-->
+                    <div class="form-group col-lg-3">
+                        <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.vinc_outra_emp_salario.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.vinc_outra_emp_salario_soc class="form-control money" placeholder="0,00"  %}
+                        </div>
+                    </div>
+                    
+                </div>  <!--ROW 3 ENDS-->
             
-            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+            <div class="spacer-md"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

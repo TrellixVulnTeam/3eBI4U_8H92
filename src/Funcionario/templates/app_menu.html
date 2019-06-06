@@ -16,11 +16,9 @@
 <script>
 
     $(document).ready(function(){
-
+        /*
         // TEXTBOX PAGINATION
-        console.log($('#contents').contents().text())
         if (1 == 1){
-            console.log('got in');
             var x = $('#contents').text();
 
             x = x.replace(/(((.|\n){300,}?\b)|((.|\n){1,299}(?!.)))/mg, '<div class="individual-page">$1</div>');
@@ -90,6 +88,7 @@
                 }
             })
         }
+        */
         // Enabling and Disabling Submit Button on ShutDown Form
         const selectElement = document.querySelector('#CPFConfirmation');
 
@@ -116,6 +115,11 @@
             $("#employee_preview").css('display', 'block');
         }
 
+        $('#status-selection').on("change", function() {
+            console.log('TESTE');
+            ToggleObsBox();
+        });
+
     })
 
     // Creating Visualize Employee URL and Assigning Window Location
@@ -129,11 +133,13 @@
         }
     }
 
-    function occurrenceShutDownRB() {
-        var OSDRB = document.getElementById('opt3');
-        var OSDTA = document.getElementById('occurrenceShutDown');
-
-        if (OSDRB.checked) {
+    // Creating Obs Box In Status Change Modal
+    function ToggleObsBox() {
+        
+        var OSDRB = document.getElementById('status-selection');
+        var OSDTA = document.getElementById('obs');
+        
+        if (OSDRB.value == "occurrenceshutdown" || OSDRB.value == "startleave" || OSDRB.value == "startsuspension") {
             OSDTA.style.display = "block";
         } else {
             OSDTA.style.display = "none";
@@ -212,31 +218,24 @@
                     <div>Nome:<span class="pull-right">{{object.primeiro_nome}} {{object.ultimo_nome}}</span></div>
                     <div>CPF:<span class="pull-right" id="officialCPF" >{{object.numero_documento_CPF}}</span></div>
                     <div>Status:
-                    <span class="pull-right">
-                        {% if not object.ativo %}
-                            Funcionário Desligado
-                        {% else %}
-                            {% if objeto.ferias %}
-                                Funcionário em Férias
-                            {% else %}
-                                Funcionário Ativo
-                            {% endif %}
-                        {% endif %}
-                    </span>
+                    <span class="pull-right">{{object.status}}</span>
                     </div>
                     <div>ID:<span class="pull-right" id="eid">{{object.id}}</span></div>
                     {% if object.obs_desligamento %}
                     <div id="currentPage" hidden></div>
                     <div id="totalPages" hidden></div>
+                    <!--
                     <div class="row">
-                            <span class="col-md-4 col-sm-12 pull-left">Observações da Ocorrencia:</span>
-                            <span class="col-md-1 col-xs-12 text-justify" id="contents">{{object.obs_desligamento}}</span>
+                        <br>
+                        <span class="col-md-4 col-sm-12 pull-left">Ocorrência:</span>
+                        <span class="col-md-1 col-xs-12 text-justify" id="contents">{{object.obs_desligamento}}</span>
 
-                            <div class="btn-group col-md-offset-10 col-xs-offset-8">
-                                <button class="custom-paginator" id="prev" style="width:30px; height: 30px; border-radius:50%;">-</button>
-                                <button class="custom-paginator" id="next">+</button>
-                            </div>
+                        <div class="btn-group col-md-offset-10 col-xs-offset-8">
+                            <button class="custom-paginator" id="prev" style="width:30px; height: 30px; border-radius:50%;">-</button>
+                            <button class="custom-paginator" id="next">+</button>
+                        </div>
                     </div>
+                    -->
                     {% endif %}
 
                 </div>
@@ -251,7 +250,7 @@
 
                 <div class="col-md-8">
                     <button class="btn-block btnmenu panel-heading" onclick="location.href = '/funcionario/cadastro';" type="button">
-                        <span>Cadastrar Novo Funcionário</span>
+                        <span>Cadastro e-Social </span>
                     </button>
                 </div>
 
@@ -263,7 +262,7 @@
 
                 <div class="col-md-8">
                     <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#modalShutDown">
-                        <span>Desligar Funcionário</span>
+                        <span>Alterar Status do Funcionário</span>
                     </button>
                 </div>
 
@@ -276,7 +275,7 @@
                 <div class="btn-group btn-group-justified">
 
                     <button class="btn-block btnmenu hidden-xs" onclick="location.href = '/funcionario/cadastro';" type="button">
-                        <span>Cadastrar Novo Funcionário</span>
+                        <span>Cadastro e-Social </span>
                     </button>
 
                     <button class="btn-block btnmenu" data-toggle="modal" href="#modalTable">
@@ -284,7 +283,7 @@
                     </button>
 
                     <button class="btn-block btnmenu lastbtn" data-toggle="modal" href="#modalShutDown">
-                        <span>Desligar Funcionário</span>
+                        <span>Alterar Status do Funcionário</span>
                     </button>
 
                 </div>
@@ -293,11 +292,6 @@
         </div>
 
     </div> <!--CONTENT ROW ENDS-->
-
-
-
-
-
 
     <!--MODALS-->
     <div class="modal fade" id="modalTable"> <!--FUNCIONARIOS LISTING MODAL BEGINS-->
@@ -323,36 +317,51 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Desligamento de Funcionário - {{ object.primeiro_nome }} {{ object.ultimo_nome }}</h4>
+                    <h4 class="modal-title">Alteração de Status - {{ object.primeiro_nome }} {{ object.ultimo_nome }}</h4>
                 </div>
                 <div class="modal-body">
 
                     <form method="POST" action="/funcionario/">
                         {% csrf_token %}
                         <div class="form-group">
-
-                            <br>
-
-                            <label class="radio-inline"><input type="radio" name="optradio" id="opt1" onclick="occurrenceShutDownRB()" checked>Demissão</label>
-                            <label class="radio-inline"><input type="radio" name="optradio" id="opt2" onclick="occurrenceShutDownRB()">Demissão Voluntária</label>
-                            <label class="radio-inline"><input type="radio" name="optradio" id="opt3" onclick="occurrenceShutDownRB()">Demissão com Ocorrência</label>
-
+                            <label for="status-selection">Status</label>
+                            <select name="status-selection" id="status-selection" class="form-control">
+                                <optgroup label="Desligamento">
+                                    <option value="shutdown">Desligar</option>
+                                    <option value="occurrenceshutdown">Desligar com Ocorrência</option>
+                                </optgroup>
+                                <optgroup label="Férias">
+                                    <option value="startvacation">Iniciar Férias</option>
+                                    <option value="finishvacation">Finalizar Férias</option>
+                                </optgroup>
+                                <optgroup label="Afastamento">
+                                    <option value="startleave">Iniciar Afastamento</option>
+                                    <option value="finishleave">Finalizar Afastamento</option>
+                                </optgroup>
+                                <optgroup label="Suspenção">
+                                    <option value="startsuspension">Iniciar Suspensão</option>
+                                    <option value="finishsuspension">Finalizar Suspensão</option>
+                                </optgroup>
+                                <optgroup label="Reativação">
+                                    <option value="reactivate">Reativar</option>
+                                </optgroup>
+                            </select>
                             <div class="spacer"></div>
 
-                            <div class="form-group" id="occurrenceShutDown" style="display:none;">
-                                <label for="occurrenceShutDown">Registro de Ocorrência:</label>
-                                <textarea class="form-control" name="occurrenceShutDown"  rows="5" style="resize: none;"></textarea>
+                            <div class="form-group" id="obs" style="display:none;">
+                                <label for="obsfield">Observação:</label>
+                                <textarea class="form-control" name="obsfield" id="obsfield" rows="5" style="resize: none;"></textarea>
                             </div>
 
                             <div class="spacer"></div>
 
-                            <label for="CPFConfirmation" class = "control-label">Para Confirmar o <u>Desligamento</u> do Funcionário, Digite o CPF</label>
+                            <label for="CPFConfirmation" class = "control-label">Digite o CPF Para Confirmar a Alteração de Status do Funcionário.</label>
                             <input name = "CPFConfirmation" type="text" class = "form-control cpf" id = "CPFConfirmation" placeholder="000.000.000-00">
                             <input name = "shutDownID" type="hidden" id = "shutDownID" value="">
 
                             <br>
 
-                            <input id="submitShutDown" class="btn btn-sm btn-primary" type="submit" style="float:right;" value="Desligar Funcionário" disabled>
+                            <input id="submitShutDown" class="btn btn-sm btn-primary" type="submit" style="float:right;" value="Alterar Status" disabled>
 
                             <div class="spacer"></div>
 

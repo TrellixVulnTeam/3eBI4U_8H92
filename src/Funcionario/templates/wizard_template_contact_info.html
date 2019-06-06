@@ -57,8 +57,8 @@
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
-            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
-            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro de Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Funcionário</span>
             <small class="pull-right hidden-xs">Informações de Contato</small>
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
             <small class="hidden-sm hidden-md hidden-lg">Informações de Contato</small>
@@ -71,7 +71,7 @@
             <div class="row">   <!--ROW 1 STARTS-->
                     
                 <!--LANDLINE-->
-                <div class="form-group col-lg-4">
+                <div class="form-group col-lg-6">
                     <label for="{{ wizard.form.cont_tel_fixo.id_for_label }}" class = "control-label col-lg-4 text-right">
                         {{wizard.form.cont_tel_fixo.label}}
                     </label>
@@ -82,7 +82,7 @@
 
                 
                 <!--CEL-->
-                <div class="form-group col-lg-4">
+                <div class="form-group col-lg-6">
                     <label for="{{ wizard.form.cont_tel_cel.id_for_label }}" class = "control-label col-lg-4 text-right">
                         {{wizard.form.cont_tel_cel.label}}
                     </label>
@@ -93,33 +93,32 @@
                 
             </div>  <!--ROW 1 ENDS-->
 
-            <div class="spacer"></div>
-
             <div class="row">   <!--ROW 2 STARTS-->                    
-                <!--MESSAGES PHONE-->
-                <div class="form-group col-lg-4">
-                    <label for="{{ wizard.form.cont_tel_recado.id_for_label }}" class = "control-label col-lg-4 text-right">
-                        {{wizard.form.cont_tel_recado.label}}
-                    </label>
-                    <div class="col-lg-8">
-                        {% render_field wizard.form.cont_tel_recado class="form-control tel" placeholder="(DDD)00000000" %}
-                    </div>
-                </div>
                 
                 <!--EMAIL-->
-                <div class="form-group col-lg-8">
-                    <label for="{{ wizard.form.cont_email.id_for_label }}" class = "control-label col-lg-2 text-right">
-                        {{wizard.form.cont_email.label}}
+                <div class="form-group col-lg-6">
+                    <label for="{{ wizard.form.cont_email_principal.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.cont_email_principal.label}}
                     </label>
-                    <div class="col-lg-6">
-                        {% render_field wizard.form.cont_email class="form-control emailvalidation" placeholder=wizard.form.cont_email.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" %}
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.cont_email_principal class="form-control emailvalidation" placeholder=wizard.form.cont_email.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" %}
+                    </div>
+                </div>
+
+                <!--SECONDARY EMAIL-->
+                <div class="form-group col-lg-6">
+                    <label for="{{ wizard.form.cont_email_secundario.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.cont_email_secundario.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.cont_email_secundario class="form-control emailvalidation" placeholder=wizard.form.cont_email_secundario.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"  %}
                     </div>
                 </div>
 
 
             </div>  <!--ROW 2 ENDS-->
 
-            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+            <div class="spacer"></div>
 
             {% include 'wizard_template_buttons.html' %}
         </form>

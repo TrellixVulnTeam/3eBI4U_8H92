@@ -241,6 +241,9 @@ class CadastroClienteWizard(SessionWizardView):
                     
                     contractualinfo.funcionario_atrib.add(*funcionarios_atribuidos)
                     contractualinfo.save()
+                    
+                    basicinfo.quantidade_funcionarios_alocados = len(funcionarios_atribuidos)
+                    basicinfo.save()
                 
         return redirect('/cliente/')
 

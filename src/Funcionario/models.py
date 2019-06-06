@@ -41,7 +41,7 @@ CNH_category_choices        = [
 disableness_choices         = [
     ('Motora', 'Motora'),
     ('Visual', 'Visual'),
-    ('Fisica', 'Fisica'),
+    ('Física', 'Física'),
     ('Auditiva', 'Auditiva'),
     ('Mental', 'Mental'),
     ('Intelectual', 'Intelectual'),
@@ -58,18 +58,17 @@ intern_schooling_choices    = [
     ('Técnico', 'Técnico'),
     ('Superior', 'Superior')
 ]
-
 grau_parentesco_choices     = [
-    ('1', 'Cônjuge'),
-    ('2','Companheiro (a) com o (a) qual tenha filhos ou viva a mais de 05 anos ou possua Declaração de união Estável '),
-    ('3','Filho(a) ou Enteado(a)'),
-    ('4','Filho(a) ou Enteado(a), universitario(a) ou cursando escola técnica de 2º Grau'),
-    ('5','Irmão(ã), Neto(a) ou Bisneto(a) sem arrimo dos pais, do(a) qual detenha a guarda judicial '),
-    ('6','Irmão(ã), Neto(a) ou Bisneto(a) sem arrimo dos pais, universitário(a) ou cursando escola técnica de 2º Grau do(a) qual detenha Guarda Judicial'),
-    ('7','Pais, avós e bisavós'),
-    ('8','Menor pobre do qual detenha guarda judicial'),
-    ('9','A pessoa absolutamente incapaz, do qual seja tutor ou curador'),
-    ('10','Ex-Cônjuge')
+    ('Cônjuge', 'Cônjuge'),
+    ('Companheiro (a) com o (a) qual tenha filhos ou viva a mais de 05 anos ou possua Declaração de união Estável ','Companheiro (a) com o (a) qual tenha filhos ou viva a mais de 05 anos ou possua Declaração de união Estável '),
+    ('Filho(a) ou Enteado(a)','Filho(a) ou Enteado(a)'),
+    ('Filho(a) ou Enteado(a), universitario(a) ou cursando escola técnica de 2º Grau','Filho(a) ou Enteado(a), universitario(a) ou cursando escola técnica de 2º Grau'),
+    ('Irmão(ã), Neto(a) ou Bisneto(a) sem arrimo dos pais, do(a) qual detenha a guarda judicial ','Irmão(ã), Neto(a) ou Bisneto(a) sem arrimo dos pais, do(a) qual detenha a guarda judicial '),
+    ('Irmão(ã), Neto(a) ou Bisneto(a) sem arrimo dos pais, universitário(a) ou cursando escola técnica de 2º Grau do(a) qual detenha Guarda Judicial','Irmão(ã), Neto(a) ou Bisneto(a) sem arrimo dos pais, universitário(a) ou cursando escola técnica de 2º Grau do(a) qual detenha Guarda Judicial'),
+    ('Pais, avós e bisavós','Pais, avós e bisavós'),
+    ('Menor pobre do qual detenha guarda judicial','Menor pobre do qual detenha guarda judicial'),
+    ('A pessoa absolutamente incapaz, do qual seja tutor ou curador','A pessoa absolutamente incapaz, do qual seja tutor ou curador'),
+    ('Ex-Cônjuge','Ex-Cônjuge')
 ]
 
 # Regex Validators
@@ -84,8 +83,8 @@ class BasicInfo(models.Model):
 
     id                          =   models.BigAutoField(primary_key = True)
 
-    primeiro_nome               =   models.CharField(max_length = 100, null = True, blank = True)
-    ultimo_nome                 =   models.CharField(max_length = 100, null = True, blank = True)
+    primeiro_nome               =   models.CharField(max_length = 100)
+    ultimo_nome                 =   models.CharField(max_length = 100)
     data_nascimento             =   models.DateField(null = True, blank = True, validators = [validateNoFutureDates])
     genero                      =   models.CharField(max_length = 200, choices = gender_choices, null = True, blank = True)
     nacionalidade               =   models.CharField(max_length = 200, null = True, blank = True)
@@ -108,9 +107,14 @@ class BasicInfo(models.Model):
     estagiario                  =   models.BooleanField(null = True, blank = True)
     deficiente                  =   models.BooleanField(null = True, blank = True)
 
-    SEG                         =   models.BooleanField(default = True) # SEG == True, Eireli == False REQUIRED
+    SEG                         =   models.BooleanField(default = True) # REQUIRED (SEG == True, Eireli == False)
     ativo                       =   models.BooleanField(default = True) # REQUIRED
     ferias                      =   models.BooleanField(default=False)  # REQUIRED
+    afastamento                 =   models.BooleanField(default=False)  # REQUIRED
+
+    status                      =   models.CharField(max_length = 100, null = True, blank = True)
+
+    obs_status                  =   models.TextField(null = True, blank = True)
     obs_desligamento            =   models.TextField(null = True, blank = True)
 
     data_ultima_ativacao        =   models.DateTimeField(null = True, blank = True)
@@ -136,6 +140,9 @@ class AddressInfo(models.Model):
     end_pais                    =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
     end_residencia_propria      =   models.BooleanField(null = True, blank = True)
     end_comprado_FGTS           =   models.BooleanField(null = True, blank = True)
+
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
 # 3 - Documents Info (No Attachments)
 class DocumentsInfo(models.Model):
@@ -169,6 +176,9 @@ class DocumentsInfo(models.Model):
     docs_CNH_data_primeira      =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
     docs_CNH_data_validade      =   models.DateField(null = True, blank = True)
 
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
+
 # 4 - Contact Info
 class ContactInfo(models.Model):
 
@@ -176,8 +186,11 @@ class ContactInfo(models.Model):
 
     cont_tel_fixo               =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
     cont_tel_cel                =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
-    cont_tel_recado             =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
-    cont_email                  =   models.EmailField(null = True, blank = True)
+    cont_email_secundario       =   models.EmailField(null = True, blank = True)
+    cont_email_principal        =   models.EmailField(null = True, blank = True)
+    
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
 # 5 - Foreigner Info (If Needed)
 class ForeignerInfo(models.Model):
@@ -190,6 +203,9 @@ class ForeignerInfo(models.Model):
     estr_casado_brasileiro      =   models.BooleanField(null = True, blank = True)
     estr_filhos_brasileiros     =   models.BooleanField(null = True, blank = True)
 
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
+
 # 6 - Handiccaped Info (If Needed)
 class HandicappedInfo(models.Model):
 
@@ -197,6 +213,9 @@ class HandicappedInfo(models.Model):
 
     deficiencia_tipo            =   models.CharField(max_length = 200, choices = disableness_choices, null = True, blank = True)
     deficiencia_obs             =   models.CharField(max_length = 3000, null = True, blank = True)
+
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
 # 7 - Banking Info
 class BankingInfo(models.Model):
@@ -209,17 +228,26 @@ class BankingInfo(models.Model):
     banco_tipo_conta            =   models.CharField(max_length = 200, choices = [('Corrente', 'C. Corrente'), ('Poupança', 'Poupança')], null = True, blank = True)
     banco_numero_conta_root     =   models.CharField(max_length = 10, null = True, blank = True)
 
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
+
 # 8 - Another Job Info (If Needed)
 class AnotherJobInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                       =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    vinc_outra_emp_func         =   models.BooleanField(null = True, blank = True)
-    vinc_outra_emp_soc          =   models.BooleanField(null = True, blank = True)
-    vinc_outra_emp_nome         =   models.CharField(max_length = 300, null = True, blank = True)
-    vinc_outra_emp_CNPJ         =   models.CharField(max_length = 18, null = True, blank = True, validators=[validateCNPJ])
-    vinc_outra_emp_salario      =   models.CharField(max_length = 10, null = True, blank = True)
-    vinc_comentarios            =   models.CharField(max_length = 3000, null = True, blank = True)
+    vinc_outra_emp_func             =   models.BooleanField(null = True, blank = True)
+    vinc_outra_emp_soc              =   models.BooleanField(null = True, blank = True)
+    vinc_outra_emp_nome             =   models.CharField(max_length = 300, null = True, blank = True)
+    vinc_outra_emp_CNPJ             =   models.CharField(max_length = 18, null = True, blank = True, validators=[validateCNPJ])
+    vinc_outra_emp_salario          =   models.CharField(max_length = 10, null = True, blank = True)
+    vinc_outra_emp_nome_soc         =   models.CharField(max_length = 300, null = True, blank = True)
+    vinc_outra_emp_CNPJ_soc         =   models.CharField(max_length = 18, null = True, blank = True, validators=[validateCNPJ])
+    vinc_outra_emp_salario_soc      =   models.CharField(max_length = 10, null = True, blank = True)
+    vinc_comentarios                =   models.CharField(max_length = 3000, null = True, blank = True)
+
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
 # 9 - Internship Info (If Needed)
 class InternInfo(models.Model):
@@ -239,16 +267,22 @@ class InternInfo(models.Model):
     estag_instituto_CEP         =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
     estag_instituto_tel         =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
 
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
+
 # 10 - Position Info
-class PositionInfo(models.Model):
-
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
-
-    funcao_cargo                =   models.CharField(max_length = 100, null = True, blank = True)
-    funcao_nivel                =   models.CharField(max_length = 100, null = True, blank = True)
-    funcao_gestor               =   models.BooleanField(null = True, blank = True)
-    funcao_CBO                  =   models.CharField(max_length = 50, null = True, blank = True)
-    funcao_descricao            =   models.CharField(max_length = 3000, null = True, blank = True)
+#class PositionInfo(models.Model):
+#
+#    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+#
+#    funcao_cargo                =   models.CharField(max_length = 100, null = True, blank = True)
+#    funcao_nivel                =   models.CharField(max_length = 100, null = True, blank = True)
+#    funcao_gestor               =   models.BooleanField(null = True, blank = True)
+#    funcao_CBO                  =   models.CharField(max_length = 50, null = True, blank = True)
+#    funcao_descricao            =   models.CharField(max_length = 3000, null = True, blank = True)
+#
+#    def __str__(self):
+#        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
 # 11 - Contractual Info
 class ContractualInfo(models.Model):
@@ -270,6 +304,16 @@ class ContractualInfo(models.Model):
     contrat_vale_transp_valor   =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_salario_atual       =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_salario_base        =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_funcao_cargo                =   models.CharField(max_length = 100, null = True, blank = True)
+    contrat_funcao_nivel                =   models.CharField(max_length = 100, null = True, blank = True)
+    contrat_funcao_nivel_inicial        =   models.CharField(max_length = 100, null = True, blank = True)
+    contrat_funcao_gestor               =   models.BooleanField(null = True, blank = True)
+    contrat_funcao_CBO                  =   models.CharField(max_length = 50, null = True, blank = True)
+    contrat_funcao_descricao            =   models.CharField(max_length = 3000, null = True, blank = True)
+    contrat_data_ultima_alteracao_cargo =   models.DateField(null = True, blank = True)
+
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
 # 12 - Document File Attachments
 class DocumentAttachments(models.Model):
@@ -289,17 +333,22 @@ class DocumentAttachments(models.Model):
     docscan_comprovante_escolar =   models.ImageField(upload_to = funcionario_media_path_COMPROVANTEESCOLAR, null = True, blank = True)
     docscan_CV                  =   models.FileField(upload_to  = funcionario_media_path_CV, null = True, blank = True)
 
+    def __str__(self):
+        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
+
 # 13 - Dependent Info (If Needed)
 class Dependente(models.Model):
 
     basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
 
-    grau_parentesco             =   models.CharField(max_length = 200, choices = grau_parentesco_choices, null = True, blank = True)
+    grau_parentesco             =   models.CharField(max_length = 500, choices = grau_parentesco_choices, null = True, blank = True)
     nome                        =   models.CharField(max_length = 200, null = True, blank = True)
     data_nascimento             =   models.DateField(null = True, blank = True)
-    CPF                         =   models.CharField(max_length = 11, null = True, blank = True)
+    CPF                         =   models.CharField(max_length = 14, null = True, blank = True)
     docscan_certidao_nascimento =   models.ImageField(upload_to = funcionario_media_path_CERTIDAONASCIMENTO, null = True, blank = True)
     docscan_CPF                 =   models.ImageField(upload_to = funcionario_media_path_CPF, null = True, blank = True)
     docscan_vacinacao           =   models.ImageField(upload_to = funcionario_media_path_VACINACAO, null = True, blank = True)
     docscan_RG                  =   models.ImageField(upload_to = funcionario_media_path_RG, null = True, blank = True)
 
+    #def __str__(self):
+    #    return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome + ' - ' + self.nome

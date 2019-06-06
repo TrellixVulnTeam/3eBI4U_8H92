@@ -5,6 +5,7 @@
 {% load i18n %}
 {% load static %}
 {% load thumbnail %}
+{% load django_tables2 %}
 
 {% block head %}
     <title>BI4U - Cliente</title>
@@ -234,8 +235,9 @@
                     </div>
                     {% endif %}
 
+                    <br>
                     <span>Funcionários Atribuidos:</span><br/>
-                    <div class="spacer"></div>
+                    <br>
                     {% for employee in SEARCH_OBJ_EMPLOYEES.funcionario_atrib.all %}
                         <button class="btn btnmenu" style="margin: 0;" onclick="visualizeEmployee(this)">{{ employee }}</button>
                         <div class="hidden-xs hidden-sm hidden-md hidden-lg eid">{{employee.id}}</div>
@@ -300,7 +302,7 @@
                     <h4 class="modal-title">Clientes Cadastrados</h4>
                 </div>
                 <div class="modal-body">
-                <!--RENDER TABLE-->
+                    {% render_table table 'django_tables2/bootstrap-responsive.html' %}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

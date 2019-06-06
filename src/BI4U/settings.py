@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'Funcionario',
     'Financeiro',
     'Cliente',
-    'ControleAdministrativo'
+    'ControleAdministrativo',
+    'bootstrap3'
 ]
 
 MIDDLEWARE = [

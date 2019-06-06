@@ -10,14 +10,12 @@ from Funcionario.forms import (
     BankingInfoForm,
     AnotherJobInfoForm,
     InternInfoForm,
-    PositionInfoForm,
     ContractualInfoForm,
     DocScansForm,
-    DependenteForm,
     CadastroFuncionarioWizard
     )
 from .utilities import estagiario_form_condition, estrangeiro_form_condition, outro_emprego_form_condition, deficiente_form_condition
-from .views import appMenu, funcionariosListing
+from . import views
 
 create_funcionario_forms = [
     ('Basic Info', BasicInfoForm),
@@ -29,26 +27,14 @@ create_funcionario_forms = [
     ('Banking Info', BankingInfoForm),
     ('Another Job Info', AnotherJobInfoForm),
     ('Intern Info', InternInfoForm),
-    ('Position Info', PositionInfoForm),
     ('Contractual Info', ContractualInfoForm),
-    ('Doc Scans', DocScansForm)
+    ('Doc Scans', DocScansForm),
 ]
 
 
 urlpatterns = [
 
     # Register URL's
-    #path(create_funcionario + '/docscans/', views_funcionario.addFuncionarioDocScans),
-    #path(create_funcionario + '/informacoes-iniciais/', views_funcionario.addFuncionarioBasicInfo),
-    #path(create_funcionario + '/endereco/', views_funcionario.addFuncionarioAddressInfo),
-    #path(create_funcionario + '/documentos/', views_funcionario.addFuncionarioDocumentsInfo),
-    #path(create_funcionario + '/outras_informacoes/', views_funcionario.addFuncionarioOtherInfo),
-    #path(create_funcionario + '/dados_bancarios/', views_funcionario.addFuncionarioBankingInfo),
-    #path(create_funcionario + '/empregos_paralelos/', views_funcionario.addFuncionarioOtherEmploymentInfo),
-    #path(create_funcionario + '/estagio/', views_funcionario.addFuncionarioInternInfo),
-    #path(create_funcionario + '/cargo/', views_funcionario.addFuncionarioPositionInfo),
-    #path(create_funcionario + '/dados_contrato/', views_funcionario.addFuncionarioContractInfo),
-    #path(create_funcionario + '/dependentes/', views_funcionario.addDependente),
     path('cadastro/', CadastroFuncionarioWizard.as_view(
                                                         create_funcionario_forms,
                                                         condition_dict = {
@@ -69,8 +55,7 @@ urlpatterns = [
                                                             }
                                                         ), name = 'funcionario/visualizar'
     ),
+    path('cadastro/dependentes/<int:id>', views.cadastroDependentes, name = 'funcionario/cadastro/dependentes' ),
 
-    path('', appMenu, name = 'funcionario/menu'),
-    path('lista/', funcionariosListing, name='funcionario/lista'),
-    
+    path('', views.appMenu, name = 'funcionario/menu'),    
     ]

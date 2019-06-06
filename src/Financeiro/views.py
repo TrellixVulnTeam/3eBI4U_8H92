@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .forms import EntradaForm, SaidaForm, EntradaProdFormSet, SaidaProdFormSet
 from .models import Entrada, Saida, Balanco, LancamentosFixos, EntradaProd, SaidaProd
 from Cliente.models import BasicInfo
@@ -195,7 +195,6 @@ def lancamentosDespesaProd(request, *args, **kwargs):
                                 newfixobj.valor = request.POST['totalValue']
                                 newfixobj.flag_receita = False
                                 newfixobj.flag_despesa = True
-                                print(newfixobj.flag_despesa, newfixobj.flag_receita)
                                 newfixobj.data_vencimento_inicial = data_vencimento
                                 newfixobj.identificador_lancamento = request.session.get('identificador_lancamento')
                                 newfixobj.observacao = request.session.get('observacao')                                
@@ -238,7 +237,7 @@ def lancamentosFinanceiro(request, *args, **kwargs):
         data = []
 
         cliente                         =       list(Entrada.objects.values_list('cliente', flat = True))
-        cliente                         =       [BasicInfo.objects.get(id = c).primeiro_nome + ' ' + BasicInfo.objects.get(id = c).ultimo_nome for c in cliente]
+        cliente                         =       [BasicInfo.objects.get(id = c).nome  for c in cliente]
         identificador_receita           =       list(Entrada.objects.values_list('identificador_receita', flat = True))
         identificador_despesa           =       list(Saida.objects.values_list('identificador_despesa', flat = True))
         valor_receita                   =       list(Entrada.objects.values_list('valor', flat = True)) 
@@ -459,3 +458,39 @@ def appMenuFinanceiro(request, *args, **kwargs):
 
         return render(request, template_name, context)
 
+@login_required
+def deleteRecord(request, *args, **kwargs):
+        mov_type        = kwargs.pop('mt', False)
+        pk              = kwargs.pop('id', False)
+        
+        print(pk)
+        
+        return HttpResponse('OK')
+        
+        '''
+        if not mov_type or not pk:
+                return HttpResponse("ERROR 1 - MISSING ARGUMENTS")
+
+        if mov_type == 1:
+                entry = Entrada.objects.filter(id = pk)
+                lastmovement = id.valor
+                entry.delete()  
+        elif mov_type == 2:
+                entry = Saida.objects.filter(id = pk)
+                lastmovement = id.valor
+                entry.delete()  
+
+
+        # UPDATE AND LOG ACCOUNT BALANCE
+        lastbalance  = Balanco.objects.all().latest('id').balanco
+        lastmovement = Decimal(lastmovement)
+        newbalance   = lastbalance - lastmovement
+        
+        newbalanceobj                       = Balanco()
+        newbalanceobj.datahora_registro     = timezone.localtime(timezone.now())
+        newbalanceobj.balanco               = newbalance
+        newbalanceobj.save()
+
+        return HttpResponse("OK" + str(mov_type) + "-" + str(pk) + " DELETED")
+        '''
+        

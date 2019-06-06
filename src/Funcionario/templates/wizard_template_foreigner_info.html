@@ -28,11 +28,11 @@
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
         
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
-            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Funcionário</span>
-            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Funcionário</span>
-            <small class="pull-right hidden-xs">Informações de Funcionário Estrangeiro</small>
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro de Funcionário</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Funcionário</span>
+            <small class="pull-right hidden-xs">Trabalhador Estrangeiro</small>
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
-            <small class="hidden-sm hidden-md hidden-lg" style="font-size: 0.54em;">Informações de Funcionário Estrangeiro</small>
+            <small class="hidden-sm hidden-md hidden-lg" style="font-size: 0.54em;">Trabalhador Estrangeiro</small>
         </h2>
         
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
@@ -59,7 +59,7 @@
                     <div class="checkbox col-lg-offset-6" onclick='showField("citizenship", "citizenship_date")'>
                         <label for="citizenship" class = "checkbox control-label switch" style="transform: translateY(-50%);">
                                 {% render_field wizard.form.estr_naturalizado id="citizenship" %}
-                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                            <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                         </label>
                     </div>
                 </div>
@@ -117,7 +117,20 @@
                 </div>              
 
             </div>  <!--ROW 2 ENDS-->
-            
+
+            <div class="row">
+                <!--CHILDREN TOGGLE-->
+                <div class="form-group col-lg-2 hidden-xs">
+                    <div class="checkbox col-lg-offset-6">
+                        <label for="{{ wizard.form.estr_filhos_brasileiros.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                            {% render_field wizard.form.estr_filhos_brasileiros %}
+                            <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-3 hidden-xs" style= "right:0%;"> {{wizard.form.estr_filhos_brasileiros.label}} </div>
+            </div>
+
             <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
             
             {% include 'wizard_template_buttons.html' %}

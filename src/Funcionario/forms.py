@@ -1,15 +1,17 @@
 import os
 import re
 from django import forms
-from django.forms import widgets
+from django.forms import widgets, modelformset_factory
 from django.forms.models import model_to_dict
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
+from django.contrib.sessions.backends.db import SessionStore
+
 
 from ControleAdministrativo.models import FuncionarioCargo, FuncionarioNivel
 
@@ -23,7 +25,6 @@ from .models import (
     BankingInfo,
     AnotherJobInfo,
     InternInfo,
-    PositionInfo,
     ContractualInfo,
     DocumentAttachments,
     Dependente
@@ -76,7 +77,7 @@ class BasicInfoForm(forms.ModelForm):
             'genero'                                            :'Gênero',
             'nacionalidade'                                     :'Nacionalidade',
             'estado_nascimento'                                 :'Estado de Nascimento',
-            'municipio_nascimento'                              :'Municipio de Nascimento',
+            'municipio_nascimento'                              :'Município de Nascimento',
             'numero_documento_CPF'                              :'Número do CPF',
             'numero_inscricao_NIS'                              :'Número do NIS',
             'numero_PIS_PASEP'                                  :'Número PIS PASEP',
@@ -239,6 +240,7 @@ class ForeignerInfoForm(forms.ModelForm):
             'estr_naturalizado',
             'estr_data_naturalizacao',
             'estr_casado_brasileiro',
+            'estr_filhos_brasileiros'
         ]
         labels = {
             'estr_data_chegada' : 'Data de Chegada',
@@ -249,7 +251,8 @@ class ForeignerInfoForm(forms.ModelForm):
         }
         widgets = {
             'estr_naturalizado'         : widgets.CheckboxInput,
-            'estr_casado_brasileiro'    : widgets.CheckboxInput
+            'estr_casado_brasileiro'    : widgets.CheckboxInput,
+            'estr_filhos_brasileiros'   : widgets.CheckboxInput
         }
 
 class HandicappedInfoForm(forms.ModelForm):
@@ -274,15 +277,15 @@ class ContactInfoForm(forms.ModelForm):
         fields = [
             'cont_tel_fixo',
             'cont_tel_cel',
-            'cont_tel_recado',
-            'cont_email',
+            'cont_email_secundario',
+            'cont_email_principal',
         ]
 
         labels = {
-            'cont_tel_fixo'     : 'Residêncial',
-            'cont_tel_cel'      : 'Celular',
-            'cont_tel_recado'   : 'Recados',
-            'cont_email'        : 'E-Mail',
+            'cont_tel_fixo'             : 'Fixo',
+            'cont_tel_cel'              : 'Móvel',
+            'cont_email_secundario'     : 'E-Mail Secundário',
+            'cont_email_principal'      : 'E-Mail',
         }
 
 class BankingInfoForm(forms.ModelForm):
@@ -298,9 +301,9 @@ class BankingInfoForm(forms.ModelForm):
         labels = {
             'banco_numero_codigo' : 'Código do Banco',
             'banco_nome' : 'Nome do Banco',
-            'banco_agencia' : 'Número de Agência',
+            'banco_agencia' : 'Agência',
             'banco_tipo_conta' : 'Tipo da Conta',
-            'banco_numero_conta_root' : 'Número da Conta'
+            'banco_numero_conta_root' : 'Conta'
         }
         widgets = {
         }
@@ -314,16 +317,22 @@ class AnotherJobInfoForm(forms.ModelForm):
             'vinc_outra_emp_nome',
             'vinc_outra_emp_CNPJ',
             'vinc_outra_emp_salario',
+            'vinc_outra_emp_nome_soc',
+            'vinc_outra_emp_CNPJ_soc',
+            'vinc_outra_emp_salario_soc',
             'vinc_comentarios'
         ]
 
         labels = {
-            'vinc_outra_emp_func' : 'Funcionario em Outra Empresa',
-            'vinc_outra_emp_soc' : 'Sócio em Outra Empresa',
+            'vinc_outra_emp_func' : 'Funcionario em Outra Empresa (CLT)',
+            'vinc_outra_emp_soc' : 'Faz ou Fez Parte de Sociedade em Empresa',
             'vinc_outra_emp_nome' : 'Nome da Empresa',
-            'vinc_outra_emp_CNPJ' : 'CNPJ da Empresa',
-            'vinc_outra_emp_salario' : 'Salário',
-            'vinc_comentarios' : 'Comentários'
+            'vinc_outra_emp_CNPJ' : 'CNPJ',
+            'vinc_outra_emp_salario' : 'Remuneração',
+            'vinc_outra_emp_nome_soc' : 'Nome da Empresa',
+            'vinc_outra_emp_CNPJ_soc' : 'CNPJ',
+            'vinc_outra_emp_salario_soc' : 'Remuneração',
+            'vinc_comentarios' : 'Observações'
         }
 
         widgets = {
@@ -370,41 +379,41 @@ class InternInfoForm(forms.ModelForm):
             'estag_valor_bolsa'     :   widgets.TextInput   
         }
 
-class PositionInfoForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(PositionInfoForm, self).__init__(*args, **kwargs)
-        self.fields['funcao_cargo'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo', required = False)
-        self.fields['funcao_nivel'] = ReadableModelChoiceField(queryset = FuncionarioNivel.objects.all(), label = 'Nivel', required = False)
-
-
-
-    class Meta():
-        model = PositionInfo
-        fields = [
-            'funcao_cargo',
-            'funcao_nivel',
-            'funcao_gestor',
-            'funcao_CBO',
-            'funcao_descricao'
-        ]
-        labels = {
-            'funcao_cargo'      : 'Cargo',
-            'funcao_nivel'      : 'Nível',
-            'funcao_gestor'     : 'Cargo de Gestão',
-            'funcao_CBO'        : 'CBO da Função',
-            'funcao_descricao'  : 'Descrição da Função'
-        }
-        widgets = {
-            'funcao_gestor' : widgets.CheckboxInput,
-            'funcao_descricao' : widgets.Textarea
-        }
+#class PositionInfoForm(forms.ModelForm):
+#
+#    def __init__(self, *args, **kwargs):
+#        super(PositionInfoForm, self).__init__(*args, **kwargs)
+#        self.fields['funcao_cargo'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo', required = False)
+#        self.fields['funcao_nivel'] = ReadableModelChoiceField(queryset = FuncionarioNivel.objects.all(), label = 'Nivel', required = False)
+#
+#
+#
+#    class Meta():
+#        model = PositionInfo
+#        fields = [
+#            'funcao_cargo',
+#            'funcao_nivel',
+#            'funcao_gestor',
+#            'funcao_CBO',
+#            'funcao_descricao'
+#        ]
+#        labels = {
+#            'funcao_cargo'      : 'Cargo',
+#            'funcao_nivel'      : 'Nível',
+#            'funcao_gestor'     : 'Cargo de Gestão',
+#            'funcao_CBO'        : 'CBO da Função',
+#            'funcao_descricao'  : 'Descrição da Função'
+#        }
+#        widgets = {
+#            'funcao_gestor' : widgets.CheckboxInput,
+#            'funcao_descricao' : widgets.Textarea
+#        }
 
 class ContractualInfoForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        super(ContractualInfoForm, self).__init__(*args, **kwargs)
-        self.fields['contrat_cargo_inicial'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo Inicial', required = False)
+    #def __init__(self, *args, **kwargs):
+    #    super(ContractualInfoForm, self).__init__(*args, **kwargs)
+    #    self.fields['contrat_cargo_inicial'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo Inicial', required = False)
 
     class Meta():
         model = ContractualInfo
@@ -424,7 +433,13 @@ class ContractualInfoForm(forms.ModelForm):
             'contrat_vale_transp',
             'contrat_vale_transp_valor',
             'contrat_salario_atual',
-            'contrat_salario_base'            
+            'contrat_salario_base',
+            'contrat_funcao_cargo',
+            'contrat_funcao_nivel',
+            'contrat_funcao_gestor',
+            'contrat_funcao_CBO',
+            'contrat_funcao_descricao',
+            'contrat_funcao_nivel_inicial'
         ]
         labels = {
             'contrat_data_admissao' : 'Data de Admissão',
@@ -440,8 +455,15 @@ class ContractualInfoForm(forms.ModelForm):
             'contrat_vale_comb_valor' : 'Valor do Vale Combustível (R$)',
             'contrat_vale_transp' : 'Vale Transporte',
             'contrat_vale_transp_valor' : 'Valor do Vale transporte (R$)',
-            'contrat_salario_atual' : 'Salário Atual (R$)',
-            'contrat_salario_base' : 'Salário Base (R$)'            
+            'contrat_salario_atual' : 'Remuneração Atual (R$)',
+            'contrat_salario_base' : 'Remuneração Inicial (R$)',
+            'contrat_funcao_cargo'  :   'Cargo Atual',
+            'contrat_funcao_nivel'  :   'Nível Atual',
+            'contrat_funcao_gestor' :   'Cargo de Gestão',
+            'contrat_funcao_CBO'    :   'CBO',
+            'contrat_funcao_descricao'  :   'Descrição do Cargo',
+            'contrat_funcao_nivel_inicial' : 'Nível Inicial'
+          
         }
         widgets = {
             'contrat_salario_atual' : widgets.TextInput,
@@ -451,6 +473,9 @@ class ContractualInfoForm(forms.ModelForm):
             'contrat_cesta' : widgets.CheckboxInput,
             'contrat_vale_comb' : widgets.CheckboxInput,
             'contrat_vale_transp' : widgets.CheckboxInput,
+            'contrat_funcao_gestor' : widgets.CheckboxInput,
+            'contrat_funcao_descricao' : widgets.Textarea
+
         }
 
 class DocScansForm(forms.ModelForm):
@@ -482,30 +507,31 @@ class DocScansForm(forms.ModelForm):
             'docscan_CV' : 'Curriculum Vitae'
         }
 
-class DependenteForm(forms.ModelForm):
-    class Meta():
-        model = Dependente
+Dependentefmset = modelformset_factory(
+    Dependente,
+    fields = [
+        'grau_parentesco',
+        'nome',         
+        'data_nascimento',
+        'CPF',
+        'docscan_certidao_nascimento',
+        'docscan_CPF',
+        'docscan_vacinacao',
+        'docscan_RG'
+    ],
+    labels = {
+        'grau_parentesco' : 'Grau de Parentesco',
+        'nome' : 'Nome Completo',         
+        'data_nascimento' : 'Data de Nascimento',
+        'CPF' : 'Número de CPF',
+        'docscan_certidao_nascimento' : 'Certidão de Nascimento',
+        'docscan_CPF' : 'CPF',
+        'docscan_vacinacao' : 'Carteira de Vacinação',
+        'docscan_RG' : 'RG'
+    },
+    extra = 1
+    )
 
-        fields = [
-            'grau_parentesco',
-            'nome',         
-            'data_nascimento',
-            'CPF',
-            'docscan_certidao_nascimento',
-            'docscan_CPF',
-            'docscan_vacinacao',
-            'docscan_RG'
-        ]
-        labels = {
-            'grau_parentesco' : 'Grau de Parentesco',
-            'nome' : 'Nome Completo',         
-            'data_nascimento' : 'Data de Nascimento',
-            'CPF' : 'Número de CPF',
-            'docscan_certidao_nascimento' : 'Certidão de Nascimento',
-            'docscan_CPF' : 'CPF',
-            'docscan_vacinacao' : 'Carteira de Vacinação',
-            'docscan_RG' : 'RG'
-        }
 
 TEMPLATES = {
         'Basic Info'        :   'wizard_template_basic_info.html',
@@ -532,11 +558,14 @@ class CadastroFuncionarioWizard(SessionWizardView):
         return t
 
     def done(self, form_list, form_dict, **kwargs):
+        
+        # if ID IN URL PARAMETERS: UPDATE RECORDS
         if 'id' in self.kwargs:
             
             eid = self.kwargs['id']
 
             for k, v in form_dict.items():
+                
                 if k == 'Basic Info':
                     cdata = v.cleaned_data
                     basicinfo = BasicInfo.objects.get(id = eid)
@@ -677,8 +706,7 @@ class CadastroFuncionarioWizard(SessionWizardView):
                                 exec('docscans.' + attr + ' = "' +  str(cdata[attr]) + '"')
                     docscans.save()
 
-
-
+        # ELSE CREATE NEW RECORDS
         else:
             for k, v in form_dict.items():
                 if k == 'Basic Info':
@@ -729,41 +757,86 @@ class CadastroFuncionarioWizard(SessionWizardView):
                 elif k == 'Doc Scans':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    DocumentAttachments.objects.create(**cdata)    
-
-        return redirect('/funcionario/')
+                    DocumentAttachments.objects.create(**cdata)
+       
+        
+        return redirect('/funcionario/cadastro/dependentes/{}'.format(self.kwargs.get('id')))
 
     def get_form_initial(self, step):
         if 'id' in self.kwargs:
             eid = self.kwargs['id']
             if step == 'Basic Info':
-                obj = BasicInfo.objects.get(id=eid)
+                try:
+                    obj = BasicInfo.objects.get(id=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+
             elif step == "Address Info":
-                obj = AddressInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = AddressInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+
             elif step == "Documents Info":
-                obj = DocumentsInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = DocumentsInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+
             elif step == "Contact Info":
-                obj = ContactInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = ContactInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Foreigner Info":
-                obj = ForeignerInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = ForeignerInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Handicapped Info":
-                obj = HandicappedInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = HandicappedInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Banking Info":
-                obj = BankingInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = BankingInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Another Job Info":
-                obj = AnotherJobInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = AnotherJobInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Intern Info":
-                obj = InternInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = InternInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Position Info":
-                obj = PositionInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = PositionInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Contractual Info":
-                obj = ContractualInfo.objects.get(basicinfo=eid)
+                try:
+                    obj = ContractualInfo.objects.get(basicinfo=eid)
+                except:
+                    return self.initial_dict.get(step, {})
+            
             elif step == "Doc Scans":
-                obj = DocumentAttachments.objects.get(basicinfo=eid)
+                #obj = DocumentAttachments.objects.get(basicinfo=eid)
                 return self.initial_dict.get(step, {})
 
-
             modeldict = model_to_dict(obj)
+
             return modeldict
         else:
             return self.initial_dict.get(step, {})
