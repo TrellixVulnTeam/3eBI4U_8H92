@@ -270,20 +270,6 @@ class InternInfo(models.Model):
     def __str__(self):
         return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
-# 10 - Position Info
-#class PositionInfo(models.Model):
-#
-#    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
-#
-#    funcao_cargo                =   models.CharField(max_length = 100, null = True, blank = True)
-#    funcao_nivel                =   models.CharField(max_length = 100, null = True, blank = True)
-#    funcao_gestor               =   models.BooleanField(null = True, blank = True)
-#    funcao_CBO                  =   models.CharField(max_length = 50, null = True, blank = True)
-#    funcao_descricao            =   models.CharField(max_length = 3000, null = True, blank = True)
-#
-#    def __str__(self):
-#        return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
-
 # 11 - Contractual Info
 class ContractualInfo(models.Model):
 

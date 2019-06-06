@@ -43,12 +43,12 @@
             <div><strong>Celular:</strong> {{ wizard.form.cont_tel_cel.errors }}</div>
         {% endif %}
 
-        {% if wizard.form.cont_tel_recado.errors %}
-            <div><strong>Recados:</strong> {{ wizard.form.cont_tel_recado.errors }}</div>
+        {% if wizard.form.cont_email_secundario.errors %}
+            <div><strong>E-mail Secundário:</strong> {{ wizard.form.cont_email_secundario.errors }}</div>
         {% endif %}
 
-        {% if wizard.form.cont_email.errors %}
-            <div><strong>E-Mail:</strong> {{ wizard.form.cont_email.errors }}</div>
+        {% if wizard.form.cont_email_principalcont_email_principal.errors %}
+            <div><strong>E-Mail:</strong> {{ wizard.form.cont_email_principal.errors }}</div>
         {% endif %}
 
     </div>
@@ -101,7 +101,7 @@
                         {{wizard.form.cont_email_principal.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.cont_email_principal class="form-control emailvalidation" placeholder=wizard.form.cont_email.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" %}
+                        {% render_field wizard.form.cont_email_principal class="form-control emailvalidation" placeholder=wizard.form.cont_email_principal.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" %}
                     </div>
                 </div>
 
