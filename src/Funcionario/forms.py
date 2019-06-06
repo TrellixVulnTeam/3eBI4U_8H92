@@ -379,36 +379,6 @@ class InternInfoForm(forms.ModelForm):
             'estag_valor_bolsa'     :   widgets.TextInput   
         }
 
-#class PositionInfoForm(forms.ModelForm):
-#
-#    def __init__(self, *args, **kwargs):
-#        super(PositionInfoForm, self).__init__(*args, **kwargs)
-#        self.fields['funcao_cargo'] = ReadableModelChoiceField(queryset = FuncionarioCargo.objects.all(), label = 'Cargo', required = False)
-#        self.fields['funcao_nivel'] = ReadableModelChoiceField(queryset = FuncionarioNivel.objects.all(), label = 'Nivel', required = False)
-#
-#
-#
-#    class Meta():
-#        model = PositionInfo
-#        fields = [
-#            'funcao_cargo',
-#            'funcao_nivel',
-#            'funcao_gestor',
-#            'funcao_CBO',
-#            'funcao_descricao'
-#        ]
-#        labels = {
-#            'funcao_cargo'      : 'Cargo',
-#            'funcao_nivel'      : 'Nível',
-#            'funcao_gestor'     : 'Cargo de Gestão',
-#            'funcao_CBO'        : 'CBO da Função',
-#            'funcao_descricao'  : 'Descrição da Função'
-#        }
-#        widgets = {
-#            'funcao_gestor' : widgets.CheckboxInput,
-#            'funcao_descricao' : widgets.Textarea
-#        }
-
 class ContractualInfoForm(forms.ModelForm):
 
     #def __init__(self, *args, **kwargs):
@@ -439,7 +409,8 @@ class ContractualInfoForm(forms.ModelForm):
             'contrat_funcao_gestor',
             'contrat_funcao_CBO',
             'contrat_funcao_descricao',
-            'contrat_funcao_nivel_inicial'
+            'contrat_funcao_nivel_inicial',
+            'contrat_data_ultima_alteracao_cargo'
         ]
         labels = {
             'contrat_data_admissao' : 'Data de Admissão',
@@ -462,7 +433,8 @@ class ContractualInfoForm(forms.ModelForm):
             'contrat_funcao_gestor' :   'Cargo de Gestão',
             'contrat_funcao_CBO'    :   'CBO',
             'contrat_funcao_descricao'  :   'Descrição do Cargo',
-            'contrat_funcao_nivel_inicial' : 'Nível Inicial'
+            'contrat_funcao_nivel_inicial' : 'Nível Inicial',
+            'contrat_data_ultima_alteracao_cargo' : 'Data da Última Promoção'
           
         }
         widgets = {

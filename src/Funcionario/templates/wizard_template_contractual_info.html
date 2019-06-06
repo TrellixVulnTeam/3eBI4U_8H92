@@ -64,15 +64,14 @@
                         {% render_field wizard.form.contrat_data_inicio class="form-control date" placeholder="DD/MM/YYYY"  %}
                     </div>
                 </div>  
-
-                <!--MANAGEMENT POSITION-->
-                <div class="form-group col-lg-2 hidden-xs" style="transform:translateY(-10%); float:right;">
-                    <div style="transform:translate(-10%,-75%)">{{wizard.form.contrat_funcao_gestor.label}}</div>
-                    <div class="checkbox">
-                        <label for="{{ wizard.form.contrat_funcao_gestor.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.contrat_funcao_gestor placeholder=wizard.form.contrat_funcao_gestor.label %}
-                            <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
-                        </label>
+                
+                <!--LAST CHANGE IN POSITION DATE-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.contrat_data_ultima_alteracao_cargo.id_for_label }}" class = "control-label col-lg-6 text-right">
+                        {{wizard.form.contrat_data_ultima_alteracao_cargo.label}}
+                    </label>
+                    <div class="col-lg-6">
+                        {% render_field wizard.form.contrat_data_ultima_alteracao_cargo class="form-control date" placeholder="DD/MM/YYYY"  %}
                     </div>
                 </div>
                 
@@ -152,6 +151,19 @@
                     </label>
                     <div class="col-lg-7">
                         {% render_field wizard.form.contrat_funcao_CBO class="form-control" placeholder=wizard.form.contrat_funcao_CBO.label %}
+                    </div>
+
+                    <div class="spacer-lg"></div>
+
+                    <!--MANAGEMENT POSITION-->
+                    <div class="col-lg-offset-2">
+                        <div class="col-lg-6">{{wizard.form.contrat_funcao_gestor.label}}</div>
+                        <div class="checkbox col-lg-6">
+                            <label for="{{ wizard.form.contrat_funcao_gestor.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
+                                {% render_field wizard.form.contrat_funcao_gestor placeholder=wizard.form.contrat_funcao_gestor.label %}
+                                <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
