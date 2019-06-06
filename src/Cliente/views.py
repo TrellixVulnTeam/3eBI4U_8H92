@@ -41,7 +41,7 @@ def appMenu(request, *args, **kwargs):
         elif method == "CNPJ":
             queryset = BasicInfo.objects.filter(numero_documento_CNPJ = searchid).latest('id')
         elif method == "id":
-            queryset = BasicInfo.objects.filter(id = searchid)
+            queryset = BasicInfo.objects.get(id = searchid)
         
         if not queryset:
             context.update({
@@ -57,7 +57,7 @@ def appMenu(request, *args, **kwargs):
             contractualinfo = ContractualInfo.objects.filter(basicinfo_id = queryset[0].id)
             context.update({
             "SEARCH_OBJ" : queryset[0],
-            "SEARCH_OBJ_EMPLOYEES" : contractualinfo[0]
+            "SEARCH_OBJ_EMPLOYEES" : contractualinfo
             })
         except TypeError:
             contractualinfo = ContractualInfo.objects.filter(basicinfo_id = queryset.id)

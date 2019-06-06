@@ -167,6 +167,8 @@ class CadastroClienteWizard(SessionWizardView):
         return t
 
     def done(self, form_list, form_dict, **kwargs):
+        
+        # UPDATING OBJECT
         if 'id' in self.kwargs:
             eid = self.kwargs['id']
 
@@ -185,7 +187,6 @@ class CadastroClienteWizard(SessionWizardView):
 
                 elif k == 'Address Info' and v.changed_data:
                     cdata = v.cleaned_data
-                    cdata['basicinfo'] = basicinfo
                     addressinfo = AddressInfo.objects.get(basicinfo = eid)
                     
                     for attr, value in addressinfo.__dict__.items():
@@ -196,7 +197,6 @@ class CadastroClienteWizard(SessionWizardView):
 
                 elif k == 'Contact Info' and v.changed_data:
                     cdata = v.cleaned_data
-                    cdata['basicinfo'] = basicinfo
                     contactinfo = ContactInfo.objects.get(basicinfo = eid)
 
                     for attr, value in contactinfo.__dict__.items():
@@ -210,9 +210,16 @@ class CadastroClienteWizard(SessionWizardView):
                     contractualinfo = ContractualInfo.objects.get(basicinfo = eid)
 
                     funcionarios_atribuidos = [x.id for x in list(cdata.get('funcionario_atrib'))]
+                    
                     contractualinfo.funcionario_atrib.set(funcionarios_atribuidos)
                     contractualinfo.save()
 
+                    basicinfo = contractualinfo.basicinfo
+
+                    basicinfo.quantidade_funcionarios_alocados = len(funcionarios_atribuidos)
+                    basicinfo.save()
+
+        # CREATING OBJECT
         else:
             for k, v in form_dict.items():
                 if k == 'Basic Info':
