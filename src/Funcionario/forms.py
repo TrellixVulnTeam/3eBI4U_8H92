@@ -149,7 +149,7 @@ class AddressInfoForm(forms.ModelForm):
             'end_estado': 'Estado', 
             'end_CEP': 'CEP', 
             'end_pais': 'País', 
-            'end_residencia_propria': 'Residêcia Própria', 
+            'end_residencia_propria': 'Residência Própria', 
             'end_comprado_FGTS': 'Comprado com FGTS'
         }
 
@@ -247,7 +247,7 @@ class ForeignerInfoForm(forms.ModelForm):
             'estr_naturalizado' : 'Naturalizado',
             'estr_data_naturalizacao' : 'Data de Naturalização',
             'estr_casado_brasileiro' : 'Casado(a) com Brasileiro(a)',
-            'estr_filhos_brasileiros' : 'Filho(a) de Brasileiros' ,
+            'estr_filhos_brasileiros' : 'Filho(a) com Brasileiros' ,
         }
         widgets = {
             'estr_naturalizado'         : widgets.CheckboxInput,
@@ -358,7 +358,9 @@ class InternInfoForm(forms.ModelForm):
             'estag_instituto_end',
             'estag_instituto_UF',
             'estag_instituto_CEP',
-            'estag_instituto_tel'            
+            'estag_instituto_tel',
+            'estag_instituto_end_numero',
+            'estag_instituto_end_municipio'
         ]
         labels = {
             'estag_data_inicio' : 'Data de Início',
@@ -372,11 +374,14 @@ class InternInfoForm(forms.ModelForm):
             'estag_instituto_end' : 'Endereço',
             'estag_instituto_UF' : 'Estado',
             'estag_instituto_CEP' : 'CEP',
-            'estag_instituto_tel' : 'Telefone'            
+            'estag_instituto_tel' : 'Telefone',
+            'estag_instituto_end_numero'    :   'Número',
+            'estag_instituto_end_municipio' :   'Município'         
         }
         widgets = {
             'estag_obrigatorio'     :   widgets.CheckboxInput,
-            'estag_valor_bolsa'     :   widgets.TextInput   
+            'estag_valor_bolsa'     :   widgets.TextInput,
+            'estag_instituto_end_numero'    :   widgets.TextInput
         }
 
 class ContractualInfoForm(forms.ModelForm):
@@ -732,7 +737,9 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     DocumentAttachments.objects.create(**cdata)
        
         
-        return redirect('/funcionario/cadastro/dependentes/{}'.format(self.kwargs.get('id')))
+        redirectID = self.kwargs.get('id') if self.kwargs.get('id') else basicinfo.id
+
+        return redirect('/funcionario/cadastro/dependentes/{}'.format(redirectID))
 
     def get_form_initial(self, step):
         if 'id' in self.kwargs:

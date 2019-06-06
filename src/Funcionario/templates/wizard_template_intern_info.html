@@ -188,7 +188,17 @@
                         {% render_field wizard.form.estag_instituto_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00"%}
                     </div>
                 </div>
-                
+
+                <!--INSTITUTE CONTACT NUMBER-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_tel.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_tel.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_tel class="form-control tel" placeholder="(DDD)000000000"%}
+                    </div>
+                </div>
+
                 <!--INSTITUTE CEP-->
                 <div class="form-group col-lg-4">
                     <label for="{{ wizard.form.estag_instituto_CEP.id_for_label }}" class = "control-label col-lg-4 text-right">
@@ -209,6 +219,27 @@
                     </div>
                 </div>
 
+                <!--ADDRESS NUMBER-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_end_numero.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_end_numero.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_end_numero class="form-control" placeholder=wizard.form.estag_instituto_end_numero.label %}
+                    </div>
+                </div>
+
+
+                <!--INSTITUTE NEIGHBORHOOD-->
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.estag_instituto_end_municipio.id_for_label }}" class = "control-label col-lg-4 text-right">
+                        {{wizard.form.estag_instituto_end_municipio.label}}
+                    </label>
+                    <div class="col-lg-8">
+                        {% render_field wizard.form.estag_instituto_end_municipio class="form-control" placeholder=wizard.form.estag_instituto_end_municipio.label  %}
+                    </div>
+                </div>
+
                 <!--INSTITUTE UF-->
                 <div class="form-group col-lg-4">
                     <label for="{{ wizard.form.estag_instituto_UF.id_for_label }}" class = "control-label col-lg-4 text-right">
@@ -220,15 +251,6 @@
                 </div>
 
 
-                <!--INSTITUTE CONTACT NUMBER-->
-                <div class="form-group col-lg-4">
-                    <label for="{{ wizard.form.estag_instituto_tel.id_for_label }}" class = "control-label col-lg-4 text-right">
-                        {{wizard.form.estag_instituto_tel.label}}
-                    </label>
-                    <div class="col-lg-8">
-                        {% render_field wizard.form.estag_instituto_tel class="form-control tel" placeholder="(DDD)000000000"%}
-                    </div>
-                </div>
 
 
             </div>  <!--ROW 3 ENDS-->

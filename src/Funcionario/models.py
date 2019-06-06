@@ -252,20 +252,22 @@ class AnotherJobInfo(models.Model):
 # 9 - Internship Info (If Needed)
 class InternInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                       =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
 
-    estag_data_inicio           =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
-    estag_data_fim              =   models.DateField(null = True, blank = True)
-    estag_obrigatorio           =   models.BooleanField(null = True, blank = True)
-    estag_escolaridade          =   models.CharField(max_length = 200, choices = intern_schooling_choices, null = True, blank = True)
-    estag_area_atuacao          =   models.CharField(max_length = 300, null = True, blank = True)
-    estag_valor_bolsa           =   models.CharField(max_length = 10, null = True, blank = True)
-    estag_instituto_nome        =   models.CharField(max_length = 200, null = True, blank = True)
-    estag_instituto_CNPJ        =   models.CharField(max_length = 18, null = True, blank = True)
-    estag_instituto_end         =   models.CharField(max_length = 200, null = True, blank = True)
-    estag_instituto_UF          =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    estag_instituto_CEP         =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
-    estag_instituto_tel         =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    estag_data_inicio               =   models.DateField(null = True, blank = True, validators=[validateNoFutureDates])
+    estag_data_fim                  =   models.DateField(null = True, blank = True)
+    estag_obrigatorio               =   models.BooleanField(null = True, blank = True)
+    estag_escolaridade              =   models.CharField(max_length = 200, choices = intern_schooling_choices, null = True, blank = True)
+    estag_area_atuacao              =   models.CharField(max_length = 300, null = True, blank = True)
+    estag_valor_bolsa               =   models.CharField(max_length = 10, null = True, blank = True)
+    estag_instituto_nome            =   models.CharField(max_length = 200, null = True, blank = True)
+    estag_instituto_CNPJ            =   models.CharField(max_length = 18, null = True, blank = True)
+    estag_instituto_end             =   models.CharField(max_length = 200, null = True, blank = True)
+    estag_instituto_end_numero      =   models.IntegerField(null = True, blank = True)
+    estag_instituto_end_municipio   =   models.CharField(max_length = 200, null = True, blank = True)
+    estag_instituto_UF              =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
+    estag_instituto_CEP             =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
+    estag_instituto_tel             =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
 
     def __str__(self):
         return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
