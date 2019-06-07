@@ -205,7 +205,7 @@
                         {{wizard.form.estag_instituto_CEP.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.estag_instituto_CEP class="form-control cep" placeholder="00000-000"%}
+                        {% render_field wizard.form.estag_instituto_CEP class="form-control cep js-cep" placeholder="00000-000"%}
                     </div>
                 </div>
 
@@ -215,7 +215,7 @@
                         {{wizard.form.estag_instituto_end.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.estag_instituto_end class="form-control" placeholder=wizard.form.estag_instituto_end.label%}
+                        {% render_field wizard.form.estag_instituto_end class="form-control js-end" placeholder=wizard.form.estag_instituto_end.label%}
                     </div>
                 </div>
 
@@ -236,7 +236,7 @@
                         {{wizard.form.estag_instituto_end_municipio.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.estag_instituto_end_municipio class="form-control" placeholder=wizard.form.estag_instituto_end_municipio.label  %}
+                        {% render_field wizard.form.estag_instituto_end_municipio class="form-control js-municipio" placeholder=wizard.form.estag_instituto_end_municipio.label  %}
                     </div>
                 </div>
 
@@ -246,7 +246,7 @@
                         {{wizard.form.estag_instituto_UF.label}}
                     </label>
                     <div class="col-lg-8">
-                        {% render_field wizard.form.estag_instituto_UF class="form-control" %}
+                        {% render_field wizard.form.estag_instituto_UF class="form-control js-estado" %}
                     </div>
                 </div>
 

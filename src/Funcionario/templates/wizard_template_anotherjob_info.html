@@ -102,21 +102,21 @@
                 </div>
             
                 <!--COMPANY CNPJ-->
-                <div class="form-group col-lg-4">
-                    <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-2 text-right">
+                <div class="form-group col-lg-3">
+                    <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-3 text-right">
                         {{wizard.form.vinc_outra_emp_CNPJ.label}}
                     </label>
-                    <div class="col-lg-10">
+                    <div class="col-lg-9">
                         {% render_field wizard.form.vinc_outra_emp_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00"  %}
                     </div>
                 </div>
 
                 <!--COMPANY PAYMENT-->
-                <div class="form-group col-lg-3">
-                    <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-5 text-right">
-                        {{wizard.form.vinc_outra_emp_salario.label}}
+                <div class="form-group col-lg-4">
+                    <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-7 text-right">
+                        {{wizard.form.vinc_outra_emp_salario.label}} (R$)
                     </label>
-                    <div class="col-lg-7">
+                    <div class="col-lg-5">
                         {% render_field wizard.form.vinc_outra_emp_salario class="form-control money" placeholder="0,00"  %}
                     </div>
                 </div>
@@ -137,21 +137,21 @@
                     </div>
                 
                     <!--COMPANY CNPJ-->
-                    <div class="form-group col-lg-4">
-                        <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-2 text-right">
+                    <div class="form-group col-lg-3">
+                        <label for="{{ wizard.form.vinc_outra_emp_CNPJ.id_for_label }}" class = "control-label col-lg-3 text-right">
                             {{wizard.form.vinc_outra_emp_CNPJ.label}}
                         </label>
-                        <div class="col-lg-10">
+                        <div class="col-lg-9">
                             {% render_field wizard.form.vinc_outra_emp_CNPJ_soc class="form-control cnpj" placeholder="00.000.000/0000-00"  %}
                         </div>
                     </div>
     
                     <!--COMPANY PAYMENT-->
-                    <div class="form-group col-lg-3">
-                        <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.vinc_outra_emp_salario.label}}
+                    <div class="form-group col-lg-4">
+                        <label for="{{ wizard.form.vinc_outra_emp_salario.id_for_label }}" class = "control-label col-lg-7 text-right">
+                            {{wizard.form.vinc_outra_emp_salario.label}} (R$)
                         </label>
-                        <div class="col-lg-7">
+                        <div class="col-lg-5">
                             {% render_field wizard.form.vinc_outra_emp_salario_soc class="form-control money" placeholder="0,00"  %}
                         </div>
                     </div>

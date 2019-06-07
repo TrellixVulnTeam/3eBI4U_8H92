@@ -2,6 +2,7 @@
 {% load widget_tweaks %}
 {% load i18n %}
 {% load static %}
+{% load thumbnail %}
 
 {% block head %}
     {{ wizard.form.media }}
@@ -154,7 +155,7 @@ $(document).ready(function(){
 
                 <!--DOCSCAN PIC-->
                 {% render_field wizard.form.docscan_picture id="tgt0" %}
-                <label for="tgt0" class="col-lg-3 notsel" id="tgtlbl0"> Foto </label>
+                <label for="tgt0" class="col-lg-3 {% if not currentscans.docscan_picture %} notsel {% else %} sel {% endif %}" id="tgtlbl0"> Foto </label>
 
                 <!--DOCSCAN CPF-->
                 {% render_field wizard.form.docscan_CPF id="tgt1" %}
@@ -195,7 +196,93 @@ $(document).ready(function(){
 
             </div>  <!--ROW 1 ENDS-->
 
-            <div class="spacer-lg hidden-sm hidden-md hidden-lg"></div>
+            <div class="spacer-sm"></div>
+
+            {% if currentscans %}
+                <legend class="text-right">Documentos Atualmente Anexados</legend>
+
+                <div class="row">
+
+                    <div class="col-lg-1"></div>
+
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_picture "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Foto </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_CPF "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> CPF ou CNH </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_TE "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Título de Eleitor </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_CTPS "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> CTPS </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_reservista "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Reservista </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+                
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-1"></div>
+                    
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_certidao_nascimento "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Certidão Nascimento </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_certidao_casamento "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Certidão Casamento </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_comprovante_resid "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Comprovante Residência </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_comprovante_escolar "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Comprovante Escolar </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+
+                    <div class="col-lg-2">
+                        {% thumbnail currentscans.docscan_CV "150x150" as im %}
+                            <legend class="text-center" style="font-size: 1.3em;"> Curriculum Vitae </legend>
+                            <img data-placement="bottom" src="{{ im.url }}" style='border-radius:20px; cursor: pointer;' class="center-block">
+                        {% endthumbnail %}
+                    </div>
+
+                </div>
+                
+                <div class="spacer"></div>
+
+            {% endif %}
+
+            
 
             {% include 'wizard_template_buttons.html' %}
         </form>

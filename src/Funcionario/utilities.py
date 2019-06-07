@@ -78,6 +78,7 @@ def deficiente_form_condition(wizard):
 # Media Files Path Creating Functions - file will be uploaded to MEDIA_ROOT/Funcionario/funcionario_<BASICINFO.ID>/<DOCTYPE>_<DATE>_<FILENAME>
 
 def funcionario_media_path_CPF(instance, filename):
+        print('got called CPF')
         return 'funcionario_{0}/CPF-CNH_{1}_{2}'.format(
                 instance.basicinfo.id,
                 date.today(),
@@ -144,11 +145,9 @@ def funcionario_media_path_RG(instance, filename):
                 filename
         )
 def funcionario_media_path_PICTURE(instance, filename):
-        print('got called')
-        return 'funcionario_{0}/PICTURE_{1}_{2}'.format(
-                instance.basicinfo.id,
-                date.today(),
-                filename
+        print('got called PIC')
+        return 'funcionario_{0}/PICTURE'.format(
+                instance.basicinfo.id
         )
 def funcionario_media_path(instance, filename):
         return 'funcionario_{0}/{1}_{2}'.format(

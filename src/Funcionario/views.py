@@ -28,25 +28,38 @@ def appMenu(request, *args, **kwargs):
             except BasicInfo.MultipleObjectsReturned:
                 
                 biResults = BasicInfo.objects.filter(numero_documento_CPF = query).latest('id') if met == 'CPF' else BasicInfo.objects.get(id = query)
-                scanResults = DocumentAttachments.objects.get(basicinfo = biResults)
-                context.update({
-                    "object"   :   biResults,
-                    "imageObject"   :   scanResults,
-                    "ERROR"  :   2
-                }) 
-                return render(request, 'app_menu.html', context)
+                try:
+                    scanResults = DocumentAttachments.objects.get(basicinfo = biResults)
                 
+                    context.update({
+                        "object"   :   biResults,
+                        "imageObject"   :   scanResults,
+                        "ERROR"  :   2
+                    }) 
+                    return render(request, 'app_menu.html', context)
+                
+                except:
+                    context.update({
+                        "object"   :   biResults,
+                        "ERROR"  :   2
+                    }) 
+                    return render(request, 'app_menu.html', context)
+
             except:
                 context.update({
                     "ERROR"  :   1
                 })
                 return render(request, 'app_menu.html', context)
-
-            scanResults = DocumentAttachments.objects.get(basicinfo = biResults)
-            context.update({
-                "object"   :   biResults,
-                "imageObject"   :   scanResults
-            })
+            try:
+                scanResults = DocumentAttachments.objects.get(basicinfo = biResults)
+                context.update({
+                    "object"   :   biResults,
+                    "imageObject"   :   scanResults
+                })
+            except:
+                context.update({
+                    "object"   :   biResults,
+                })
 
         else:
             context.update({

@@ -2,7 +2,7 @@
 $(document).ready(function(){
 
     $('.js-cep').blur(function(){
-        var cep = this.val().replace(/[^0-9]/, "");
+        var cep = this.value.replace(/[^0-9]/, "");
 
         if(cep.length != 8){
             return false;
@@ -25,12 +25,14 @@ $(document).ready(function(){
 //MAKE VISIBLE SELECTION FIELD BAR ON FORM WIZARD TEMPLATES - VISIBILITY
 function showField(x, y) {
 
-    var checkbox    = document.getElementById(x);
-    var elem     = document.getElementById(y);
+    var checkbox    = $('#x');
+    var elem     = $('#y');
 
     if (checkbox.checked == true){
+        checkbox.prop('checked', true);
         elem.style.visibility = "visible";
     } else{
+        checkbox.prop('checked', false);
         elem.style.visibility = "hidden";
     }
 }
@@ -38,13 +40,15 @@ function showField(x, y) {
 //MAKE VISIBLE SELECTION FIELD BAR ON FORM WIZARD TEMPLATES - DISPLAY
 function displayField(x, y) {
 
-    var checkbox    = document.getElementById(x);
-    var elem     = document.getElementById(y);
+    var checkbox    = $('#x');
+    var elem     = $('#y');
 
     if (checkbox.checked == true){
-        elem.style.display = "block";
+        checkbox.prop('checked', true);
+        elem.show();
     } else{
-        elem.style.display = "none";
+        checkbox.prop('checked', false);
+        elem.hide();
     }
 }
 

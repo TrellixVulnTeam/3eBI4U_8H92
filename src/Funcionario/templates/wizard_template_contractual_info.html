@@ -9,6 +9,40 @@
 
 {% block custom_scripts %}
 <script>
+    $(document).ready(function() {
+        $(".js-beneficio-valor").each(function() {
+            if (!$(this).find('input').val() == "") {
+                if ($(this).css('display') == 'none') {
+                    $(this).css('display', 'block');
+                }
+            } else {
+                console.log('A');
+                
+
+                if ($(this).find('input').hasClass('js-meal-tgl')) {
+                    console.log('meal');
+                    $("input.js-meal-tgl[type=checkbox]").prop('checked', false);
+
+                } else if ($(this).find('input').hasClass('js-food-tgl')) {
+                    console.log('food');
+                    $("input.js-food-tgl[type=checkbox]").prop('checked', false);
+
+                } else if ($(this).find('input').hasClass('js-basket-tgl')) {
+                    console.log('basket');
+                    $("input.js-basket-tgl[type=checkbox]").prop('checked', false);
+
+                } else if ($(this).find('input').hasClass('js-fuel-tgl')) {
+                    console.log('fuel');
+                    $("input.js-fuel-tgl[type=checkbox]").prop('checked', false);
+
+                } else if ($(this).find('input').hasClass('js-transp-tgl')) {
+                    console.log('transp');
+                    $("input.js-transp-tgl[type=checkbox]").prop('checked', false);
+
+                };
+            } 
+        });
+    });
 </script>
 {% endblock custom_scripts %}
 
@@ -194,7 +228,7 @@
                     <div style="transform:translate(-2.5%,-75%)">{{wizard.form.contrat_vale_ref.label}}</div>
                     <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_ref", "vale_refeicao")'>
                         <label for="{{ wizard.form.contrat_vale_ref.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.contrat_vale_ref %}
+                            {% render_field wizard.form.contrat_vale_ref class="js-meal-tgl" %}
                             <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                         </label>
                     </div>
@@ -227,7 +261,7 @@
                     <div style="transform:translate(-10%,-75%)">{{wizard.form.contrat_vale_alim.label}}</div>
                     <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_alim", "vale_alimentacao")'>
                         <label for="{{ wizard.form.contrat_vale_alim.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.contrat_vale_alim %}
+                            {% render_field wizard.form.contrat_vale_alim class="js-food-tgl" %}
                             <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                         </label>
                     </div>
@@ -260,7 +294,7 @@
                     <div style="transform:translate(-2.5%,-75%)">{{wizard.form.contrat_cesta.label}}</div>
                     <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_cesta", "cesta_basica")'>
                         <label for="{{ wizard.form.contrat_cesta.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.contrat_cesta %}
+                            {% render_field wizard.form.contrat_cesta class="js-basket-tgl" %}
                             <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                         </label>
                     </div>
@@ -293,7 +327,7 @@
                     <div style="transform:translate(-10%,-75%)">{{wizard.form.contrat_vale_comb.label}}</div>
                     <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_comb", "vale_combustivel")'>
                         <label for="{{ wizard.form.contrat_vale_comb.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.contrat_vale_comb %}
+                            {% render_field wizard.form.contrat_vale_comb class="js-fuel-tgl" %}
                             <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                         </label>
                     </div>
@@ -326,7 +360,7 @@
                     <div style="transform:translate(-7.5%,-75%)">{{wizard.form.contrat_vale_transp.label}}</div>
                     <div class="checkbox" onclick='displayField("id_Contractual Info-contrat_vale_transp", "vale_transporte")'>
                         <label for="{{ wizard.form.contrat_vale_transp.id_for_label }}" class = "checkbox control-label switch" style="transform: translateY(-50%);">
-                            {% render_field wizard.form.contrat_vale_transp %}
+                            {% render_field wizard.form.contrat_vale_transp class="js-transp-tgl" %}
                             <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                         </label>
                     </div>
@@ -360,52 +394,52 @@
             <div class="row">   <!--ROW 3 STARTS-->
                 
                 <!--MEAL TICKET VALUE-->
-                <div class="form-group col-lg-6" id="vale_refeicao" style="display:none;">
+                <div class="form-group col-lg-6 js-beneficio-valor" id="vale_refeicao" style="display:none;">
                     <label for="{{ wizard.form.contrat_vale_ref_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
                         {{wizard.form.contrat_vale_ref_valor.label}}
                     </label>
                     <div class="col-lg-6">
-                        {% render_field wizard.form.contrat_vale_ref_valor class="form-control money" placeholder="0,00" %}
+                        {% render_field wizard.form.contrat_vale_ref_valor class="form-control money js-meal-tgl" placeholder="0,00" %}
                     </div>
                 </div>
 
                 <!--FOOD TICKET VALUE-->
-                <div class="form-group col-lg-6" id="vale_alimentacao" style="display:none;">
+                <div class="form-group col-lg-6 js-beneficio-valor" id="vale_alimentacao" style="display:none;">
                     <label for="{{ wizard.form.contrat_vale_alim_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
                         {{wizard.form.contrat_vale_alim_valor.label}}
                     </label>
                     <div class="col-lg-6">
-                        {% render_field wizard.form.contrat_vale_alim_valor class="form-control money" placeholder="0,00" %}
+                        {% render_field wizard.form.contrat_vale_alim_valor class="form-control money js-food-tgl" placeholder="0,00" %}
                     </div>
                 </div>  
 
                 <!--BASIC FOOD BASKET VALUE-->
-                <div class="form-group col-lg-6" id="cesta_basica" style="display:none;">
+                <div class="form-group col-lg-6 js-beneficio-valor" id="cesta_basica" style="display:none;">
                     <label for="{{ wizard.form.contrat_cesta_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
                         {{wizard.form.contrat_cesta_valor.label}}
                     </label>
                     <div class="col-lg-6">
-                        {% render_field wizard.form.contrat_cesta_valor class="form-control money" placeholder="0,00" %}
+                        {% render_field wizard.form.contrat_cesta_valor class="form-control money js-basket-tgl" placeholder="0,00" %}
                     </div>
                 </div>  
 
                 <!--FUEL VOUCHER VALUE-->
-                <div class="form-group col-lg-6" id="vale_combustivel" style="display:none;">
+                <div class="form-group col-lg-6 js-beneficio-valor" id="vale_combustivel" style="display:none;">
                     <label for="{{ wizard.form.contrat_vale_comb_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
                         {{wizard.form.contrat_vale_comb_valor.label}}
                     </label>
                     <div class="col-lg-6">
-                        {% render_field wizard.form.contrat_vale_comb_valor class="form-control money" placeholder="0,00" %}
+                        {% render_field wizard.form.contrat_vale_comb_valor class="form-control money js-fuel-tgl" placeholder="0,00" %}
                     </div>
                 </div>  
 
                 <!--TRANSPORTATION VOUCHER VALUE-->
-                <div class="form-group col-lg-6" id="vale_transporte" style="display:none;">
+                <div class="form-group col-lg-6 js-beneficio-valor" id="vale_transporte" style="display:none;">
                     <label for="{{ wizard.form.contrat_vale_transp_valor.id_for_label }}" class = "control-label col-lg-6 text-right">
                         {{wizard.form.contrat_vale_transp_valor.label}}
                     </label>
                     <div class="col-lg-6">
-                        {% render_field wizard.form.contrat_vale_transp_valor class="form-control money" placeholder="0,00" %}
+                        {% render_field wizard.form.contrat_vale_transp_valor class="form-control money js-transp-tgl" placeholder="0,00" %}
                     </div>
                 </div>  
 

@@ -673,15 +673,22 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     contractualinfo.save()
 
                 elif k == 'Doc Scans':
-                    cdata = v.cleaned_data
-                    cdata['basicinfo'] = basicinfo
-                    docscans = DocumentAttachments.objects.get(basicinfo = eid)
+                    #cdata = v.cleaned_data
+                    #cdata['basicinfo'] = basicinfo
+                    #docscans = DocumentAttachments.objects.get(basicinfo = eid)
 
-                    for attr, value in docscans.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('docscans.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    docscans.save()
+                    #for attr, value in docscans.__dict__.items():
+                    #    if attr in cdata.keys():
+                    #        if not cdata[attr] == "None" and not cdata[attr] == None:
+                    #            exec('docscans.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                    #docscans.save()
+                    savingform = v.save(commit = False)
+                    savingform.basicinfo = basicinfo
+                    not_empty_data = [ k for k,val in v.cleaned_data.items() if val ]
+                    savingform.save(update_fields=not_empty_data)
+
+                    
+
 
         # ELSE CREATE NEW RECORDS
         else:
@@ -729,6 +736,7 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     PositionInfo.objects.create(**cdata)
                 elif k == 'Contractual Info':
                     cdata = v.cleaned_data
+                    print(cdata)
                     cdata['basicinfo'] = basicinfo
                     ContractualInfo.objects.create(**cdata)
                 elif k == 'Doc Scans':
@@ -819,3 +827,17 @@ class CadastroFuncionarioWizard(SessionWizardView):
             return modeldict
         else:
             return self.initial_dict.get(step, {})
+
+    def get_context_data(self, form, **kwargs):
+        context = super(CadastroFuncionarioWizard, self).get_context_data(form=form, **kwargs)
+        
+        if 'id' in self.kwargs:
+            eid = self.kwargs['id']
+        
+            if self.steps.current == 'Doc Scans':
+                try:
+                    scans = DocumentAttachments.objects.get(basicinfo = eid)
+                    context.update({'currentscans': scans})
+                finally:
+                    return context
+        return context

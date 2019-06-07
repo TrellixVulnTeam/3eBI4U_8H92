@@ -13,6 +13,7 @@
     }
 
     .sel {
+        transform: translateY(50%);
         background-color: #B6F122;
     }
 
@@ -161,7 +162,6 @@
 
         function cloneMore(selector, prefix) {
             // CLONES ORIGINAL ELEMENT WHEN ADDING NEW ONE AND CREATES REMOVE FORM BUTTON
-            
             var newElement = $(selector).clone(true);
             var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
             newElement.find(':input').each(function() {
@@ -181,7 +181,7 @@
             //var conditionRow = $('.form-row:not(:last)');
             
             //conditionRow.find('.btn.add-form-row').removeClass('btn-success').addClass('btn-danger').removeClass('add-form-row').addClass('remove-form-row').html('-');
-
+            
             return false;
         };
 
@@ -206,9 +206,7 @@
 
             // GETTING URL
             var id = window.location.href.match(/[1-9]+$/)[0];
-            console.log(id);
             
-
 
             // ADDING FORM EVENT LISTENER TO CALL CLONEMORE
             $(document).on('click', '.add-form-row', function(e){
@@ -226,14 +224,42 @@
             // CREATES FILE LOADERS CUSTOM STYLE
             $('.doctgt').each(function(){
                 $(this).on("change", function() {
-                    if ($(this).value !== "") {
-                        $(this).next.classList.remove('notsel');
-                        $(this).next.classList.add('sel');
+                    if ($(this).val() !== "") {
+                        $(this).next().removeClass('notsel');
+                        $(this).next().addClass('sel');
                     }
                 });
             });
 
-        });
+            $('.cpf').keydown(function(){
+                
+                var cpf = $(this).val();
+                cpf = cpf.replace(/\D/g,"")
+
+                if ($(this).val().replace(/\D/g, "").length <= 11) {
+				    cpf = cpf.replace(/(\d{3})(\d)/,"$1.$2")
+				    cpf = cpf.replace(/(\d{3})(\d)/,"$1.$2")
+				    cpf = cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")    
+                }
+                
+				
+                $(this).val(cpf);
+            });
+
+            $('.date').keydown(function(){
+                var date = $(this).val();
+                date = date.replace(/\D/g,"")
+                date = date.replace(/(\d{2})(\d)/,"$1/$2")
+				date = date.replace(/(\d)(\d{4})$/,"$1/$2")
+				console.log();
+                
+                $(this).val(date);
+            });
+            
+
+
+	    });
+
     </script>
 {% endblock content %}
     
