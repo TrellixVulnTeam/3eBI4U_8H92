@@ -3,7 +3,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .utilities import validateCNPJ, validateCPF
 from django.core.exceptions import ValidationError
-from .models import BasicInfo, ContactInfo, ContractualInfo
+from .models import BasicInfo, ContractualInfo
 from .tables import ClienteBasicInfoTable
 
 # Create your views here.

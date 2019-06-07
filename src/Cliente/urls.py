@@ -3,7 +3,6 @@ from django.urls import path
 from Cliente.forms import (
     BasicInfoForm,
     AddressInfoForm,
-    ContactInfoForm,
     ContractualInfoForm,
     CadastroClienteWizard
     )
@@ -11,9 +10,7 @@ from Cliente import views
     
 create_cliente_forms = [
     ('Basic Info', BasicInfoForm),
-    ('Address Info', AddressInfoForm),
-    ('Contact Info', ContactInfoForm),
-    ('Contractual Info', ContractualInfoForm),
+    ('Address Info', AddressInfoForm)
 ]
 
 

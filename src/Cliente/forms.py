@@ -12,7 +12,7 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from chosen import forms as chosenforms
 
-from .models import BasicInfo, AddressInfo, ContactInfo, ContractualInfo
+from .models import BasicInfo, AddressInfo, ContractualInfo
 from Funcionario.models import BasicInfo as FuncBasicInfo
 
 class BasicInfoForm(forms.ModelForm):
@@ -62,7 +62,13 @@ class AddressInfoForm(forms.ModelForm):
             'end_fiscal_complemento',
             'end_fiscal_municipio',
             'end_fiscal_estado',
-            'end_fiscal_pais'
+            'end_fiscal_pais',
+            'cont_tel_fixo',
+            'cont_tel_fixo_adicional',
+            'cont_tel_cel',
+            'cont_tel_cel_adicional',
+            'cont_email',
+            'cont_email_adicional'
         ]
 
         labels = {
@@ -74,35 +80,19 @@ class AddressInfoForm(forms.ModelForm):
             'end_fiscal_municipio'      :   'Município',
             'end_fiscal_estado'         :   'Estado',
             'end_fiscal_pais'           :   'País',
-            'end_servico_CEP'           :   'CEP' 
+            'end_servico_CEP'           :   'CEP',
+            'cont_tel_fixo'             :   'Telefone Fixo',
+            'cont_tel_fixo_adicional'   :   'Telefone Fixo',
+            'cont_tel_cel'              :   'Telefone Celular',
+            'cont_tel_cel_adicional'    :   'Telefone Celular',
+            'cont_email'                :   'E-mail',
+            'cont_email_adicional'      :   'E-mail'            
         }
 
         widgets = {
             'end_fiscal_numero'         :   widgets.TextInput,
             'end_servico_numero'        :   widgets.TextInput,
         }
-
-class ContactInfoForm(forms.ModelForm):
-    class Meta():
-        model = ContactInfo
-        fields = [
-            'cont_tel_fixo',
-            'cont_tel_fixo_adicional',
-            'cont_tel_cel',
-            'cont_tel_cel_adicional',
-            'cont_email',
-            'cont_email_adicional'
-        ]
-
-        labels = {
-            'cont_tel_fixo'             :   'Telefone Fixo',
-            'cont_tel_fixo_adicional'   :   'Telefone Fixo Adicional',
-            'cont_tel_cel'              :   'Telefone Celular',
-            'cont_tel_cel_adicional'    :   'Telefone Celular Adicional',
-            'cont_email'                :   'E-mail',
-            'cont_email_adicional'      :   'E-mail Adicional'            
-        }
-
 
 class ChosenModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -133,7 +123,6 @@ class ContractualInfoForm(ChosenModelForm):
 TEMPLATES = {
         'Basic Info'        :   'wizard_template_basic_info_cliente.html',
         'Address Info'      :   'wizard_template_address_info_cliente.html',
-        'Contact Info'      :   'wizard_template_contact_info_cliente.html',
         'Contractual Info'  :   'wizard_template_contractual_info_cliente.html',
         }
 
@@ -176,16 +165,6 @@ class CadastroClienteWizard(SessionWizardView):
                                 exec('addressinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
                     addressinfo.save()
 
-                elif k == 'Contact Info' and v.changed_data:
-                    cdata = v.cleaned_data
-                    contactinfo = ContactInfo.objects.get(basicinfo = eid)
-
-                    for attr, value in contactinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('contactinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    contactinfo.save()
-
                 elif k == 'Contractual Info' and v.changed_data:
                     cdata = v.cleaned_data
                     contractualinfo = ContractualInfo.objects.get(basicinfo = eid)
@@ -214,10 +193,6 @@ class CadastroClienteWizard(SessionWizardView):
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
                     AddressInfo.objects.create(**cdata)
-                elif k == 'Contact Info':
-                    cdata = v.cleaned_data
-                    cdata['basicinfo'] = basicinfo
-                    ContactInfo.objects.create(**cdata)
                 elif k == 'Contractual Info':
                     cdata = v.cleaned_data
                     
@@ -242,8 +217,6 @@ class CadastroClienteWizard(SessionWizardView):
                 obj = BasicInfo.objects.get(id=eid)
             elif step == "Address Info":
                 obj = AddressInfo.objects.get(basicinfo=eid)
-            elif step == "Contact Info":
-                obj = ContactInfo.objects.get(basicinfo=eid)
             elif step == "Contractual Info":
                 obj = ContractualInfo.objects.get(basicinfo=eid)
 

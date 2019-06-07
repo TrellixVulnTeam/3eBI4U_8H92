@@ -127,6 +127,14 @@ class AddressInfo(models.Model):
     end_fiscal_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     end_fiscal_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
     
+    cont_tel_fixo               =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    cont_tel_fixo_adicional     =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    cont_tel_cel                =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    cont_tel_cel_adicional      =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
+    
+    cont_email                  =   models.EmailField(null = True, blank = True)
+    cont_email_adicional        =   models.EmailField(null = True, blank = True)
+
     #end_servico_CEP              =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
     #end_servico                  =   models.CharField(max_length = 500, null = True, blank = True)
     #end_servico_numero           =   models.IntegerField(null = True, blank = True)
@@ -135,19 +143,6 @@ class AddressInfo(models.Model):
     #end_servico_municipio        =   models.CharField(max_length = 200, null = True, blank = True)
     #end_servico_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     #end_servico_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
-
-# 3 - Contact Info
-class ContactInfo(models.Model):
-
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
-
-    cont_tel_fixo               =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
-    cont_tel_fixo_adicional     =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
-    cont_tel_cel                =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
-    cont_tel_cel_adicional      =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
-    
-    cont_email                  =   models.EmailField(null = True, blank = True)
-    cont_email_adicional        =   models.EmailField(null = True, blank = True)
 
 # 4 - Contractual Info
 class ContractualInfo(models.Model):

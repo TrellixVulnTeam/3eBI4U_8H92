@@ -53,7 +53,7 @@
             {% csrf_token %}
             {{ wizard.management_form }}
 
-            <div class="row">   <!--ROW 1 STARTS-->
+            <div class="row">   <!--ROW 1 STARTS - TAXES ADRESS-->
 
                 <legend class="text-right">Endereço Fiscal</legend>
                 
@@ -121,7 +121,7 @@
                             {{wizard.form.end_fiscal_pais.label}}
                         </label>
                         <div class="col-lg-10">
-                            {% render_field wizard.form.end_fiscal_pais class="form-control js-estado" placeholder=wizard.form.end_fiscal_pais.label %}
+                            {% render_field wizard.form.end_fiscal_pais class="form-control" placeholder=wizard.form.end_fiscal_pais.label %}
                         </div>
                     </div>
 
@@ -145,7 +145,7 @@
                             {{wizard.form.end_fiscal_estado.label}}
                         </label>
                         <div class="col-lg-9">
-                            {% render_field wizard.form.end_fiscal_estado class="form-control" placeholder=wizard.form.end_fiscal_estado.label  %}
+                            {% render_field wizard.form.end_fiscal_estado class="form-control js-estado" placeholder=wizard.form.end_fiscal_estado.label  %}
                         </div>
                     </div>
 
@@ -153,6 +153,97 @@
                 </div>  <!--COL 3 ENDS-->
             </div>  <!--ROW 1 ENDS-->
             
+            <div class="spacer-sm"></div>
+
+            <div class="row">   <!--ROW 2 STARTS - CONTACT INFO 1-->
+
+                <legend class="text-right">Informações de Contato</legend>
+
+                <!--LANDLINE-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_tel_fixo.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.cont_tel_fixo.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.cont_tel_fixo class="form-control tel" placeholder="(000)00000000" type="tel" %}
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!--CEL-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_tel_cel.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.cont_tel_cel.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.cont_tel_cel class="form-control tel" placeholder="(DDD)000000000" %}
+                        </div>
+                    </div>
+                </div>
+
+                <!--EMAIL-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_email.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.cont_email.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.cont_email class="form-control emailvalidation" placeholder=wizard.form.cont_email.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="spacer-sm"></div>
+
+            <div class="row">   <!--ROW 3 STARTS - CONTACT INFO 2-->
+
+                <legend class="text-right">Informações de Contato Adicional</legend>
+
+                <!--LANDLINE-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_tel_fixo_adicional.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.cont_tel_fixo_adicional.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.cont_tel_fixo_adicional class="form-control tel" placeholder="(000)00000000" type="tel" %}
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!--CEL-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_tel_cel_adicional.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.cont_tel_cel_adicional.label}}
+                        </label>
+                        <div class="col-lg-7">
+                            {% render_field wizard.form.cont_tel_cel_adicional class="form-control tel" placeholder="(DDD)000000000" %}
+                        </div>
+                    </div>
+                </div>
+
+                <!--EMAIL-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="{{ wizard.form.cont_email_adicional.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.cont_email_adicional.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.cont_email_adicional class="form-control emailvalidation" placeholder=wizard.form.cont_email_adicional.label type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>            
+
+
             <div class="spacer"></div>
 
             {% include 'wizard_template_buttons.html' %}
