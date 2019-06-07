@@ -42,11 +42,11 @@
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">
 
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
-            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Cliente</span>
-            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Cliente</span>
-            <small class="pull-right hidden-xs">Informações de Endereço</small>
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro de Cliente</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Cliente</span>
+            <small class="pull-right hidden-xs">Informações Complementares</small>
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
-            <small class="hidden-sm hidden-md hidden-lg">Informações de Endereço</small>
+            <small class="hidden-sm hidden-md hidden-lg">Informações Complementares</small>
         </h2>
 
         <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
@@ -67,7 +67,7 @@
                             {{wizard.form.end_fiscal_CEP.label}}
                         </label>
                         <div class="col-lg-9">
-                            {% render_field wizard.form.end_fiscal_CEP class="form-control cep" placeholder=wizard.form.end_fiscal_CEP.label %}
+                            {% render_field wizard.form.end_fiscal_CEP class="form-control cep js-cep" placeholder=wizard.form.end_fiscal_CEP.label %}
                         </div>
                     </div>
 
@@ -77,7 +77,7 @@
                             {{wizard.form.end_fiscal_bairro.label}}
                         </label>
                         <div class="col-lg-9">
-                            {% render_field wizard.form.end_fiscal_bairro class="form-control" placeholder=wizard.form.end_fiscal_bairro.label  %}
+                            {% render_field wizard.form.end_fiscal_bairro class="form-control js-bairro" placeholder=wizard.form.end_fiscal_bairro.label  %}
                         </div>
                     </div>
 
@@ -101,7 +101,7 @@
                             {{wizard.form.end_fiscal.label}}
                         </label>
                         <div class="col-lg-10">
-                            {% render_field wizard.form.end_fiscal class="form-control" placeholder=wizard.form.end_fiscal.label %}
+                            {% render_field wizard.form.end_fiscal class="form-control js-end" placeholder=wizard.form.end_fiscal.label %}
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                             {{wizard.form.end_fiscal_municipio.label}}
                         </label>
                         <div class="col-lg-10">
-                            {% render_field wizard.form.end_fiscal_municipio class="form-control" placeholder=wizard.form.end_fiscal_municipio.label  %}
+                            {% render_field wizard.form.end_fiscal_municipio class="form-control js-municipio" placeholder=wizard.form.end_fiscal_municipio.label  %}
                         </div>
                     </div>
 
@@ -121,7 +121,7 @@
                             {{wizard.form.end_fiscal_pais.label}}
                         </label>
                         <div class="col-lg-10">
-                            {% render_field wizard.form.end_fiscal_pais class="form-control" placeholder=wizard.form.end_fiscal_pais.label %}
+                            {% render_field wizard.form.end_fiscal_pais class="form-control js-estado" placeholder=wizard.form.end_fiscal_pais.label %}
                         </div>
                     </div>
 
@@ -153,107 +153,6 @@
                 </div>  <!--COL 3 ENDS-->
             </div>  <!--ROW 1 ENDS-->
             
-
-            <div class="row">   <!--ROW 1 STARTS-->
-
-                <legend class="text-right">Endereço de Serviço</legend>
-                
-                <div class="spacer"></div>
-                
-                <div class="col-lg-3">  <!--COL 1 STARTS-->
-                    
-                    <!--CEP-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico_CEP.id_for_label }}" class = "control-label col-lg-3 text-right">
-                            {{wizard.form.end_servico_CEP.label}}
-                        </label>
-                        <div class="col-lg-9">
-                            {% render_field wizard.form.end_servico_CEP class="form-control cep" placeholder=wizard.form.end_servico_CEP.label %}
-                        </div>
-                    </div>
-
-                    <!--NEIGHBORHOOD-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico_bairro.id_for_label }}" class = "control-label col-lg-3 text-right">
-                            {{wizard.form.end_servico_bairro.label}}
-                        </label>
-                        <div class="col-lg-9">
-                            {% render_field wizard.form.end_servico_bairro class="form-control" placeholder=wizard.form.end_servico_bairro.label  %}
-                        </div>
-                    </div>
-
-                    <!--COMPLEMENT-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico_complemento.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.end_servico_complemento.label}}
-                        </label>
-                        <div class="col-lg-7">
-                            {% render_field wizard.form.end_servico_complemento class="form-control" placeholder=wizard.form.end_servico_complemento.label %}
-                        </div>
-                    </div>
-
-
-                </div>  <!--COL 1 ENDS-->
-
-                <div class="col-lg-6">  <!--COL 2 STARTS-->
-                    <!--MAIN ADDRESS-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico.id_for_label }}" class = "control-label col-lg-2 text-right">
-                            {{wizard.form.end_servico.label}}
-                        </label>
-                        <div class="col-lg-10">
-                            {% render_field wizard.form.end_servico class="form-control" placeholder=wizard.form.end_servico.label %}
-                        </div>
-                    </div>
-
-                    <!--COUNTY-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico_municipio.id_for_label }}" class = "control-label col-lg-2 text-right">
-                            {{wizard.form.end_servico_municipio.label}}
-                        </label>
-                        <div class="col-lg-10">
-                            {% render_field wizard.form.end_servico_municipio class="form-control" placeholder=wizard.form.end_servico_municipio.label  %}
-                        </div>
-                    </div>
-
-                    <!--COUNTRY-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico_pais.id_for_label }}" class = "control-label col-lg-2 text-right">
-                            {{wizard.form.end_servico_pais.label}}
-                        </label>
-                        <div class="col-lg-10">
-                            {% render_field wizard.form.end_servico_pais class="form-control" placeholder=wizard.form.end_servico_pais.label %}
-                        </div>
-                    </div>
-
-
-                </div>  <!--COL 2 ENDS-->
-
-                <div class="col-lg-3">  <!--COL 3 STARTS-->
-                    <!--ADDRESS NUMBER-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico_numero.id_for_label }}" class = "control-label col-lg-3 text-right">
-                            {{wizard.form.end_servico_numero.label}}
-                        </label>
-                        <div class="col-lg-9">
-                            {% render_field wizard.form.end_servico_numero class="form-control" placeholder=wizard.form.end_servico_numero.label %}
-                        </div>
-                    </div>
-
-                    <!--STATE-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.end_servico_estado.id_for_label }}" class = "control-label col-lg-3 text-right">
-                            {{wizard.form.end_servico_estado.label}}
-                        </label>
-                        <div class="col-lg-9">
-                            {% render_field wizard.form.end_servico_estado class="form-control" placeholder=wizard.form.end_servico_estado.label  %}
-                        </div>
-                    </div>
-
-
-                </div>  <!--COL 3 ENDS-->
-            </div>  <!--ROW 1 ENDS-->
-
             <div class="spacer"></div>
 
             {% include 'wizard_template_buttons.html' %}

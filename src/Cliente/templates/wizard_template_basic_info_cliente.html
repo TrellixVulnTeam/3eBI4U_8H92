@@ -6,15 +6,38 @@
 {% block head %}
     {{ wizard.form.media }}
 {% endblock head %}
-<!--
+
 {% block customjs %}
     <script>
-        $(document).ready(function(){
-            $(".chosen-select").chosen()
+        $(document).ready(function() {
+            $('#tipoPessoa').on('change', function(e){
+                if (this.value == "F") {
+                    $('#CNPJ').hide();
+                    $('#CPF').show();
+                    
+                    $('.cnpj').prop('required', false);
+                    $('.cpf').prop('required', true);
+
+                } else if (this.value == "J") {
+                    $('#CPF').hide();
+                    $('#CNPJ').show();
+
+                    $('.cpf').prop('required', false);
+                    $('.cnpj').prop('required', true);
+
+                } else {
+                    $('#CPF').hide();
+                    $('#CNPJ').hide();
+
+                    $('.cpf').prop('required', false);
+                    $('.cnpj').prop('required', false);
+                }
+                
+            })
         })
+
     </script>
 {% endblock customjs %}
--->
 
 {% block content %}
 
@@ -37,8 +60,8 @@
     <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">    
         
         <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
-            <span class="col-lg-6 pull-left hidden-xs">Cadastro De Cliente</span>
-            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro De Cliente</span>
+            <span class="col-lg-6 pull-left hidden-xs">Cadastro de Cliente</span>
+            <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Cliente</span>
             <small class="pull-right hidden-xs">Informações Básicas</small>
             <div class="spacer hidden-sm hidden-md hidden-lg"></div>
             <small class="hidden-sm hidden-md hidden-lg">Informações Básicas</small>
@@ -83,34 +106,22 @@
                         </div>
                     </div>
 
-                    <!--PLACE OF WORK NAME-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.nome_local_servico.id_for_label }}" class = "control-label col-lg-3 text-right">
-                            {{wizard.form.nome_local_servico.label}}
-                        </label>
-                        <div class="col-lg-9">
-                            {% render_field wizard.form.nome_local_servico class="form-control" placeholder=wizard.form.nome_local_servico.label %}
-                        </div>
-                    </div>
-
                     <!--KIND OF PERSON-->
                     <div class="form-group">
                         <label for="{{ wizard.form.tipo_pessoa.id_for_label }}" class = "control-label col-lg-3 text-right">
                             {{wizard.form.tipo_pessoa.label}}
                         </label>
                         <div class="col-lg-9">
-                            {% render_field wizard.form.tipo_pessoa class="form-control"%}
+                            {% render_field wizard.form.tipo_pessoa class="form-control" id="tipoPessoa"%}
                         </div>
                     </div>
 
                 </div>
 
-                <!--BOOLEAN INPUT FIELDS-->
-                <div class="col-lg-4">
-
-                    <!--ACTIVE CLIENT TOGGLE XS-->
+                <!--ACTIVE CLIENT TOGGLE XS-->
+                <div class="col-lg-4">   
                     <div class="form-group hidden-xs">
-                        <label class="col-sm-8">Serviço Ativo: </label>
+                        <label class="col-sm-8">Serviço Ativo </label>
                         <div class="checkbox">
                             <label for="active" class = "checkbox control-label switch" style="transform: translateY(-50%);">
                                 {% render_field wizard.form.servico_ativo id="active" %}
@@ -118,28 +129,27 @@
                             </label>
                         </div>
                     </div>
-        
                 </div>
 
-            </div>
-            
-            <div class="row">
-
+                
+                
+                <!--CPF NUMBER-->
                 <div class="col-lg-4">
-
-                    <!--CPF NUMBER-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.numero_documento_CPF.id_for_label }}" class = "control-label col-lg-6 text-right">
-                            {{wizard.form.numero_documento_CPF.label}} * 
+                    <div class="spacer-sm"></div>
+                    <div class="form-group" hidden id="CPF">
+                        <label for="{{ wizard.form.numero_documento_CPF.id_for_label }}" class = "control-label col-lg-5 text-right">
+                            {{wizard.form.numero_documento_CPF.label}}
                         </label>
                         <div class="col-lg-6">
                             {% render_field wizard.form.numero_documento_CPF class="form-control cpf" placeholder="000.000.000-00" %}
                         </div>
                     </div>
-
-                    <!--CNPJ NUMBER-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.numero_documento_CNPJ.id_for_label }}" class = "control-label col-lg-6 text-right">
+                </div>
+                
+                <!--CNPJ NUMBER-->
+                <div class="col-lg-4">
+                    <div class="form-group" hidden id="CNPJ">
+                        <label for="{{ wizard.form.numero_documento_CNPJ.id_for_label }}" class = "control-label col-lg-5 text-right">
                             {{wizard.form.numero_documento_CNPJ.label}}
                         </label>
                         <div class="col-lg-6">
@@ -148,6 +158,7 @@
                     </div>
 
                 </div>
+    
 
             </div>
             

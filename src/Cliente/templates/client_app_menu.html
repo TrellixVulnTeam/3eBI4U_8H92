@@ -17,7 +17,47 @@
 
     $(document).ready(function(){
 
-        // LISTEN TO EID ND MAKE EMPLOYEE LINKS
+        // DISABLE MENU OVERFLOW
+        $('html').css('overflow', 'hidden');
+
+        // DEFAULT SEARCH MASK AS CPF
+        $('#search-field').mask('000.000.000-00', {reverse: true});
+        $('#search-field').attr('placeholder', "000.000.000-00");
+
+        // LISTEN FOR CHANGES IN SEARCH SELECT INPUT FOR MASKING INPUTBOX
+        $('select').on('change', function() {
+            var method = this.value;
+
+
+            if (method == "CPF"){
+                $('#search-field').mask('000.000.000-00', {reverse: true});
+                $('#search-field').attr('placeholder', "000.000.000-00");
+            } else if (method == "CNPJ") {
+                $('#search-field').mask('00.000.000/0000-00', {reverse: true});
+                $('#search-field').attr('placeholder', "00.000.000/0000-00");
+            } else if (method == "ID") {
+                $('#search-field').mask('##', {reverse: true});
+                $('#search-field').attr('placeholder', "ID do Cliente");
+            } else if (method == "NOME") {
+                // REMOVE MASK
+                $('#search-field').unmask();
+                $('#search-field').attr('placeholder', "Nome da Empresa");
+                
+                // AUTOCOMPLETE SEARCH BY NAME
+                $(function() {
+                    $("#search-field").autocomplete({
+                        source: "api/get_by_name/",
+                        minLength: 1,
+                        messages: {
+                            noResults : '',
+                            results : function() {}
+                        }
+                    });
+                });
+            }
+        });
+
+        // LISTEN TO EID AND MAKE EMPLOYEE LINKS
         $(".eid").each(function(){
             var id = $(this).text()
             if (id !== '') {
@@ -32,7 +72,6 @@
         // TEXTBOX PAGINATION
         console.log($('#contents').contents().text())
         if (1 == 1){
-            console.log('got in');
             var x = $('#contents').text();
 
             x = x.replace(/(((.|\n){300,}?\b)|((.|\n){1,299}(?!.)))/mg, '<div class="individual-page">$1</div>');
@@ -115,7 +154,7 @@
             $("#customer_preview").css('display', 'block');
         }
 
-    })
+    });
 
     // Creating Visualize Employee URL and Assigning Window Location
     function visualizeClient() {
@@ -171,12 +210,22 @@
     <div class="row"> <!--CONTENT ROW BEGINS-->
         <div class="col-lg-5 col-md-push-6"> <!--EMPLOYEE INFORMATION BEGINS-->
             <div class="spacer"></div>
-            <label for="cliente">Buscar Cliente:</label>
-            <form method="GET" action="/cliente#load">
-                <div class="input-group">
-                    <input name="search-id" id="cliente" type="text" class="form-control" placeholder="Insira o CPF ou CNPJ do Cliente">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+            <legend for="search-field" class="text-right">Buscar Cliente</legend>
+            <form method="GET" action="/cliente#load" class="row-no-gutters">
+                <div class="col-sm-3">
+                    <select class="form-control" name="search-method" id="search-method">
+                        <option value="CPF" selected>CPF</option>
+                        <option value="CNPJ">CNPJ</option>
+                        <option value="ID">ID</option>
+                        <option value="NOME">Nome</option>
+                    </select>
+                </div>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input name="search-id" id="search-field" type="text" class="form-control">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
                 </div>
             </form>

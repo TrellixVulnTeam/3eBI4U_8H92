@@ -127,14 +127,14 @@ class AddressInfo(models.Model):
     end_fiscal_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
     end_fiscal_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
     
-    end_servico_CEP              =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
-    end_servico                  =   models.CharField(max_length = 500, null = True, blank = True)
-    end_servico_numero           =   models.IntegerField(null = True, blank = True)
-    end_servico_bairro           =   models.CharField(max_length = 200, null = True, blank = True)
-    end_servico_complemento      =   models.CharField(max_length = 100, null = True, blank = True)
-    end_servico_municipio        =   models.CharField(max_length = 200, null = True, blank = True)
-    end_servico_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    end_servico_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
+    #end_servico_CEP              =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
+    #end_servico                  =   models.CharField(max_length = 500, null = True, blank = True)
+    #end_servico_numero           =   models.IntegerField(null = True, blank = True)
+    #end_servico_bairro           =   models.CharField(max_length = 200, null = True, blank = True)
+    #end_servico_complemento      =   models.CharField(max_length = 100, null = True, blank = True)
+    #end_servico_municipio        =   models.CharField(max_length = 200, null = True, blank = True)
+    #end_servico_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
+    #end_servico_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
 
 # 3 - Contact Info
 class ContactInfo(models.Model):

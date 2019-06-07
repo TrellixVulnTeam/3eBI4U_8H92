@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from json import dumps
+from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .utilities import validateCNPJ, validateCPF
 from django.core.exceptions import ValidationError
@@ -67,3 +68,35 @@ def appMenu(request, *args, **kwargs):
             })
             
     return render(request, template_name, context)
+
+def autocompleteByname(request, *args, **kwargs):
+
+    if request.is_ajax():
+        term = request.GET.get('term', '')
+        names = BasicInfo.objects.filter(nome__contains = term)[:20]
+
+        print(term)
+
+        results = []
+        
+        for name in names:
+            name_json = {}
+            
+            name_json  = name.id
+            name_json  = name.nome
+            name_json  = name.nome
+
+            
+
+            results.append(name_json)
+        
+        data = dumps(results)
+    
+    else:
+        data = 'fail'
+    
+    mimetype = 'application/json'
+
+    print(data)
+
+    return HttpResponse(data, mimetype)

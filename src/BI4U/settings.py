@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'dynamic_formsets',
     'chosen',
+    'bootstrap3',
 
     # STANDARD
     'django.contrib.admin',
@@ -52,8 +53,7 @@ INSTALLED_APPS = [
     'Funcionario',
     'Financeiro',
     'Cliente',
-    'ControleAdministrativo',
-    'bootstrap3'
+    'ControleAdministrativo'
 ]
 
 MIDDLEWARE = [

@@ -30,9 +30,8 @@ class BasicInfoForm(forms.ModelForm):
         ]
 
         labels = {
-            'nome'                              :'Nome',
+            'nome'                              :'Nome da Empresa',
             'nome_responsavel'                  :'Nome do Responsável',
-            'nome_local_servico'                :'Nome do Local de Serviço',
             'tipo_pessoa'                       :'Tipo de Pessoa',
             'numero_documento_CPF'              :'Número CPF',
             'numero_documento_CNPJ'             :'Número CNPJ',
@@ -42,7 +41,6 @@ class BasicInfoForm(forms.ModelForm):
         widgets = {
             'nome'                              :   widgets.TextInput,              
             'nome_responsavel'                  :   widgets.TextInput,
-            'nome_local_servico'                :   widgets.TextInput,
             'numero_documento_CPF'              :   widgets.TextInput,
             'numero_documento_CNPJ'             :   widgets.TextInput,
             'servico_ativo'                     :   widgets.CheckboxInput
@@ -64,15 +62,7 @@ class AddressInfoForm(forms.ModelForm):
             'end_fiscal_complemento',
             'end_fiscal_municipio',
             'end_fiscal_estado',
-            'end_fiscal_pais',
-            'end_servico_CEP',
-            'end_servico',
-            'end_servico_numero',
-            'end_servico_bairro',
-            'end_servico_complemento',
-            'end_servico_municipio',
-            'end_servico_estado',
-            'end_servico_pais' 
+            'end_fiscal_pais'
         ]
 
         labels = {
@@ -84,14 +74,7 @@ class AddressInfoForm(forms.ModelForm):
             'end_fiscal_municipio'      :   'Município',
             'end_fiscal_estado'         :   'Estado',
             'end_fiscal_pais'           :   'País',
-            'end_servico_CEP'           :   'CEP',   
-            'end_servico'               :   'Endereço',
-            'end_servico_numero'        :   'Número',
-            'end_servico_bairro'        :   'Bairro',
-            'end_servico_complemento'   :   'Complemento',
-            'end_servico_municipio'     :   'Município',
-            'end_servico_estado'        :   'Estado',
-            'end_servico_pais'          :   'País' 
+            'end_servico_CEP'           :   'CEP' 
         }
 
         widgets = {
@@ -135,7 +118,6 @@ class ChosenModelForm(forms.ModelForm):
     def label_from_instance(self, obj):
             return obj.primeiro_nome
 
-
 class ContractualInfoForm(ChosenModelForm):
     class Meta:
         model = ContractualInfo
@@ -147,7 +129,6 @@ class ContractualInfoForm(ChosenModelForm):
         labels = {
             'funcionario_atrib' :   'Funcionários Atribuidos'
         }
-
 
 TEMPLATES = {
         'Basic Info'        :   'wizard_template_basic_info_cliente.html',
