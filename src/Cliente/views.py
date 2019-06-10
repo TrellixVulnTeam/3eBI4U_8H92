@@ -14,21 +14,10 @@ def appMenu(request, *args, **kwargs):
     context = {'table' : table}
 
     if request.GET.get('search-id'):
+        method = request.GET.get('search-method')
         searchid = request.GET.get('search-id')
-        if '.' in searchid:
-            try:
-                validateCNPJ(searchid.replace('.','').replace('-','').replace('/',''))
-                method = "CNPJ"
-            except ValidationError:
-                try:
-                    validateCPF(searchid.replace('.','').replace('-','').replace('/',''))
-                    method = "CPF"
-                except ValidationError:
-                    method = "Invalid"
-        else:
-            method = "id"
         
-        if method == "Invalid":
+        if method not in ["CPF", "CNPJ", "ID", "NOME"]:
             context.update({
                 "ERROR" : 1,
                 "ERROR_HEADER" : "CPF ou CNPJ Inválido.",
@@ -43,6 +32,8 @@ def appMenu(request, *args, **kwargs):
             queryset = BasicInfo.objects.filter(numero_documento_CNPJ = searchid).latest('id')
         elif method == "id":
             queryset = BasicInfo.objects.get(id = searchid)
+        elif method == "NOME":
+            queryset = BasicInfo.objects.filter(nome = searchid).latest('id')
         
         if not queryset:
             context.update({
@@ -54,18 +45,12 @@ def appMenu(request, *args, **kwargs):
             return render(request, template_name, context)
         
         # Getting Alocated Employees Info
-        try:
-            contractualinfo = ContractualInfo.objects.filter(basicinfo_id = queryset[0].id)
-            context.update({
-            "SEARCH_OBJ" : queryset[0],
-            "SEARCH_OBJ_EMPLOYEES" : contractualinfo
-            })
-        except TypeError:
-            contractualinfo = ContractualInfo.objects.filter(basicinfo_id = queryset.id)
-            context.update({
+    
+        contractualinfo = ContractualInfo.objects.filter(basicinfo_id = queryset.id)
+        context.update({
             "SEARCH_OBJ" : queryset,
-            "SEARCH_OBJ_EMPLOYEES" : contractualinfo[0]
-            })
+            "SEARCH_OBJ_EMPLOYEES" : contractualinfo
+        })
             
     return render(request, template_name, context)
 

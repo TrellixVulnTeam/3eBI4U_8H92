@@ -697,6 +697,7 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     cdata = v.cleaned_data
                     cdata['data_ultima_ativacao'] = timezone.localtime(timezone.now())
                     cdata['data_ultima_modificacao'] = timezone.localtime(timezone.now())
+                    cdata['status'] = "Funcionário em Atividade"
                     basicinfo = BasicInfo.objects.create(**cdata)
                 elif k == 'Address Info':
                     cdata = v.cleaned_data
@@ -736,7 +737,6 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     PositionInfo.objects.create(**cdata)
                 elif k == 'Contractual Info':
                     cdata = v.cleaned_data
-                    print(cdata)
                     cdata['basicinfo'] = basicinfo
                     ContractualInfo.objects.create(**cdata)
                 elif k == 'Doc Scans':

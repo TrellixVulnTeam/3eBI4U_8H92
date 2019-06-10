@@ -30,18 +30,8 @@ def lancamentosReceita(request, *args, **kwargs):
 
                         savingform = filledform.save(commit = False)
                         savingform.datahora_registro = timezone.localtime(timezone.now())
-                        data_vencimento = savingform.data_vencimento
                         savingform.save()
                         
-                        # LOG FIX INCOME IN SESSION
-                        if 'receita_fixa' in request.POST:
-                                if request.POST['receita_fixa'] == 'on':
-                                        request.session['receita_fixa'] = True
-                                        request.session['periodicidade'] = request.POST['periodicidade']
-                                        request.session['data_vencimento'] = str(data_vencimento)
-                                        request.session['identificador_lancamento'] = request.POST['identificador_receita']
-                                        request.session['observacao'] = request.POST['observacao']
-
                         id_venda = Entrada.objects.latest('id').id
                         request.session['id_venda'] = id_venda
                         
@@ -89,39 +79,6 @@ def lancamentosReceitaProd(request, *args, **kwargs):
                 newbalanceobj.balanco               = newbalance
                 newbalanceobj.save()
 
-                # UPDATE NEW FIX INCOME
-                if 'receita_fixa' in request.session:
-                        if request.session.get('receita_fixa') == True:
-                                data_vencimento = request.session.get('data_vencimento')
-                                
-                                newfixobj       =       LancamentosFixos()
-                                newfixobj.valor = request.POST.get('totalValue')
-                                newfixobj.flag_receita = True
-                                newfixobj.data_vencimento_inicial = data_vencimento
-                                newfixobj.identificador_lancamento = request.session.get('identificador_lancamento')
-                                newfixobj.observacao = request.session.get('observacao')
-
-
-                                if request.session['periodicidade'] == '1':
-                                        newfixobj.periodicidade_diaria = True
-                                if request.session['periodicidade'] == '2':
-                                        newfixobj.periodicidade_semanal = True
-                                if request.session['periodicidade'] == '3':
-                                        newfixobj.periodicidade_quinzenal = True
-                                if request.session['periodicidade'] == '4':
-                                        newfixobj.periodicidade_mensal = True
-                                if request.session['periodicidade'] == '5':
-                                        newfixobj.periodicidade_trimestral = True
-                                if request.session['periodicidade'] == '6':
-                                        newfixobj.periodicidade_semestral = True
-                                if request.session['periodicidade'] == '7':
-                                        newfixobj.periodicidade_anual = True
-                                newfixobj.save()
-
-
-
-
-
                 return redirect(appMenuFinanceiro)
         return redirect(appMenuFinanceiro)
 
@@ -139,20 +96,8 @@ def lancamentosDespesa(request, *args, **kwargs):
 
                 savingform = filledform.save(commit = False)
                 savingform.datahora_registro = timezone.localtime(timezone.now())
-                data_vencimento = savingform.data_vencimento
                 savingform.save()        
                 
-
-                # LOG FIX INCOME IN SESSION
-                if 'despesa_fixa' in request.POST:
-                        if request.POST['despesa_fixa'] == 'on':
-                                request.session['despesa_fixa'] = True
-                                request.session['periodicidade'] = request.POST['periodicidade']
-                                request.session['data_vencimento'] = str(data_vencimento)
-                                request.session['identificador_lancamento'] = request.POST['identificador_despesa']
-                                request.session['observacao'] = request.POST['observacao']
-
-
                 id_venda = Saida.objects.latest('id').id
                 request.session['id_venda'] = id_venda
 
@@ -186,35 +131,6 @@ def lancamentosDespesaProd(request, *args, **kwargs):
                                         savingform.id_saida = Saida.objects.filter(id = request.session.get('id_venda'))[0]
                                         savingform.save()
 
-                # UPDATE NEW FIX EXPENSE 
-                if 'despesa_fixa' in request.session:
-                        if request.session.get('despesa_fixa') == True:
-                                data_vencimento = request.session.get('data_vencimento')
-
-                                newfixobj       =       LancamentosFixos()
-                                newfixobj.valor = request.POST['totalValue']
-                                newfixobj.flag_receita = False
-                                newfixobj.flag_despesa = True
-                                newfixobj.data_vencimento_inicial = data_vencimento
-                                newfixobj.identificador_lancamento = request.session.get('identificador_lancamento')
-                                newfixobj.observacao = request.session.get('observacao')                                
-
-                                if request.session['periodicidade'] == '1':
-                                        newfixobj.periodicidade_diaria = True
-                                if request.session['periodicidade'] == '2':
-                                        newfixobj.periodicidade_semanal = True
-                                if request.session['periodicidade'] == '3':
-                                        newfixobj.periodicidade_quinzenal = True
-                                if request.session['periodicidade'] == '4':
-                                        newfixobj.periodicidade_mensal = True
-                                if request.session['periodicidade'] == '5':
-                                        newfixobj.periodicidade_trimestral = True
-                                if request.session['periodicidade'] == '6':
-                                        newfixobj.periodicidade_semestral = True
-                                if request.session['periodicidade'] == '7':
-                                        newfixobj.periodicidade_anual = True
-                                newfixobj.save()
-
                 # UPDATE AND LOG ACCOUNT BALANCE
                 lastbalance  = Balanco.objects.all().latest('id').balanco
                 lastmovement = request.POST.get('totalValue')
@@ -246,10 +162,6 @@ def lancamentosFinanceiro(request, *args, **kwargs):
         percentual_desconto_despesa     =       list(Saida.objects.values_list('percentual_desconto', flat = True))
         forma_pagamento_receita         =       list(Entrada.objects.values_list('forma_pagamento', flat = True)) 
         forma_pagamento_despesa         =       list(Saida.objects.values_list('forma_pagamento', flat = True))
-        data_vencimento_receita         =       list(Entrada.objects.values_list('data_vencimento', flat = True))
-        data_vencimento_despesa         =       list(Saida.objects.values_list('data_vencimento', flat = True))
-        fixa_receita                    =       list(Entrada.objects.values_list('receita_fixa', flat = True)) 
-        fixa_despesa                    =       list(Saida.objects.values_list('despesa_fixa', flat = True))
         observacao_receita              =       list(Entrada.objects.values_list('observacao', flat = True)) 
         observacao_despesa              =       list(Saida.objects.values_list('observacao', flat = True))
         datahora_registro_receita       =       list(Entrada.objects.values_list('datahora_registro', flat = True)) 
@@ -264,8 +176,6 @@ def lancamentosFinanceiro(request, *args, **kwargs):
                 data_dict['valor']                      =       valor_receita.pop(0)
                 data_dict['percentual_desconto']        =       percentual_desconto_receita.pop(0)
                 data_dict['forma_pagamento']            =       forma_pagamento_receita.pop(0)
-                data_dict['data_vencimento']            =       data_vencimento_receita.pop(0)
-                data_dict['fixa']                       =       fixa_receita.pop(0)
                 data_dict['observacao']                 =       observacao_receita.pop(0)
                 data_dict['datahora_registro']          =       datahora_registro_receita.pop(0)
 
@@ -280,8 +190,6 @@ def lancamentosFinanceiro(request, *args, **kwargs):
                 data_dict['valor']                      =       valor_despesa.pop(0)
                 data_dict['percentual_desconto']        =       percentual_desconto_despesa.pop(0)
                 data_dict['forma_pagamento']            =       forma_pagamento_despesa.pop(0)
-                data_dict['data_vencimento']            =       data_vencimento_despesa.pop(0)
-                data_dict['fixa']                       =       fixa_despesa.pop(0)
                 data_dict['observacao']                 =       observacao_despesa.pop(0)
                 data_dict['datahora_registro']          =       datahora_registro_despesa.pop(0)
 

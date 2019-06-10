@@ -159,39 +159,39 @@ $(document).ready(function(){
 
                 <!--DOCSCAN CPF-->
                 {% render_field wizard.form.docscan_CPF id="tgt1" %}
-                <label for="tgt1" class="col-lg-3 notsel" id="tgtlbl1"> CPF ou CNH </label>
+                <label for="tgt1" class="col-lg-3 {% if not currentscans.docscan_CPF %} notsel {% else %} sel {% endif %}" id="tgtlbl1"> CPF ou CNH </label>
 
                 <!--DOCSCAN TE-->
                 {% render_field wizard.form.docscan_TE id="tgt2" %}
-                <label for="tgt2" class="col-lg-3 notsel" id="tgtlbl2"> Titulo de Eleitor </label>
+                <label for="tgt2" class="col-lg-3 {% if not currentscans.docscan_TE %} notsel {% else %} sel {% endif %}" id="tgtlbl2"> Titulo de Eleitor </label>
 
                 <!--DOCSCAN CTPS-->
                 {% render_field wizard.form.docscan_CTPS id="tgt3" %}
-                <label for="tgt3" class="col-lg-3 notsel" id="tgtlbl3"> CTPS </label>
+                <label for="tgt3" class="col-lg-3 {% if not currentscans.docscan_CTPS %} notsel {% else %} sel {% endif %}" id="tgtlbl3"> CTPS </label>
 
                 <!--DOCSCAN RESERVISTA-->
                 {% render_field wizard.form.docscan_reservista id="tgt4" %}
-                <label for="tgt4" class="col-lg-3 notsel" id="tgtlbl4"> Reservista </label>
+                <label for="tgt4" class="col-lg-3 {% if not currentscans.docscan_reservista %} notsel {% else %} sel {% endif %}" id="tgtlbl4"> Reservista </label>
 
                 <!--DOCSCAN BIRTH CERTIFICATE-->
                 {% render_field wizard.form.docscan_certidao_nascimento id="tgt5" %}
-                <label for="tgt5" class="col-lg-3 notsel" id="tgtlbl5"> Certidão de Nascimento </label>
+                <label for="tgt5" class="col-lg-3 {% if not currentscans.docscan_certidao_nascimento %} notsel {% else %} sel {% endif %}" id="tgtlbl5"> Certidão de Nascimento </label>
 
                 <!--DOCSCAN MARRIAGE CERTIFICATE-->
                 {% render_field wizard.form.docscan_certidao_casamento id="tgt6" %}
-                <label for="tgt6" class="col-lg-3 notsel" id="tgtlbl6"> Certidão de Casamento </label>
+                <label for="tgt6" class="col-lg-3 {% if not currentscans.docscan_certidao_casamento %} notsel {% else %} sel {% endif %}" id="tgtlbl6"> Certidão de Casamento </label>
 
                 <!--DOCSCAN PROOF OF ADDRESS-->
                 {% render_field wizard.form.docscan_comprovante_resid id="tgt7" %}
-                <label for="tgt7" class="col-lg-3 notsel" id="tgtlbl7"> Comprovante de Residência </label>
+                <label for="tgt7" class="col-lg-3 {% if not currentscans.docscan_comprovante_resid %} notsel {% else %} sel {% endif %}" id="tgtlbl7"> Comprovante de Residência </label>
 
                 <!--DOCSCAN PROOF OF SCHOLARSHIP-->
                 {% render_field wizard.form.docscan_comprovante_escolar id="tgt8" %}
-                <label for="tgt8" class="col-lg-3 notsel" id="tgtlbl8"> Comprovante Escolar </label>
+                <label for="tgt8" class="col-lg-3 {% if not currentscans.docscan_comprovante_escolar %} notsel {% else %} sel {% endif %}" id="tgtlbl8"> Comprovante Escolar </label>
 
                 <!--DOCSCAN CV-->
                 {% render_field wizard.form.docscan_CV id="tgt9" %}
-                <label for="tgt9" class="col-lg-3 notsel" id="tgtlbl9"> Curriculum Vitae </label>
+                <label for="tgt9" class="col-lg-3 {% if not currentscans.docscan_CV %} notsel {% else %} sel {% endif %}" id="tgtlbl9"> Curriculum Vitae </label>
 
 
             </div>  <!--ROW 1 ENDS-->

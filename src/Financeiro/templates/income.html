@@ -23,11 +23,20 @@
 
         </div>
 
-        <div class="spacer"></div>
-
         <div class="row">
+    
+            <!--PAYMENT METHOD-->
+            <div class="form-group col-lg-7">
+                <label for="{{ form.forma_pagamento.id_for_label }}" class = "control-label col-lg-5 text-right">
+                    {{ form.forma_pagamento.label }}
+                </label>
+                <div class="col-lg-7" style="transform: translateX(4%)">
+                    {% render_field form.forma_pagamento class="form-control" placeholder=form.forma_pagamento.label %}
+                </div>
+            </div>
+
             <!--CLIENT-->
-            <div class="form-group col-lg-5">
+            <div class="form-group col-lg-5" id="cliente" style="visibility: hidden;">
                 <label for="{{ form.cliente.id_for_label }}" class = "control-label col-lg-5 text-right">
                     {{ form.cliente.label }}
                 </label>
@@ -35,48 +44,11 @@
                     {% render_field form.cliente class="form-control" placeholder=form.cliente.label %}
                 </div>
             </div>
-    
-            <!--PAYMENT METHOD-->
-            <div class="form-group col-lg-7">
-                <label for="{{ form.forma_pagamento.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ form.forma_pagamento.label }}
-                </label>
-                <div class="col-lg-7">
-                    {% render_field form.forma_pagamento class="form-control" placeholder=form.forma_pagamento.label %}
-                </div>
-            </div>
+
 
         </div>
 
-        <div class="row">
-            <div class="form-group col-lg-5" id="period_selector" style="visibility: hidden;"> <!--PERIOD SELECTOR-->
-                <label for="periodicidade" class="control-label col-lg-5 text-right">Periodicidade</label>
-                <div class="col-lg-7">
-                    <select name="periodicidade" id="periodicidade" class="form-control">
-                        <option value="" selected>----------</option>
-                        <option value="1">Diária</option>
-                        <option value="2">Semanal</option>
-                        <option value="3">Quinzenal</option>
-                        <option value="4">Mensal</option>
-                        <option value="5">Trimestral</option>
-                        <option value="6">Semestral</option>
-                        <option value="7">Anual</option>
-                    </select>
-                </div>
-            </div>
-
-            <!--DUE DATE-->
-            <div class="form-group col-lg-7">
-                <label for="{{ form.data_vencimento.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ form.data_vencimento.label }}
-                </label>
-                <div class="col-lg-7">
-                    {% render_field form.data_vencimento class="form-control date" placeholder="DD/MM/YYYY" %}
-                </div>
-            </div>
-
-        </div>
-
+        <div class="spacer-sm"></div>
 
         <div class="row">
 
@@ -91,29 +63,24 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="row" style="transform: translateY(10%);">
-                    <!--RECURRING INCOME TOGGLE-->
-                    <label class="col-lg-6 col-sm-6 text-left" style="transform: translateY(25%);"> {{ form.receita_fixa.label }} </label>
-                    <div class="form-group col-lg-6 col-sm-6 text-center">
-                        <div class="checkbox" onclick='showField("RIT", "period_selector")'>
-                            <label for="RIT" class = "checkbox control-label switch" style="transform: translateY(-25%);">
-                                    {% render_field form.receita_fixa id="RIT" class="form-control" placeholder=form.receita_fixa.label %}
-                                <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
+                <div class="row">
+
+                    <div class="text-right col-sm-6" style="transform: translateY(50%);">Adicionar Cliente </div>
+                    <div class="form-group col-sm-6">
+                        <div class="checkbox" onclick='showField("cliente-tgl", "cliente")'>
+                            <label for="cliente-tgl" class = "checkbox control-label switch">
+                                <input type="checkbox" id="cliente-tgl" name="cliente-tgl">
+                                <span class="slider round"><span class="on">SIM</span><span class="off">NÃO</span></span>
                             </label>
                         </div>
                     </div>
-                </div>
-                <div class="row" style="transform: translateY(-10%);">
-                    <div class="col-lg-12"></div>
+        
                     <button name = "incomeform" class="btn btn-success col-lg-9" type="submit" style="margin-left:20px; margin-top:40px; background: RGB(255, 163, 26); color:white; border-color: RGB(255, 163, 26);">Adicionar Produtos</button>
                 </div>
             </div>   
 
         </div>
     </form>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
 </div>
 
 

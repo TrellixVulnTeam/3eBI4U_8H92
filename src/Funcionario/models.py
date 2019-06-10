@@ -269,7 +269,7 @@ class InternInfo(models.Model):
     def __str__(self):
         return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
-# 11 - Contractual Info
+# 10 - Contractual Info
 class ContractualInfo(models.Model):
 
     basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
@@ -300,7 +300,7 @@ class ContractualInfo(models.Model):
     def __str__(self):
         return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
-# 12 - Document File Attachments
+# 11 - Document File Attachments
 class DocumentAttachments(models.Model):
 
     #   upload_to  =    os.path.join(str(basicinfo.numero_documento_cpf), %Y%m)
@@ -321,7 +321,7 @@ class DocumentAttachments(models.Model):
     def __str__(self):
         return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
 
-# 13 - Dependent Info (If Needed)
+# 12 - Dependent Info (If Needed)
 class Dependente(models.Model):
 
     basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
@@ -337,4 +337,3 @@ class Dependente(models.Model):
 
     #def __str__(self):
     #    return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome + ' - ' + self.nome
-

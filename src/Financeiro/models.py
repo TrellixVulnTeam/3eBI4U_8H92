@@ -15,9 +15,6 @@ class Entrada(models.Model):
     valor                   =   models.CharField(max_length = 20, null = True, blank = True)
     percentual_desconto     =   models.CharField(max_length = 5, null = True, blank = True)
     forma_pagamento         =   models.CharField(max_length = 100, choices = payment_method_choices)    
-    data_vencimento         =   models.DateField()
-
-    receita_fixa            =   models.BooleanField()
 
     identificador_receita   =   models.CharField(max_length = 100)
     observacao              =   models.CharField(max_length = 500, null = True, blank = True)
@@ -40,9 +37,6 @@ class Saida(models.Model):
     valor                   =   models.CharField(max_length = 20, null = True, blank = True)
     percentual_desconto     =   models.CharField(max_length = 5, null = True, blank = True)
     forma_pagamento         =   models.CharField(max_length = 100, choices = payment_method_choices)    
-    data_vencimento         =   models.DateField()
-
-    despesa_fixa            =   models.BooleanField()
 
     identificador_despesa   =   models.CharField(max_length = 100)
     observacao              =   models.CharField(max_length = 100, null = True, blank = True)

@@ -10,8 +10,6 @@ class EntradaForm(forms.ModelForm):
         fields  =   [
             'cliente',
             'forma_pagamento',
-            'data_vencimento',
-            'receita_fixa',
             'identificador_receita',
             'observacao'
         ]
@@ -19,15 +17,11 @@ class EntradaForm(forms.ModelForm):
         labels  =   {
             'cliente'                   :   'Cliente',
             'forma_pagamento'           :   'Forma de Pagamento',
-            'data_vencimento'           :   'Data de Vencimento',
-            'receita_fixa'              :   'Receita Fixa',
             'identificador_receita'     :   'Identificador da Receita',
             'observacao'                :   'Observação'
         }
 
         widgets =   {
-            'data_vencimento'           :   widgets.DateInput,
-            'receita_fixa'              :   widgets.CheckboxInput,
             'observacao'                :   widgets.Textarea
         }
     
@@ -42,23 +36,17 @@ class SaidaForm(forms.ModelForm):
 
         fields  =   [
             'forma_pagamento',
-            'data_vencimento',
-            'despesa_fixa',
             'identificador_despesa',
             'observacao'
         ]
 
         labels  =   {
             'forma_pagamento'           :   'Forma de Pagamento',
-            'data_vencimento'           :   'Data de Vencimento',
-            'despesa_fixa'              :   'Despesa Fixa',
             'identificador_despesa'     :   'Identificador da Despesa',
             'observacao'                :   'Observação'
         }
 
         widgets =   {
-            'data_vencimento'           :   widgets.DateInput,
-            'despesa_fixa'              :   widgets.CheckboxInput,
             'observacao'                :   widgets.Textarea
         }
 

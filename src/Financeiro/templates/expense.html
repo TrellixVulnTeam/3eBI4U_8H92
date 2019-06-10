@@ -43,34 +43,6 @@
                 </div>
             </div>
 
-            <!--PERIOD SELECTOR-->
-            <div class=" form-group col-lg-5" style="visibility: hidden;" id="period_selector_expense">
-                <label for="periodicidade" class="control-label col-lg-5 text-right">Periodicidade</label>
-                <div class="col-lg-7">
-                    <select name="periodicidade" id="periodicidade" class="form-control">
-                        <option value="" selected>----------</option>
-                        <option value="1">Diária</option>
-                        <option value="2">Semanal</option>
-                        <option value="3">Quinzenal</option>
-                        <option value="4">Mensal</option>
-                        <option value="5">Trimestral</option>
-                        <option value="6">Semestral</option>
-                        <option value="7">Anual</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!--DUE DATE-->
-            <div class="form-group col-lg-7">
-                <label for="{{ formExpense.data_vencimento.id_for_label }}" class = "control-label col-lg-5 text-right">
-                    {{ formExpense.data_vencimento.label }}
-                </label>
-                <div class="col-lg-7">
-                    {% render_field formExpense.data_vencimento class="form-control date" placeholder="DD/MM/YYYY" %}
-                </div>
-            </div>
-
-
         </div>
 
         <div class="row">
@@ -85,25 +57,8 @@
                 </div>
             </div>
 
-            <div class="col-lg-4">
-
-                <div class="row" style="transform: translateY(50%);">
-                    <!--RECURRING EXPENSE TOGGLE-->
-                    <label class="col-sm-6 text-left" style="transform: translate(-10%, 10%);"> {{ formExpense.despesa_fixa.label }} </label>
-                    <div class="form-group col-sm-6 text-center">
-                        <div class="checkbox" onclick='showField("EIT", "period_selector_expense")'>
-                            <label for="EIT" class = "checkbox control-label switch" style="transform: translateY(-25%);">
-                                {% render_field formExpense.despesa_fixa id="EIT" name="EIT" class="form-control" placeholder=formExpense.despesa_fixa.label %}
-                                <span class="slider round"><span class="on">sim</span><span class="off">não</span></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row" style="transform: translateY(100%);">
-                    <div class="">
-                        <button name="expenseform" class="btn btn-success col-lg-10" type="submit" style="background: #FFA31A; color:white; border-color: #FFA31A;">Adicionar Produtos</button>
-                    </div>             
+            <div class="col-lg-4" style="transform: translateY(28 0%);">                
+                    <button name="expenseform" class="btn btn-success col-lg-10" type="submit" style="background: #FFA31A; color:white; border-color: #FFA31A;">Adicionar Produtos</button>
                 </div>
             </div>
             
