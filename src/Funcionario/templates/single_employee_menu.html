@@ -14,15 +14,31 @@
             text-decoration: none;
             color: black;
         }
-        .nav-tabs > li > a:hover {
+
+        .nav-pills > li > a:hover {
           background-color: #3c3c3c;
           color: white;
         }
+
+        .nav-pills > li {
+            border: var(--darkblue) 2px solid;
+            border-radius: 5px;
+            margin: 2px;
+            padding: 0px;
+        }
+
+        .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+            background-color: var(--darkblue);
+        }
+
         #img-modal-content {
             background-color: transparent;
             border: none;
             box-shadow: none;
         }
+
+
+
     </style>
 {% endblock customcss %}
 
@@ -140,7 +156,7 @@
 
                     <div class="spacer-xxs"></div>
 
-                    <ul class="nav nav-tabs"> <!--TAB MENU-->
+                    <ul class="nav nav-pills"> <!--TAB MENU-->
                         <li class="active"><a data-toggle="tab" href="#BasicInfo">Dados do Trabalhador</a></li>
                         <li><a data-toggle="tab" href="#AddressInfo">Dados Complementares</a></li>
                         <li><a data-toggle="tab" href="#DocsInfo">Documentos de Identificação</a></li>
