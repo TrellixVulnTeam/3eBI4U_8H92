@@ -1,0 +1,894 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+{% load thumbnail %}
+
+{% block head %}
+    <title>BI4U - Funcionário - {{basicinfo.primeiro_nome}}</title>
+{% endblock head %}
+
+{% block customcss %}
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+        .nav-tabs > li > a:hover {
+          background-color: #3c3c3c;
+          color: white;
+        }
+        #img-modal-content {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+        }
+    </style>
+{% endblock customcss %}
+
+{% block customjs %}
+    <script>
+        $(document).ready(function() {
+            
+            $('.pop').on('click', function() {
+                $('.imagepreview').attr('src', $(this).find('img').attr('data-url'));
+                $('#imagemodal').modal('show');
+            });
+            
+            // Enabling and Disabling Submit Button on ShutDown Form
+            const selectElement = document.querySelector('#CPFConfirmation');
+
+            selectElement.addEventListener('change', (event) => {
+                var ofCPF = $('#officialCPF').text();
+                var CPF = $('#CPFConfirmation').val();
+                var id = document.getElementById("eid").textContent;
+                console.log(ofCPF, CPF, id);
+                
+
+                if (ofCPF === CPF && ofCPF != "" && CPF != "") {
+                    $('#submitShutDown').prop("disabled", false);
+                    $('#shutDownID').val(id);
+                } else {
+                    $('#submitShutDown').prop("disabled", true);
+                    $('#shutDownID').val('');
+                }
+            });
+        });
+
+        // Creating Obs Box In Status Change Modal
+        function ToggleObsBox() {
+        
+            var OSDRB = document.getElementById('status-selection');
+            var OSDTA = document.getElementById('obs');
+            
+            if (OSDRB.value == "occurrenceshutdown" || OSDRB.value == "startleave" || OSDRB.value == "startsuspension") {
+                OSDTA.style.display = "block";
+            } else {
+                OSDTA.style.display = "none";
+            }
+        }
+    
+    </script>
+{% endblock customjs %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2"> 
+                <div class="row"> <!--PICTURE-->
+                    {% thumbnail basicinfo.docscans.docscan_picture "300x300" as im %}
+                        <img class="center-block" src="{{ im.url }}" style='border-radius:50px;'>
+                    {% empty %}
+                        Sem Imagem
+                    {% endthumbnail %}
+                </div>
+                <div class="row" style="margin-top: -50px;"> <!--BUTTONS MENU-->
+                    <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#modalShutDown">
+                        <span>Alterar Status</span>
+                    </button>
+                    <a class="btn-block btnmenu panel-heading text-center" href="{% url 'funcionario/cadastro/dependentes' basicinfo.id %}">
+                        <span>Dependentes</span>
+                    </a>
+                    <a class="btn-block btnmenu panel-heading text-center" href="{% url 'funcionario/editar' basicinfo.id %}">
+                        <span>Editar Cadastro</span>
+                    </a>
+                    <button class="btn-block btnmenu panel-heading">
+                        <span>Agenda</span>
+                    </button>
+                    <button class="btn-block btnmenu panel-heading">
+                        <span>Alocar Ponto</span>
+                    </button>
+
+                </div>
+
+            </div>
+            <div class="col-sm-10">
+                <div class="col-sm-5"> <!--EMPLOYEE HEADER INFO-->
+                    <span id="eid" hidden>{{basicinfo.id}}</span>
+                    <h2>
+                        {{basicinfo.primeiro_nome}} {{basicinfo.ultimo_nome}}, {{age}}<br><small><!--NAME AND AGE-->
+                        {{basicinfo.nacionalidade}}, {{basicinfo.data_nascimento}}, {{basicinfo.get_estado_civil_display}}<br><!--NATIONALITY, BIRTHDATE, CIVIL STATE-->
+                        {{basicinfo.contractual_info.contrat_funcao_cargo}} {{basicinfo.contractual_info.contrat_funcao_nivel}}, {% if basicinfo.SEG %}Funcionário SEG{% else %}Funcionário Eireli{% endif %} <!--FUNCTION, LEVEL AND COMPANY--></small>
+                    </h2>
+                </div>
+
+                <div class="col-sm-3"> <!--ACTIVE STATUS-->
+                    <div class="spacer-xxs"></div>
+                    <h4 class="text-primary bold-text">{{basicinfo.status}}</h4>
+                </div>
+
+                <div class="col-sm-3"> <!--EXTRA STATUS INFORMATION-->
+                    <div class="spacer-xxs"></div>
+                    {% if basicinfo.primeiro_emprego %}
+                        <span class="text-success pull-right bold-text">Primeiro Emprego &#10004;</span><br>
+                    {% endif %}
+                    {% if basicinfo.estrangeiro %}
+                        <span class="text-success pull-right bold-text">Funcionário Estrangeiro &#10004;</span><br>
+                    {% endif %}
+                    {% if basicinfo.outro_emprego %}
+                        <span class="text-success pull-right bold-text">Possui Outro Emprego &#10004;</span><br>
+                    {% endif %}
+                    {% if basicinfo.estagiario %}
+                        <span class="text-success pull-right bold-text">Estagiário &#10004;</span><br>
+                    {% endif %}
+                    {% if basicinfo.deficiente %}
+                        <span class="text-success pull-right bold-text">Funcionário com Deficiência &#10004;</span><br>
+                    {% endif %}
+                </div>
+                
+                <div class="col-sm-12"> <!-- REGULAR CONTENT-->
+
+                    <div class="spacer-xxs"></div>
+
+                    <ul class="nav nav-tabs"> <!--TAB MENU-->
+                        <li class="active"><a data-toggle="tab" href="#BasicInfo">Dados do Trabalhador</a></li>
+                        <li><a data-toggle="tab" href="#AddressInfo">Dados Complementares</a></li>
+                        <li><a data-toggle="tab" href="#DocsInfo">Documentos de Identificação</a></li>
+                        {% if basicinfo.estrangeiro %}<li><a data-toggle="tab" href="#ForeignerInfo">Trabalhador Estrangeiro</a></li>{% endif %}
+                        {% if basicinfo.deficiente %}<li><a data-toggle="tab" href="#HandicappedInfo">Trabalhador com Deficiência</a></li>{% endif %}
+                        <li><a data-toggle="tab" href="#ContactInfo">Informações de Contato</a></li>
+                        <li><a data-toggle="tab" href="#BankingInfo">Informações Bancárias</a></li>
+                        {% if basicinfo.outro_emprego %}<li><a data-toggle="tab" href="#AnotherJobInfo">Outros Vínculos de Relação de Emprego</a></li>{% endif %}
+                        {% if basicinfo.estagiario %}<li><a data-toggle="tab" href="#InternInfo">Trabalhador sem Vínculo de Emprego - Estagiário</a></li>{% endif %}
+                        <li><a data-toggle="tab" href="#ContractualInfo">Informações de Contrato</a></li>
+                        <li><a data-toggle="tab" href="#DocScans">Documentos Anexos</a></li>
+                        
+                    </ul>
+
+                    <div class="spacer-xs"></div>
+
+                    <div class="container-fluid tab-content" style="font-size: 1.2em;"> <!--TAB PANES-->
+                        
+                        <div class="tab-pane fade in active" id="BasicInfo"> <!--BASIC INFO-->
+                            <div class="col-sm-5">
+                                <p>
+                                    <label>Nome</label><span class="pull-right">{{basicinfo.primeiro_nome}} {{basicinfo.ultimo_nome}}</span>
+                                </p>
+                                <p>
+                                    <label>Gênero</label><span class="pull-right">{{basicinfo.get_genero_display}}</span>
+                                </p>
+                                <p>
+                                    <label>Estado de Nascimento</label><span class="pull-right">{{basicinfo.estado_nascimento}}</span>
+                                </p>
+                                <p>
+                                    <label>Município de Nascimento</label><span class="pull-right">{{basicinfo.municipio_nascimento}}</span>
+                                </p>
+                                <p>
+                                    <label>Número de CPF</label><span class="pull-right" id="officialCPF">{{basicinfo.numero_documento_CPF}}</span>
+                                </p>
+                                <p>
+                                    <label>Número do NIS</label><span class="pull-right">{{basicinfo.numero_inscricao_NIS}}</span>
+                                </p>
+                            </div>
+                            <div class="col-sm-5 col-sm-offset-1">
+                                <p>
+                                    <label>Número do PIS/PASEP</label><span class="pull-right">{{basicinfo.numero_PIS_PASEP}}</span>
+                                </p>
+                                <p>
+                                    <label>Número do NIT/INSS</label><span class="pull-right">{{basicinfo.numero_NIT_INSS}}/{{basicinfo.numero_codigo_NIT}}</span>
+                                </p>
+                                <p>
+                                    <label>Raça/Cor</label><span class="pull-right">{{basicinfo.get_raca_cor_display}}</span>
+                                </p>
+                                <p>
+                                    <label>Nome da Mãe</label><span class="pull-right">{{basicinfo.nome_completo_mae}}</span>
+                                </p>
+                                <p>
+                                    <label>Nome do Pai</label><span class="pull-right">{{basicinfo.nome_completo_pai}}</span>
+                                </p>
+                                <p>
+                                    <label>Escolaridade</label><span class="pull-right">{{basicinfo.escolaridade}}</span>
+                                </p>
+
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="AddressInfo"> <!--ADRESS INFO-->
+                            <div class="col-sm-5">
+                                <p>
+                                    <label>Endereço</label><span class="pull-right">{{basicinfo.address_info.end_geral}}</span>
+                                </p>
+                                <p>
+                                    <label>Número</label><span class="pull-right">{{basicinfo.address_info.end_numero}}</span>
+                                </p>
+                                <p>
+                                    <label>Bairro</label><span class="pull-right">{{basicinfo.address_info.end_bairro}}</span>
+                                </p>
+                                <p>
+                                    <label>Complemento</label><span class="pull-right">{{basicinfo.address_info.end_complemento}}</span>
+                                </p>
+                                <p>
+                                    <label>Município</label><span class="pull-right">{{basicinfo.address_info.end_municipio}}</span>
+                                </p>
+                                <p>
+                                    <label>Estado</label><span class="pull-right">{{basicinfo.address_info.end_estado}}</span>
+                                </p>
+                            </div>
+                            <div class="col-sm-5 col-sm-offset-1">
+                                <p>
+                                    <label>CEP</label><span class="pull-right">{{basicinfo.address_info.end_CEP}}</span>
+                                </p>
+                                <p>
+                                    <label>País</label><span class="pull-right">{{basicinfo.address_info.end_pais}}</span>
+                                </p>
+                                <div class="spacer-xs"></div>
+                                <p>
+                                    {% if basicinfo.address_info.end_residente_exterior %}
+                                        <span class="text-success pull-right bold-text">Residente no Exterior &#10004;</span><br>
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    {% if basicinfo.address_info.end_residencia_propria %}
+                                        <span class="text-success pull-right bold-text">Residencia Própria &#10004;</span><br>
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    {% if basicinfo.address_info.end_comprado_FGTS %}
+                                        <span class="text-success pull-right bold-text">Residência Comprada com FGTS &#10004;</span><br>
+                                    {% endif %}
+                                </p>
+
+
+                            </div> 
+
+                        </div>
+    
+                        <div class="tab-pane fade" id="DocsInfo"> <!--DOCUMENTS INFO-->
+                            
+                            <div class="row"> <!--DOCS INFO-->
+
+                                {% if basicinfo.documents_info.docs_CTPS_numero_geral %}
+                                    <div class="col-sm-6"> <!--CTPS-->
+                                        <legend class="col-sm-12">CTPS</legend>
+                                        <p class="col-sm-4">
+                                            <label>{{basicinfo.documents_info.docs_CTPS_numero_geral}}-{{basicinfo.documents_info.docs_CTPS_numero_serie}}</label>
+                                        </p>
+
+                                        <p class="col-sm-7 pull-right">
+                                            <label>Emitido em {{basicinfo.documents_info.docs_CTPS_data_emissao}} - {{basicinfo.documents_info.docs_CTPS_UF}}</label>
+                                        </p>
+                                    </div>
+                                {% endif %}
+
+                                {% if basicinfo.documents_info.docs_TE_numero_geral %}
+                                    <div class="col-sm-6"> <!--TE-->
+                                        <legend class="col-sm-12">Título de Eleitor</legend>
+                                        <p class="col-sm-4">
+                                            <label>{{basicinfo.documents_info.docs_TE_numero_geral}}</label>
+                                        </p>
+                                        <p class="col-sm-4">
+                                            <label>Seção {{basicinfo.documents_info.docs_TE_secao}}</label>
+                                        </p>
+                                        <p class="col-sm-4">
+                                            <label>Zona {{basicinfo.documents_info.docs_TE_zona}}</label>
+                                        </p>
+                                    </div>
+                                {% endif %}
+
+                                {% if basicinfo.documents_info.docs_RG_numero_geral %}
+                                    <div class="col-sm-6"> <!--RG-->
+                                        <div class="spacer-xxs"></div>
+                                        <legend class="col-sm-12">RG</legend>
+                                        <p class="col-sm-5">
+                                            <label>{{basicinfo.documents_info.docs_RG_numero_geral}} / {{basicinfo.documents_info.docs_RG_emissor}}-{{basicinfo.documents_info.docs_RG_UF}}</label>
+                                        </p>
+                                        <p class="col-sm-7">
+                                            <label>Emitido em {{basicinfo.documents_info.docs_RG_data_emissao}}</label>
+                                        </p>
+                                    </div>
+                                {% endif %}
+
+                                {% if basicinfo.documents_info.docs_RNE_numero_geral %}
+                                    <div class="col-sm-6"> <!--RNE-->
+                                        <div class="spacer-xxs"></div>
+                                        <legend class="col-sm-12">Registro Nacional de Estrangeiro</legend>
+                                        <p class="col-sm-5">
+                                            <label>{{basicinfo.documents_info.docs_RNE_numero_geral}} / {{basicinfo.documents_info.docs_RNE_emissor}}-{{basicinfo.documents_info.docs_RNE_UF}}</label>
+                                        </p>
+                                        <p class="col-sm-7">
+                                            <label>Emitido em {{basicinfo.documents_info.docs_RNE_data_emissao}}</label>
+                                        </p>
+                                    </div>
+                                {% endif %}
+
+                                {% if basicinfo.documents_info.docs_OC_numero_geral %}
+                                    <div class="col-sm-6"> <!--OC-->
+                                        <div class="spacer-xxs"></div>
+                                        <legend class="col-sm-12">Órgão de Classe</legend>
+                                        <p class="col-sm-5">
+                                            <label>{{basicinfo.documents_info.docs_OC_numero_geral}} / {{basicinfo.documents_info.docs_OC_emissor}}-{{basicinfo.documents_info.docs_OC_UF}}</label>
+                                        </p>
+                                        <p class="col-sm-7">
+                                            <label>Emitido em {{basicinfo.documents_info.docs_OC_data_emissao}}</label>
+                                        </p>
+                                    </div>
+                                {% endif %}
+
+                                {% if basicinfo.documents_info.docs_CNH_numero_geral %}
+                                    <div class="col-sm-6"> <!--CNH-->
+                                        <div class="spacer-xxs"></div>
+                                        <legend class="col-sm-12">Carteira Nacional de Habilitação</legend>
+                                        <p class="col-sm-6">
+                                            <label>{{basicinfo.documents_info.docs_CNH_numero_geral}} / {{basicinfo.documents_info.docs_CNH_emissor}}-{{basicinfo.documents_info.docs_CNH_UF}}</label>
+                                        </p>
+                                        
+                                        <p class="col-sm-6">
+                                            <label>Categoria {{basicinfo.documents_info.docs_CNH_categoria}}</label>
+                                        </p>
+
+                                        <p class="col-sm-6">
+                                            <label>Emitido em {{basicinfo.documents_info.docs_CNH_data_emissao}}</label>
+                                        </p>
+                                        <p class="col-sm-6">
+                                            <label>Valido até {{basicinfo.documents_info.docs_CNH_data_validade}}</label>
+                                        </p>
+
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane fade" id="ForeignerInfo"> <!--FOREIGNER INFO-->
+                            <div class="col-sm-5">
+                                {% if basicinfo.foreigner_info.estr_data_chegada %}
+                                    <p>
+                                        <label>Data de Chegada</label><span class="pull-right">{{basicinfo.foreigner_info.estr_data_chegada}}</span>
+                                    </p>
+                                {% endif %}
+                                
+                                {% if basicinfo.foreigner_info.estr_data_naturalizacao %}
+                                    <p>
+                                        <label>Data de Naturalização</label><span class="pull-right">{{basicinfo.foreigner_info.estr_data_naturalizacao}}</span>
+                                    </p>
+                                {% endif %}                            
+                            </div>
+                            <div class="col-sm-5 col-sm-offset-1">
+                                <p>
+                                    {% if basicinfo.foreigner_info.estr_naturalizado %}
+                                        <span class="text-success pull-right bold-text">Estrangeiro Naturalizado &#10004;</span><br>
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    {% if basicinfo.foreigner_info.estr_casado_brasileiro %}
+                                        <span class="text-success pull-right bold-text">Estrangeiro Casado(a) com Brasileiro(a) &#10004;</span><br>
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    {% if basicinfo.foreigner_info.estr_filhos_brasileiros %}
+                                        <span class="text-success pull-right bold-text">Estrangeiro com Filho(a) Brasileiro(a) &#10004;</span><br>
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane fade" id="HandicappedInfo"> <!--HANDICAPPED INFO-->
+                            {% if basicinfo.handicapped_info.deficiencia_tipo %}
+                                <p>
+                                    <label>Tipo de Deficiência</label><span class="pull-right">{{basicinfo.handicapped_info.get_deficiencia_tipo_display}}</span>
+                                </p>
+                            {% endif %}
+                            
+                            {% if basicinfo.handicapped_info.deficiencia_obs %}
+                                <p>
+                                    <label>Observações</label><span class="pull-right">{{basicinfo.handicapped_info.deficiencia_obs}}</span>
+                                </p>
+                            {% endif %}                
+                        </div>
+
+                        <div class="tab-pane fade" id="ContactInfo"> <!--CONTACT INFO-->
+                            {% if basicinfo.contact_info.cont_tel_fixo %}
+                                <p><label>Telefone Fixo</label><span class="pull-right">{{basicinfo.contact_info.cont_tel_fixo}}</span></p>
+                            {% endif %}
+                            
+                            {% if basicinfo.contact_info.cont_tel_fixo %}
+                                <p><label>Telefone Celular</label><span class="pull-right">{{basicinfo.contact_info.cont_tel_cel}}</span></p>
+                            {% endif %}
+
+                            {% if basicinfo.contact_info.cont_email_principal %}
+                                <p><label>e-Mail Principal</label><span class="pull-right">{{basicinfo.contact_info.cont_email_principal}}</span></p>
+                            {% endif %}
+                            
+                            {% if basicinfo.contact_info.cont_email_secundario %}
+                                <p><label>e-Mail Secundario</label><span class="pull-right">{{basicinfo.contact_info.cont_email_secundario}}</span></p>
+                            {% endif %}
+
+
+
+                        </div>
+
+                        <div class="tab-pane fade" id="BankingInfo"> <!--BANKING INFO-->
+                            <div class="col-sm-5">
+                                {% if basicinfo.banking_info.banco_numero_codigo %}
+                                    <p><label>Banco</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.banking_info.banco_numero_codigo}} - {{basicinfo.banking_info.banco_nome}}
+                                        </span></p>
+                                {% endif %}
+                                
+                                {% if basicinfo.banking_info.banco_tipo_conta %}
+                                    <p><label>Tipo de Conta</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.banking_info.get_banco_tipo_conta_display}}
+                                        </span></p>
+                                {% endif %}                            
+                            </div>
+                            <div class="col-sm-5 col-sm-offset-1">
+                                {% if basicinfo.banking_info.banco_agencia %}
+                                    <p><label>Agência</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.banking_info.banco_agencia}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.banking_info.banco_numero_conta_root %}
+                                    <p><label>Conta</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.banking_info.banco_numero_conta_root}}
+                                        </span></p>
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane fade" id="AnotherJobInfo"> <!--ANOTHER JOB INFO-->
+                            
+                            <div class="col-sm-5">
+                                {% if basicinfo.another_job.vinc_outra_emp_func %}
+                                <legend class="text-right">CLT</legend>
+                                    {% if basicinfo.another_job.vinc_outra_emp_nome %}
+                                        <p><label>Nome da Empresa</label>
+                                            <span class="pull-right">
+                                                {{basicinfo.another_job.vinc_outra_emp_nome}}
+                                            </span></p>
+                                    {% endif %}
+                                    
+                                    {% if basicinfo.another_job.vinc_outra_emp_CNPJ %}
+                                        <p><label>CNPJ</label>
+                                            <span class="pull-right">
+                                                {{basicinfo.another_job.vinc_outra_emp_CNPJ}}
+                                            </span></p>
+                                    {% endif %} 
+                                    
+                                    {% if basicinfo.another_job.vinc_outra_emp_salario %}
+                                        <p><label>Remuneração - R$</label>
+                                            <span class="pull-right">
+                                                {{basicinfo.another_job.vinc_outra_emp_salario}}
+                                            </span></p>
+                                    {% endif %}                            
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-5 col-sm-offset-1">
+                                {% if basicinfo.another_job.vinc_outra_emp_soc %}
+                                <legend class="text-right">Sociedade</legend>
+                                    {% if basicinfo.another_job.vinc_outra_emp_nome_soc %}
+                                        <p><label>Nome da Empresa</label>
+                                            <span class="pull-right">
+                                                {{basicinfo.another_job.vinc_outra_emp_nome_soc}}
+                                            </span></p>
+                                    {% endif %}
+                                    
+                                    {% if basicinfo.another_job.vinc_outra_emp_CNPJ_soc %}
+                                        <p><label>CNPJ</label>
+                                            <span class="pull-right">
+                                                {{basicinfo.another_job.vinc_outra_emp_CNPJ_soc}}
+                                            </span></p>
+                                    {% endif %} 
+                                    
+                                    {% if basicinfo.another_job.vinc_outra_emp_salario_soc %}
+                                        <p><label>Remuneração - R$</label>
+                                            <span class="pull-right">
+                                                {{basicinfo.another_job.vinc_outra_emp_salario_soc}}
+                                            </span></p>
+                                    {% endif %}                            
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-12">
+                                {% if basicinfo.another_job.vinc_comentarios %}
+                                <div class="spacer-xxs"></div>
+                                    <legend>Observações</legend>
+                                        <p><span class="pull-right">
+                                            {{basicinfo.another_job.vinc_comentarios}}
+                                        </span></p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="InternInfo"> <!--INTERNSHIP INFO-->
+                            {% if basicinfo.intern_info.estag_obrigatorio %}
+                                <div class="col-sm-3 col-sm-offset-9">
+                                    <span class="text-success pull-right bold-text">Estágio Obrigatório &#10004;</span><br>
+                                    <div class="spacer-xxs"></div>
+                                </div>
+                            {% endif %}
+
+                            <div class="col-sm-5">
+                                {% if basicinfo.intern_info.estag_data_inicio %}
+                                    <p><label>Data de Início</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.intern_info.estag_data_inicio}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.intern_info.estag_data_fim %}
+                                    <p><label>Data de Finalização</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.intern_info.estag_data_fim}}
+                                        </span></p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-sm-5 col-sm-offset-1">
+                                {% if basicinfo.intern_info.estag_escolaridade %}
+                                    <p><label>Escolaridade</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.intern_info.estag_escolaridade}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.intern_info.estag_area_atuacao %}
+                                    <p><label>Área de Atuação</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.intern_info.estag_area_atuacao}}
+                                        </span></p>
+                                {% endif %}
+                            </div>
+
+                            {% if basicinfo.intern_info.estag_instituto_nome %}
+                                <div class="row col-sm-12">
+                                    <div class="spacer-xxs"></div>
+                                    <legend class="text-right">{{basicinfo.intern_info.estag_instituto_nome}}</legend>
+
+                                    <div class="col-sm-5">
+                                        {% if basicinfo.intern_info.estag_instituto_end %}
+                                            <label>{{basicinfo.intern_info.estag_instituto_end}}, {{basicinfo.intern_info.estag_instituto_end_numero}} - {{basicinfo.intern_info.estag_instituto_end_municipio}}/{{basicinfo.intern_info.estag_instituto_UF}}</label>
+                                            <div class="spacer-xxs"></div>
+                                        {% endif %}
+
+                                        {% if basicinfo.intern_info.estag_instituto_CNPJ %}
+                                            <p><label>CNPJ</label>
+                                                <span class="pull-right">
+                                                    {{basicinfo.intern_info.estag_instituto_CNPJ}}
+                                                </span></p>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="col-sm-5 col-sm-offset-1">
+                                        {% if basicinfo.intern_info.estag_instituto_CEP %}
+                                            <p><label>CEP</label>
+                                                <span class="pull-right">
+                                                    {{basicinfo.intern_info.estag_instituto_CEP}}
+                                                </span></p>
+                                            <div class="spacer-xxs"></div>
+                                        {% endif %}
+
+                                        {% if basicinfo.intern_info.estag_instituto_tel %}
+                                            <p><label>Telefone</label>
+                                                <span class="pull-right">
+                                                    {{basicinfo.intern_info.estag_instituto_tel}}
+                                                </span></p>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="tab-pane fade" id="ContractualInfo"> <!--CONTRACTUAL INFO-->
+                            
+                            {% if basicinfo.contractual_info.contrat_funcao_gestor %}
+                                <div class="col-sm-3 col-sm-offset-9">
+                                    <span class="text-success pull-right bold-text">Gestor &#10004;</span><br>
+                                    <div class="spacer-xxs"></div>
+                                </div>
+                            {% endif %}
+
+                            <div class="col-sm-5">
+                                {% if basicinfo.contractual_info.contrat_funcao_cargo %}
+                                    <p><label>Cargo e Nível</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.contractual_info.contrat_funcao_cargo}} {{basicinfo.contractual_info.contrat_funcao_nivel}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.contractual_info.contrat_salario_atual %}
+                                    <p><label>Remuneração Atual</label>
+                                        <span class="pull-right">
+                                            R$ {{basicinfo.contractual_info.contrat_salario_atual}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.contractual_info.contrat_data_admissao %}
+                                    <p><label>Data de Admissão</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.contractual_info.contrat_data_admissao}}
+                                        </span></p>
+                                {% endif %}
+                                
+                                {% if basicinfo.contractual_info.contrat_data_inicio %}
+                                    <p><label>Data de Início</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.contractual_info.contrat_data_inicio}}
+                                        </span></p>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="col-sm-5 col-sm-offset-1">
+                                
+                                {% if basicinfo.contractual_info.contrat_cargo_inicial %}
+                                    <p><label>Cargo e Nível Iniciais</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.contractual_info.contrat_cargo_inicial}} {{basicinfo.contractual_info.contrat_funcao_nivel_inicial}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.contractual_info.contrat_salario_base %}
+                                    <p><label>Remuneração Inicial</label>
+                                        <span class="pull-right">
+                                            R$ {{basicinfo.contractual_info.contrat_salario_base}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.contractual_info.contrat_funcao_CBO %}
+                                    <p><label>CBO da Função</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.contractual_info.contrat_funcao_CBO}}
+                                        </span></p>
+                                {% endif %}
+
+                                {% if basicinfo.contractual_info.contrat_data_ultima_alteracao_cargo %}
+                                    <p><label>Data da Ultima Alteração de Cargo</label>
+                                        <span class="pull-right">
+                                            {{basicinfo.contractual_info.contrat_data_ultima_alteracao_cargo}}
+                                        </span></p>
+                                {% endif %}
+
+
+                            </div>
+
+                            {% if basicinfo.contractual_info.contrat_funcao_descricao %}
+                                <div class="row col-sm-12">
+                                    <div class="spacer-xxs"></div>
+                                    <legend class="text-left">Descrição da Função</legend>
+                                    <p><span class="pull-right">
+                                            {{basicinfo.contractual_info.contrat_funcao_descricao}}
+                                        </span></p>
+                                </div>
+                            {% endif %}
+
+                            {% if basicinfo.contractual_info.contrat_vale_alim or basicinfo.contractual_info.contrat_vale_ref or basicinfo.contractual_info.contrat_cesta or basicinfo.contractual_info.contrat_vale_comb %}
+                                <div class="row col-sm-12">
+                                    <div class="spacer-xxs"></div>
+                                    <legend class="text-right">Benefícios</legend>    
+                                    
+                                    {% if basicinfo.contractual_info.contrat_vale_alim %}
+                                        <p class="col-sm-5"><label>Vale Alimentação</label>
+                                            <span class="pull-right">
+                                                R$ {{basicinfo.contractual_info.contrat_vale_alim_valor}} 
+                                            </span></p>
+                                        <div class="col-sm-1"></div>
+                                    {% endif %}
+                                    {% if basicinfo.contractual_info.contrat_vale_ref_valor %}
+                                        <p class="col-sm-5"><label>Vale Refeição</label>
+                                            <span class="pull-right">
+                                                R$ {{basicinfo.contractual_info.contrat_vale_ref_valor}} 
+                                            </span></p>
+                                            <div class="col-sm-1"></div>
+                                    {% endif %}
+                                    {% if basicinfo.contractual_info.contrat_cesta_valor %}
+                                        <p class="col-sm-5"><label>Cesta Básica</label>
+                                            <span class="pull-right">
+                                                R$ {{basicinfo.contractual_info.contrat_cesta_valor}} 
+                                            </span></p>
+                                            <div class="col-sm-1"></div>
+                                    {% endif %}
+                                    {% if basicinfo.contractual_info.contrat_vale_comb_valor %}
+                                        <p class="col-sm-5"><label>Vale Combustível</label>
+                                            <span class="pull-right">
+                                                R$ {{basicinfo.contractual_info.contrat_vale_comb_valor}} 
+                                            </span></p>
+                                            <div class="col-sm-1"></div>
+                                    {% endif %}
+                                    {% if basicinfo.contractual_info.contrat_vale_transp_valor %}
+                                        <p class="col-sm-5"><label>Vale Transporte</label>
+                                            <span class="pull-right">
+                                                R$ {{basicinfo.contractual_info.contrat_vale_transp_valor}} 
+                                            </span></p>
+                                            <div class="col-sm-1"></div>
+                                    {% endif %}
+                                    
+
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                        <div class="tab-pane fade" id="DocScans"> <!--DOCSCANS-->
+                            <div class="row">
+                                {% if basicinfo.docscans.docscan_CPF %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_CPF "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> CPF ou CNH </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_CPF.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                                {% if basicinfo.docscans.docscan_TE %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_TE "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> Título de Eleitor </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_TE.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                                {% if basicinfo.docscans.docscan_CTPS %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_CTPS "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> CTPS </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_CTPS.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="row">
+                                {% if basicinfo.docscans.docscan_reservista %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_reservista "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> Reservista </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_reservista.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                                {% if basicinfo.docscans.docscan_certidao_nascimento %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_certidao_nascimento "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> Certidão de Nascimento </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_certidao_nascimento.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                                {% if basicinfo.docscans.docscan_certidao_casamento %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_certidao_casamento "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> Certidão de Casamento </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_certidao_casamento.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="row">
+                                {% if basicinfo.docscans.docscan_comprovante_resid %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_comprovante_resid "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> Comprovante de Residência </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_comprovante_resid.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                                {% if basicinfo.docscans.docscan_comprovante_escolar %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_comprovante_escolar "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> Comprovante de Escolaridade </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_comprovante_escolar.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                                {% if basicinfo.docscans.docscan_CV %}
+                                    <div class="col-lg-4">
+                                        {% thumbnail basicinfo.docscans.docscan_CV "150x150" as im %}
+                                            <legend class="text-center" style="font-size: 1.3em;"> Curriculum Vitae </legend>
+                                            <a href="#" class="pop"><img data-placement="bottom" src="{{ im.url }}" class="center-block" data-url="{{basicinfo.docscans.docscan_CV.url}}"></a>
+                                        {% endthumbnail %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="spacer"></div>
+
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="img-modal-content">
+        <div class="modal-body">
+            <img src="" class="imagepreview" style="width: 100%;">
+        </div>
+        </div>
+    </div>
+    </div>
+    
+    <div class="modal fade" id="modalShutDown"> <!--FUNCIONARIO SHUTDOWN MODAL BEGINS-->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Alteração de Status - {{ basicinfo.primeiro_nome }} {{ basicinfo.ultimo_nome }}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="/funcionario/visualizar/{{basicinfo.id}}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="status-selection">Status</label>
+                            <select name="status-selection" id="status-selection" class="form-control">
+                                <optgroup label="Desligamento">
+                                    <option value="shutdown">Desligar</option>
+                                    <option value="occurrenceshutdown">Desligar com Ocorrência</option>
+                                </optgroup>
+                                <optgroup label="Férias">
+                                    <option value="startvacation">Iniciar Férias</option>
+                                    <option value="finishvacation">Finalizar Férias</option>
+                                </optgroup>
+                                <optgroup label="Afastamento">
+                                    <option value="startleave">Iniciar Afastamento</option>
+                                    <option value="finishleave">Finalizar Afastamento</option>
+                                </optgroup>
+                                <optgroup label="Suspenção">
+                                    <option value="startsuspension">Iniciar Suspensão</option>
+                                    <option value="finishsuspension">Finalizar Suspensão</option>
+                                </optgroup>
+                                <optgroup label="Reativação">
+                                    <option value="reactivate">Reativar</option>
+                                </optgroup>
+                            </select>
+                            <div class="spacer"></div>
+
+                            <div class="form-group" id="obs" style="display:none;">
+                                <label for="obsfield">Observação:</label>
+                                <textarea class="form-control" name="obsfield" id="obsfield" rows="5" style="resize: none;"></textarea>
+                            </div>
+
+                            <div class="spacer"></div>
+
+                            <label for="CPFConfirmation" class = "control-label">Digite o CPF Para Confirmar a Alteração de Status do Funcionário.</label>
+                            <input name = "CPFConfirmation" type="text" class = "form-control cpf" id = "CPFConfirmation" placeholder="000.000.000-00">
+                            <input name = "shutDownID" type="hidden" id = "shutDownID" value="">
+
+                            <br>
+
+                            <input id="submitShutDown" class="btn btn-sm btn-primary" type="submit" style="float:right;" value="Alterar Status" disabled>
+
+                            <div class="spacer"></div>
+
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!--FUNCIONARIO SHUTDOWN MODAL ENDS-->
+
+{% endblock content %}

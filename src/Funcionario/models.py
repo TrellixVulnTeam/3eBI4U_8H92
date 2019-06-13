@@ -4,6 +4,7 @@ import os
 from django.core.validators import RegexValidator
 from . import utilities
 from ControleAdministrativo.models import FuncionarioCargo, FuncionarioNivel
+from datetime import date
 
 # App Logic ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -118,13 +119,30 @@ class BasicInfo(models.Model):
     data_ultima_modificacao     =   models.DateTimeField(null = True, blank = True)
     data_ultimo_desligamento    =   models.DateTimeField(null = True, blank = True)
 
+    @property
+    def age(self):
+        
+        """Get the current age."""
+        
+        today = date.today() 
+        try:  
+            birthday = self.data_nascimento.replace(year = today.year)     
+        except ValueError:  
+            birthday = self.data_nascimento.replace(year = today.year, 
+                    month = self.data_nascimento.month + 1, day = 1) 
+    
+        if birthday > today: 
+            return today.year - self.data_nascimento.year - 1
+        else: 
+            return today.year - self.data_nascimento.year
+
     def __str__(self):
         return self.primeiro_nome + ' ' + self.ultimo_nome
 
 # 2 - Address Info
 class AddressInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "address_info")
 
     end_residente_exterior      =   models.BooleanField(null = True, blank = True)
     end_geral                   =   models.CharField(max_length = 500, null = True, blank = True)
@@ -144,7 +162,7 @@ class AddressInfo(models.Model):
 # 3 - Documents Info (No Attachments)
 class DocumentsInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "documents_info")
 
     docs_CTPS_numero_geral      =   models.IntegerField(null = True, blank = True)
     docs_CTPS_numero_serie      =   models.IntegerField(null = True, blank = True)
@@ -179,7 +197,7 @@ class DocumentsInfo(models.Model):
 # 4 - Contact Info
 class ContactInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "contact_info")
 
     cont_tel_fixo               =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
     cont_tel_cel                =   models.CharField(validators=[phoneRegex], max_length = 17, null = True, blank = True)
@@ -192,7 +210,7 @@ class ContactInfo(models.Model):
 # 5 - Foreigner Info (If Needed)
 class ForeignerInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "foreigner_info")
 
     estr_data_chegada           =   models.DateField(null = True, blank = True, validators=[utilities.validateNoFutureDates])
     estr_naturalizado           =   models.BooleanField(null = True, blank = True)
@@ -206,10 +224,10 @@ class ForeignerInfo(models.Model):
 # 6 - Handiccaped Info (If Needed)
 class HandicappedInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "handicapped_info")
 
     deficiencia_tipo            =   models.CharField(max_length = 200, choices = disableness_choices, null = True, blank = True)
-    deficiencia_obs             =   models.CharField(max_length = 3000, null = True, blank = True)
+    deficiencia_obs             =   models.TextField(null = True, blank = True)
 
     def __str__(self):
         return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
@@ -217,7 +235,7 @@ class HandicappedInfo(models.Model):
 # 7 - Banking Info
 class BankingInfo(models.Model):
 
-    basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, related_name = "banking_info")
 
     banco_numero_codigo         =   models.DecimalField(max_digits = 4, decimal_places = 0, null = True, blank = True)
     banco_nome                  =   models.CharField(max_length = 200, choices = bank_choices, null = True, blank = True)
@@ -231,7 +249,7 @@ class BankingInfo(models.Model):
 # 8 - Another Job Info (If Needed)
 class AnotherJobInfo(models.Model):
 
-    basicinfo                       =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                       =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "another_job")
 
     vinc_outra_emp_func             =   models.BooleanField(null = True, blank = True)
     vinc_outra_emp_soc              =   models.BooleanField(null = True, blank = True)
@@ -241,7 +259,7 @@ class AnotherJobInfo(models.Model):
     vinc_outra_emp_nome_soc         =   models.CharField(max_length = 300, null = True, blank = True)
     vinc_outra_emp_CNPJ_soc         =   models.CharField(max_length = 18, null = True, blank = True, validators=[utilities.validateCNPJ])
     vinc_outra_emp_salario_soc      =   models.CharField(max_length = 10, null = True, blank = True)
-    vinc_comentarios                =   models.CharField(max_length = 3000, null = True, blank = True)
+    vinc_comentarios                =   models.TextField(null = True, blank = True)
 
     def __str__(self):
         return self.basicinfo.primeiro_nome + ' ' + self.basicinfo.ultimo_nome
@@ -249,7 +267,7 @@ class AnotherJobInfo(models.Model):
 # 9 - Internship Info (If Needed)
 class InternInfo(models.Model):
 
-    basicinfo                       =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                       =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "intern_info")
 
     estag_data_inicio               =   models.DateField(null = True, blank = True, validators=[utilities.validateNoFutureDates])
     estag_data_fim                  =   models.DateField(null = True, blank = True)
@@ -272,29 +290,29 @@ class InternInfo(models.Model):
 # 10 - Contractual Info
 class ContractualInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                           =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "contractual_info")
 
-    contrat_data_admissao       =   models.DateField(null = True, blank = True, validators=[utilities.validateNoFutureDates])
-    contrat_data_inicio         =   models.DateField(null = True, blank = True)
-    contrat_cargo_inicial       =   models.CharField(max_length = 100, null = True, blank = True)
-    contrat_vale_alim           =   models.BooleanField(null = True, blank = True)
-    contrat_vale_alim_valor     =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_vale_ref            =   models.BooleanField(null = True, blank = True)
-    contrat_vale_ref_valor      =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_cesta               =   models.BooleanField(null = True, blank = True)
-    contrat_cesta_valor         =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_vale_comb           =   models.BooleanField(null = True, blank = True)
-    contrat_vale_comb_valor     =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_vale_transp         =   models.BooleanField(null = True, blank = True)
-    contrat_vale_transp_valor   =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_salario_atual       =   models.CharField(max_length = 20, null = True, blank = True)
-    contrat_salario_base        =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_data_admissao               =   models.DateField(null = True, blank = True, validators=[utilities.validateNoFutureDates])
+    contrat_data_inicio                 =   models.DateField(null = True, blank = True)
+    contrat_cargo_inicial               =   models.CharField(max_length = 100, null = True, blank = True)
+    contrat_vale_alim                   =   models.BooleanField(null = True, blank = True)
+    contrat_vale_alim_valor             =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_vale_ref                    =   models.BooleanField(null = True, blank = True)
+    contrat_vale_ref_valor              =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_cesta                       =   models.BooleanField(null = True, blank = True)
+    contrat_cesta_valor                 =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_vale_comb                   =   models.BooleanField(null = True, blank = True)
+    contrat_vale_comb_valor             =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_vale_transp                 =   models.BooleanField(null = True, blank = True)
+    contrat_vale_transp_valor           =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_salario_atual               =   models.CharField(max_length = 20, null = True, blank = True)
+    contrat_salario_base                =   models.CharField(max_length = 20, null = True, blank = True)
     contrat_funcao_cargo                =   models.CharField(max_length = 100, null = True, blank = True)
     contrat_funcao_nivel                =   models.CharField(max_length = 100, null = True, blank = True)
     contrat_funcao_nivel_inicial        =   models.CharField(max_length = 100, null = True, blank = True)
     contrat_funcao_gestor               =   models.BooleanField(null = True, blank = True)
     contrat_funcao_CBO                  =   models.CharField(max_length = 50, null = True, blank = True)
-    contrat_funcao_descricao            =   models.CharField(max_length = 3000, null = True, blank = True)
+    contrat_funcao_descricao            =   models.TextField(null = True, blank = True)
     contrat_data_ultima_alteracao_cargo =   models.DateField(null = True, blank = True)
 
     def __str__(self):
@@ -305,7 +323,7 @@ class DocumentAttachments(models.Model):
 
     #   upload_to  =    os.path.join(str(basicinfo.numero_documento_cpf), %Y%m)
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "docscans")
 
     docscan_picture             =   models.ImageField(upload_to = utilities.funcionario_media_path_PICTURE, null = True, blank = True)
     docscan_CPF                 =   models.ImageField(upload_to = utilities.funcionario_media_path_CPF, null = True, blank = True)

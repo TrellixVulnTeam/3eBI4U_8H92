@@ -16,95 +16,6 @@
 <script>
 
     $(document).ready(function(){
-        /*
-        // TEXTBOX PAGINATION
-        if (1 == 1){
-            var x = $('#contents').text();
-
-            x = x.replace(/(((.|\n){300,}?\b)|((.|\n){1,299}(?!.)))/mg, '<div class="individual-page">$1</div>');
-
-            $('#contents').html(x);
-
-            $('#contents > .individual-page').each(function () {
-                if ($(this).is(':first-child')) {
-                $("#currentPage").html($(this).index());
-            } else {
-                $(this).hide()
-                $("#totalPages").html($(this).index());
-            }
-            });
-
-            if(parseInt($('#totalPages')) == 0){
-                $('#next').hide();
-                $('#prev').hide();
-            } else {
-                $('#next').show();
-                $('#prev').show();
-            }
-
-
-            $('#next').on('click', function() {
-                var currentPage = $('#currentPage').html()
-                var totalPages = $('#totalPages').html()
-                $($("#contents").children().get().reverse()).each(function() {
-                if($(this).index() == parseInt(currentPage) + 1){
-                    $('#currentPage').html(parseInt(currentPage) + 1)
-                $('#currentPage').trigger('change');
-                    $(this).show()
-                } else if ($(this).index() == currentPage){
-                    $(this).hide()
-                }
-            })
-            })
-
-            $('#prev').on('click', function() {
-                var currentPage = $('#currentPage').html()
-                var totalPages = $('#totalPages').html()
-                if (!parseInt(currentPage) == 0){
-                    $(this).show();
-                    $($("#contents").children().get()).each(function() {
-                    if($(this).index() == parseInt(currentPage) - 1){
-                        $('#currentPage').html(parseInt(currentPage) - 1)
-                        $('#currentPage').trigger('change');
-                        $(this).show()
-                    } else if ($(this).index() == currentPage){
-                        $(this).hide()
-                    }
-                    })
-                }
-            })
-
-            $('#currentPage').on('change', function() {
-
-                if ($(this).html() == $('#totalPages').html()){
-                $('#next').hide();
-                } else {
-                    $('#next').show();
-                }
-                if (parseInt($(this).html()) == 0){
-                    $('#prev').prop('disabled', true);
-                } else {
-                    $('#prev').prop('disabled', false);
-                }
-            })
-        }
-        */
-        // Enabling and Disabling Submit Button on ShutDown Form
-        const selectElement = document.querySelector('#CPFConfirmation');
-
-        selectElement.addEventListener('change', (event) => {
-        var ofCPF = $('#officialCPF').text();
-        var CPF = $('#CPFConfirmation').val();
-        var id = document.getElementById("eid").textContent;
-
-            if (ofCPF === CPF && ofCPF != "" && CPF != "") {
-                $('#submitShutDown').prop("disabled", false);
-                $('#shutDownID').val(id);
-            } else {
-                $('#submitShutDown').prop("disabled", true);
-                $('#shutDownID').val('');
-            }
-        });
 
         // Adding Popover Event to Picture
         $('[data-toggle="popover"]').popover();
@@ -120,6 +31,14 @@
             ToggleObsBox();
         });
 
+        // Table Filtering
+        $("#js-filter-search").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#js-filter-employee-table tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
     })
 
     // Creating Visualize Employee URL and Assigning Window Location
@@ -133,18 +52,6 @@
         }
     }
 
-    // Creating Obs Box In Status Change Modal
-    function ToggleObsBox() {
-        
-        var OSDRB = document.getElementById('status-selection');
-        var OSDTA = document.getElementById('obs');
-        
-        if (OSDRB.value == "occurrenceshutdown" || OSDRB.value == "startleave" || OSDRB.value == "startsuspension") {
-            OSDTA.style.display = "block";
-        } else {
-            OSDTA.style.display = "none";
-        }
-    }
 </script>
 
 {% endblock custom_scripts %}
@@ -222,20 +129,8 @@
                     </div>
                     <div>ID:<span class="pull-right" id="eid">{{object.id}}</span></div>
                     {% if object.obs_desligamento %}
-                    <div id="currentPage" hidden></div>
-                    <div id="totalPages" hidden></div>
-                    <!--
-                    <div class="row">
-                        <br>
-                        <span class="col-md-4 col-sm-12 pull-left">Ocorrência:</span>
-                        <span class="col-md-1 col-xs-12 text-justify" id="contents">{{object.obs_desligamento}}</span>
-
-                        <div class="btn-group col-md-offset-10 col-xs-offset-8">
-                            <button class="custom-paginator" id="prev" style="width:30px; height: 30px; border-radius:50%;">-</button>
-                            <button class="custom-paginator" id="next">+</button>
-                        </div>
-                    </div>
-                    -->
+                        <div id="currentPage" hidden></div>
+                        <div id="totalPages" hidden></div>
                     {% endif %}
 
                 </div>
@@ -246,7 +141,7 @@
 
             <div class="col-md-10 hidden-xs"> <!--FUNCIONÁRIO MENU-->
 
-                <div class="spacer-lg"></div>
+                <div class="spacer-xl"></div>
 
                 <div class="col-md-8">
                     <button class="btn-block btnmenu panel-heading" onclick="location.href = '/funcionario/cadastro';" type="button">
@@ -257,12 +152,6 @@
                 <div class="col-md-8">
                     <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#modalTable">
                         <span>Visualizar Funcionários </span>
-                    </button>
-                </div>
-
-                <div class="col-md-8">
-                    <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#modalShutDown">
-                        <span>Alterar Status do Funcionário</span>
                     </button>
                 </div>
 
@@ -281,11 +170,6 @@
                     <button class="btn-block btnmenu" data-toggle="modal" href="#modalTable">
                         <span>Visualizar Funcionários </span>
                     </button>
-
-                    <button class="btn-block btnmenu lastbtn" data-toggle="modal" href="#modalShutDown">
-                        <span>Alterar Status do Funcionário</span>
-                    </button>
-
                 </div>
 
             </div>
@@ -297,83 +181,25 @@
     <div class="modal fade" id="modalTable"> <!--FUNCIONARIOS LISTING MODAL BEGINS-->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Funcionarios Cadastrados</h4>
+                <div class="modal-header container-fluid">
+                    <button type="button" class="close col-sm-1 col-sm-offset-10" data-dismiss="modal">&times;</button>
+                    <div class="row">
+                        <div class="spacer-sm"></div>
+                        <div class="col-sm-8">
+                            <h4 class="modal-title">Funcionarios Cadastrados</h4>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Pesquisar Funcionario..." id="js-filter-search">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-body">
                     {% render_table table 'django_tables2/bootstrap-responsive.html' %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div> <!--FUNCIONARIOS LISTING MODAL ENDS-->
-
-
-    <div class="modal fade" id="modalShutDown"> <!--FUNCIONARIO SHUTDOWN MODAL BEGINS-->
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Alteração de Status - {{ object.primeiro_nome }} {{ object.ultimo_nome }}</h4>
-                </div>
-                <div class="modal-body">
-
-                    <form method="POST" action="/funcionario/">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="status-selection">Status</label>
-                            <select name="status-selection" id="status-selection" class="form-control">
-                                <optgroup label="Desligamento">
-                                    <option value="shutdown">Desligar</option>
-                                    <option value="occurrenceshutdown">Desligar com Ocorrência</option>
-                                </optgroup>
-                                <optgroup label="Férias">
-                                    <option value="startvacation">Iniciar Férias</option>
-                                    <option value="finishvacation">Finalizar Férias</option>
-                                </optgroup>
-                                <optgroup label="Afastamento">
-                                    <option value="startleave">Iniciar Afastamento</option>
-                                    <option value="finishleave">Finalizar Afastamento</option>
-                                </optgroup>
-                                <optgroup label="Suspenção">
-                                    <option value="startsuspension">Iniciar Suspensão</option>
-                                    <option value="finishsuspension">Finalizar Suspensão</option>
-                                </optgroup>
-                                <optgroup label="Reativação">
-                                    <option value="reactivate">Reativar</option>
-                                </optgroup>
-                            </select>
-                            <div class="spacer"></div>
-
-                            <div class="form-group" id="obs" style="display:none;">
-                                <label for="obsfield">Observação:</label>
-                                <textarea class="form-control" name="obsfield" id="obsfield" rows="5" style="resize: none;"></textarea>
-                            </div>
-
-                            <div class="spacer"></div>
-
-                            <label for="CPFConfirmation" class = "control-label">Digite o CPF Para Confirmar a Alteração de Status do Funcionário.</label>
-                            <input name = "CPFConfirmation" type="text" class = "form-control cpf" id = "CPFConfirmation" placeholder="000.000.000-00">
-                            <input name = "shutDownID" type="hidden" id = "shutDownID" value="">
-
-                            <br>
-
-                            <input id="submitShutDown" class="btn btn-sm btn-primary" type="submit" style="float:right;" value="Alterar Status" disabled>
-
-                            <div class="spacer"></div>
-
-                        </div>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div> <!--FUNCIONARIO SHUTDOWN MODAL ENDS-->
 
 {% endblock content %}

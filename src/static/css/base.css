@@ -2,6 +2,8 @@
 @media (max-width: 575px) {
     :root {
         --spacer: 20px;
+        --spacerxxs: calc(var(--spacer) / 2);
+        --spacerxs: calc(var(--spacer) / 1.5);
         --spacersm: calc(var(--spacer) / 1.2);
         --spacermd: calc(var(--spacer) * 1.5);
         --spacerlg: calc(var(--spacer) * 2);
@@ -16,6 +18,8 @@
 @media (min-width: 576px) and (max-width: 767px) {
     :root {
         --spacer: 20px;
+        --spacerxxs: calc(var(--spacer) / 2);
+        --spacerxs: calc(var(--spacer) / 1.5);
         --spacersm: calc(var(--spacer) / 1.2);
         --spacermd: calc(var(--spacer) * 1.5);
         --spacerlg: calc(var(--spacer) * 2);
@@ -30,6 +34,8 @@
 @media (min-width: 768px) and (max-width: 991px) {
     :root {
         --spacer: 30px;
+        --spacerxxs: calc(var(--spacer) / 2);
+        --spacerxs: calc(var(--spacer) / 1.5);
         --spacersm: calc(var(--spacer) / 1.2);
         --spacermd: calc(var(--spacer) * 1.5);
         --spacerlg: calc(var(--spacer) * 2);
@@ -44,6 +50,8 @@
 @media (min-width: 992px) and (max-width: 1199px) {
     :root {
         --spacer: 40px;
+        --spacerxxs: calc(var(--spacer) / 2);
+        --spacerxs: calc(var(--spacer) / 1.5);
         --spacersm: calc(var(--spacer) / 1.2);
         --spacermd: calc(var(--spacer) * 1.5);
         --spacerlg: calc(var(--spacer) * 2);
@@ -58,6 +66,8 @@
 @media (min-width: 1200px) {
     :root {
         --spacer: 50px;
+        --spacerxxs: calc(var(--spacer) / 2);
+        --spacerxs: calc(var(--spacer) / 1.5);
         --spacersm: calc(var(--spacer) / 1.2);
         --spacermd: calc(var(--spacer) * 1.5);
         --spacerlg: calc(var(--spacer) * 2);
@@ -86,6 +96,14 @@ a {
     background-color: inherit;
     min-height: calc(100vh - 172px)
 }      
+
+.spacer-xxs {
+    margin-top: var(--spacerxxs);
+}
+
+.spacer-xs {
+    margin-top: var(--spacerxs);
+}
 
 .spacer-sm {
     margin-top: var(--spacersm);

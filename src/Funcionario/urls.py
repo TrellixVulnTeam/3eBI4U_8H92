@@ -31,7 +31,6 @@ create_funcionario_forms = [
     ('Doc Scans', DocScansForm),
 ]
 
-
 urlpatterns = [
 
     # Register URL's
@@ -45,7 +44,7 @@ urlpatterns = [
                                                             }
                                                         ), name = 'funcionario/cadastro'
     ),
-    path('visualizar/<int:id>', CadastroFuncionarioWizard.as_view(
+    path('editar/<int:id>', CadastroFuncionarioWizard.as_view(
                                                         create_funcionario_forms,
                                                         condition_dict = {
                                                             'Foreigner Info'    :   estrangeiro_form_condition,
@@ -53,9 +52,9 @@ urlpatterns = [
                                                             'Another Job Info'  :   outro_emprego_form_condition,
                                                             'Intern Info'       :   estagiario_form_condition,
                                                             }
-                                                        ), name = 'funcionario/visualizar'
+                                                        ), name = 'funcionario/editar'
     ),
-    path('cadastro/dependentes/<int:id>', views.cadastroDependentes, name = 'funcionario/cadastro/dependentes' ),
-
+    path('visualizar/<int:id>', views.DetalhesFuncionario.as_view(), name = 'funcionario/visualizar'),
+    path('cadastro/dependentes/<int:id>', views.cadastroDependentes, name = 'funcionario/cadastro/dependentes'),
     path('', views.appMenu, name = 'funcionario/menu'),    
     ]

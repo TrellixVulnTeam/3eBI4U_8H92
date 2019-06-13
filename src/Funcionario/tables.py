@@ -9,10 +9,13 @@ class FuncionarioBasicInfoTable(tables.Table):
     class Meta:
         model = BasicInfo
         
-        fields = ["ultimo_nome", "data_nascimento", "genero", "numero_documento_CPF", "status"]
+        fields = ["numero_documento_CPF", "status"]
     
-        sequence = ("Nome", "ultimo_nome", "data_nascimento", "genero", "numero_documento_CPF", "status")
+        sequence = ("Nome", "numero_documento_CPF", "status")
         
         attrs = {
-            'style' : 'font-size: 1em;'
+            'style' :   'font-size: 1em;',
+            'tbody' : {
+                'id'    :   'js-filter-employee-table'
+            }
         }

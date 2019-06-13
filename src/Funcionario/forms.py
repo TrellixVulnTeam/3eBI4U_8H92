@@ -12,7 +12,6 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.contrib.sessions.backends.db import SessionStore
 
-
 from ControleAdministrativo.models import FuncionarioCargo, FuncionarioNivel
 
 from .models import (
@@ -556,7 +555,7 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     for attr, value in basicinfo.__dict__.items():
                         if attr in cdata.keys():
                             if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('basicinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
+                                exec('basicinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
 
                     basicinfo.data_ultima_modificacao = timezone.localtime(timezone.now())
                     basicinfo.data_ultima_ativacao = timezone.localtime(timezone.now())
@@ -565,112 +564,136 @@ class CadastroFuncionarioWizard(SessionWizardView):
                 elif k == 'Address Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    addressinfo = AddressInfo.objects.get(basicinfo = eid)
-                    
-                    for attr, value in addressinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('addressinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    addressinfo.save()
+                    try: 
+                        addressinfo = AddressInfo.objects.get(basicinfo = eid)
+                        
+                        for attr, value in addressinfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('addressinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        addressinfo.save()
+                    except AddressInfo.DoesNotExist:
+                        AddressInfo.objects.create(**cdata)
 
                 elif k == 'Documents Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    documentsinfo = DocumentsInfo.objects.get(basicinfo = eid)
+                    try:
+                        documentsinfo = DocumentsInfo.objects.get(basicinfo = eid)
 
-                    for attr, value in documentsinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('documentsinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    documentsinfo.save()
+                        for attr, value in documentsinfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('documentsinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        documentsinfo.save()
+                    except DocumentsInfo.DoesNotExist:
+                        DocumentsInfo.objects.create(**cdata)
+
 
                 elif k == 'Foreigner Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    foreignerinfo = ForeignerInfo.objects.get(basicinfo = eid)
-                    
-                    for attr, value in foreignerinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('foreignerinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    foreignerinfo.save()
+                    try:
+                        foreignerinfo = ForeignerInfo.objects.get(basicinfo = eid)
+                        
+                        for attr, value in foreignerinfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('foreignerinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        foreignerinfo.save()
+
+                    except ForeignerInfo.DoesNotExist:
+                        ForeignerInfo.objects.create(**cdata)
+
 
                 elif k == 'Handicapped Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    handicappedinfo = HandicappedInfo.objects.get(basicinfo = eid)
+                    try:
+                        handicappedinfo = HandicappedInfo.objects.get(basicinfo = eid)
 
-                    for attr, value in handicappedinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('handicappedinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    handicappedinfo.save()
+                        for attr, value in handicappedinfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('handicappedinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        handicappedinfo.save()
+                    except HandicappedInfo.DoesNotExist:
+                        HandicappedInfo.objects.create(**cdata)
+
 
                 elif k == 'Contact Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    contactinfo = ContactInfo.objects.get(basicinfo = eid)
+                    try:
+                        contactinfo = ContactInfo.objects.get(basicinfo = eid)
 
-                    for attr, value in contactinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('contactinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    contactinfo.save()
+                        for attr, value in contactinfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('contactinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        contactinfo.save()
+                    except ContactInfo.DoesNotExist:
+                        ContactInfo.objects.create(**cdata)
+
 
                 elif k == 'Banking Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    bankinginfo = BankingInfo.objects.get(basicinfo = eid)
+                    try:    
+                        bankinginfo = BankingInfo.objects.get(basicinfo = eid)
 
-                    for attr, value in bankinginfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('bankinginfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    bankinginfo.save()
+                        for attr, value in bankinginfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('bankinginfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        bankinginfo.save()
+                    except BankingInfo.DoesNotExist:
+                        BankingInfo.objects.create(**cdata)
+
 
                 elif k == 'Another Job Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    anotherjobinfo = AnotherJobInfo.objects.get(basicinfo = eid)
+                    try:
+                        anotherjobinfo = AnotherJobInfo.objects.get(basicinfo = eid)
 
-                    for attr, value in anotherjobinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('anotherjobinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    anotherjobinfo.save()
+                        for attr, value in anotherjobinfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('anotherjobinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        anotherjobinfo.save()
+                    except AnotherJobInfo.DoesNotExist:
+                        AnotherJobInfo.objects.create(**cdata)
+
 
                 elif k == 'Intern Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    interninfo = InternInfo.objects.get(basicinfo = eid)
+                    try:
+                        interninfo = InternInfo.objects.get(basicinfo = eid)
 
-                    for attr, value in interninfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('interninfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    interninfo.save()
-
-                elif k == 'Position Info':
-                    cdata = v.cleaned_data
-                    cdata['basicinfo'] = basicinfo
-                    positioninfo = PositionInfo.objects.get(basicinfo = eid)
-
-                    for attr, value in positioninfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('positioninfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    positioninfo.save()
+                        for attr, value in interninfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('interninfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        interninfo.save()
+                    except InternInfo.DoesNotExist:
+                        InternInfo.objects.create(**cdata)
 
                 elif k == 'Contractual Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
-                    contractualinfo = ContractualInfo.objects.get(basicinfo = eid)
+                    try:
+                        contractualinfo = ContractualInfo.objects.get(basicinfo = eid)
 
-                    for attr, value in contractualinfo.__dict__.items():
-                        if attr in cdata.keys():
-                            if not cdata[attr] == "None" and not cdata[attr] == None:
-                                exec('contractualinfo.' + attr + ' = "' +  str(cdata[attr]) + '"')
-                    contractualinfo.save()
+                        for attr, value in contractualinfo.__dict__.items():
+                            if attr in cdata.keys():
+                                if not cdata[attr] == "None" and not cdata[attr] == None:
+                                    exec('contractualinfo.' + attr + ' = """' +  str(cdata[attr]) + '"""')
+                        contractualinfo.save()
+                    except ContractualInfo.DoesNotExist:
+                        ContractualInfo.objects.create(**cdata)
+
 
                 elif k == 'Doc Scans':
                     #cdata = v.cleaned_data
@@ -731,10 +754,6 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
                     InternInfo.objects.create(**cdata)
-                elif k == 'Position Info':
-                    cdata = v.cleaned_data
-                    cdata['basicinfo'] = basicinfo
-                    PositionInfo.objects.create(**cdata)
                 elif k == 'Contractual Info':
                     cdata = v.cleaned_data
                     cdata['basicinfo'] = basicinfo
