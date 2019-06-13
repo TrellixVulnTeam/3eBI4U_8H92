@@ -76,7 +76,7 @@
         <div class="row">
             <div class="col-sm-2"> 
                 <div class="row"> <!--PICTURE-->
-                    {% thumbnail basicinfo.docscans.docscan_picture "300x300" as im %}
+                    {% thumbnail basicinfo.docscans.docscan_picture "250x300" as im %}
                         <img class="center-block" src="{{ im.url }}" style='border-radius:50px;'>
                     {% empty %}
                         Sem Imagem
