@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+{% load thumbnail %}
+
+{% block head %}
+    <title>BI4U - {{basicinfo.nome}}</title>
+{% endblock head %}
+
+{% block customcss %}
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .nav-pills > li > a:hover {
+          background-color: #3c3c3c;
+          color: white;
+        }
+
+        .nav-pills > li {
+            border: var(--darkblue) 2px solid;
+            border-radius: 5px;
+            margin: 2px;
+            padding: 0px;
+        }
+
+        .nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+            background-color: var(--darkblue);
+        }
+
+        #img-modal-content {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+
+
+    </style>
+{% endblock customcss %}
+
+{% block customjs %}
+    <script>
+        $(document).ready(function() {
+            
+            $('.pop').on('click', function() {
+                $('.imagepreview').attr('src', $(this).find('img').attr('data-url'));
+                $('#imagemodal').modal('show');
+            });
+            
+            // Enabling and Disabling Submit Button on ShutDown Form
+            const selectElement = document.querySelector('#CPFConfirmation');
+
+            selectElement.addEventListener('change', (event) => {
+                var ofCPF = $('#officialCPF').text();
+                var CPF = $('#CPFConfirmation').val();
+                var id = document.getElementById("eid").textContent;
+                console.log(ofCPF, CPF, id);
+                
+
+                if (ofCPF === CPF && ofCPF != "" && CPF != "") {
+                    $('#submitShutDown').prop("disabled", false);
+                    $('#shutDownID').val(id);
+                } else {
+                    $('#submitShutDown').prop("disabled", true);
+                    $('#shutDownID').val('');
+                }
+            });
+        });
+        // Creating Obs Box In Status Change Modal
+        function ToggleObsBox() {
+        
+            var OSDRB = document.getElementById('status-selection');
+            var OSDTA = document.getElementById('obs');
+            
+            if (OSDRB.value == "occurrenceshutdown" || OSDRB.value == "startleave" || OSDRB.value == "startsuspension") {
+                OSDTA.style.display = "block";
+            } else {
+                OSDTA.style.display = "none";
+            }
+        }
+    
+    </script>
+{% endblock customjs %}
+
+{% block content %}
+    
+    <div class="row"> <!--ERROR ROW BEGINS-->
+
+        {% if ERROR %}
+            <div id="alert" class="alert alert-danger alert-dismissible fade in col-sm-5">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>{{ERROR_HEADER}}</strong><span class="pull-right">{{ERROR_MSG}}</span>
+            </div>
+        {% endif %}
+
+    </div> <!--ERROR ROW ENDS-->
+
+    <div class="container-fluid">
+        <div class="row">
+            
+            <div class="col-sm-6"> <!--HEADER INFO-->
+                <span id="eid" hidden>{{basicinfo.id}}</span>
+                <h2>
+                    {{basicinfo.nome}} {{basicinfo.ultimo_nome}}<br><small><!--NAME-->
+                    Pessoa {{basicinfo.get_tipo_pessoa_display}},<!--KIND OF PERSON-->
+                    {% if basicinfo.numero_documento_CNPJ %}CNPJ {{basicinfo.numero_documento_CNPJ}}{% elif basicinfo.numero_documento_CPF %}CPF {{basicinfo.numero_documento_CPF}}{% endif %}<!--DOC NUMBER-->
+                    </small>
+                </h2>
+            </div>
+
+            <div class="col-sm-2 pull-left spacer-xxs"> <!--BEGIN AND END DATE INFORMATION-->
+                {% if basicinfo.data_inicio_servico %}
+                    <span class="text-primary bold-text">Início do {% if not basicinfo.servico_ativo %}Ultimo {% endif %}Serviço:<br/>{{basicinfo.data_inicio_servico}}</span><br/><br/>
+                {% endif %}
+            </div>
+
+            <div class="col-sm-2 spacer-xxs"> <!--SERVICE STATUS-->
+                {% if basicinfo.data_fim_servico %}
+                    <span class="text-primary bold-text">Final {% if basicinfo.servico_ativo %}Previsto {% endif %} do {% if not basicinfo.servico_ativo %}Ultimo {% endif %} Serviço:<br/>{{basicinfo.data_fim_servico}}</span><br>
+                {% endif %}
+            </div>
+
+            <div class="col-sm-2 text-right"> <!--ACTIVE STATUS-->
+                <div class="spacer-xxs"></div>
+                {% if basicinfo.servico_ativo %}
+                    <h4 class="text-success bold-text">Serviço Ativo &#10004;</h4>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="spacer-xs"></div>
+
+            <div class="col-sm-2"> 
+                <div class="row"> <!--BUTTONS MENU-->
+                    <a class="btn-block btnmenu panel-heading text-center" href="{% url 'cliente/editar' basicinfo.id %}">
+                        <span>Editar Cadastro</span>
+                    </a>
+                    <button class="btn-block btnmenu panel-heading">
+                        <span>Ordens de Serviço</span>
+                    </button>
+                    <button class="btn-block btnmenu panel-heading">
+                        <span>Locais de Serviço</span>
+                    </button>
+                    {% if basicinfo.servico_ativo %}
+                        <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#EndServiceModal">
+                            <span>Finalizar Serviço</span>
+                        </button>
+                    {% else %}
+                    <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#StartServiceModal">
+                        <span>Iniciar Serviço</span>
+                    </button>                    
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="col-sm-10">
+                
+                <div class="col-sm-12"> <!-- REGULAR CONTENT-->
+
+                    <div class="spacer-xxs"></div>
+
+                    <ul class="nav nav-pills"> <!--TAB MENU-->
+                        <li class="active"><a data-toggle="tab" href="#BasicInfo">Dados do Cliente</a></li>
+                        <li><a data-toggle="tab" href="#AddressInfo">Dados Complementares</a></li>
+                        <li><a data-toggle="tab" href="#EmployeeInfo">Funcionários Alocados</a></li>                     
+                    </ul>
+
+                    <div class="spacer-xs"></div>
+
+                    <div class="container-fluid tab-content" style="font-size: 1.2em;"> <!--TAB PANES-->
+                        
+                        <div class="tab-pane fade in active" id="BasicInfo"> <!--BASIC INFO-->
+                            <p> <!--RESPONSIBLE PERSON NAME-->
+                                <label>Nome do Responsável</label><span class="pull-right">{{basicinfo.nome_responsavel}}</span>
+                            </p>
+                            <p> <!--REGISTRATION DATE-->
+                                <label>Data de Cadastro</label><span class="pull-right">{{basicinfo.data_cadastro}}</span>
+                            </p>
+                            {% if basicinfo.data_ultima_modificacao %} <!--LAST MODIFICATION DATE-->
+                                <p> 
+                                    <label>Data da Ultima Modificação</label><span class="pull-right">{{basicinfo.data_ultima_modificacao}}</span>
+                                </p>
+                            {% endif %}
+                            <p> <!--ALOCATED EMPLOYEES QUANTITY-->
+                                <label>Quantidade de Funcionários Atualmente Alocados</label><span class="pull-right">{{basicinfo.quantidade_funcionarios_alocados}}</span>
+                            </p>
+
+                            {% if basicinfo.observacoes %}
+                                <legend class="text-right">
+                                    Observações
+                                </legend>
+                                {{basicinfo.observacoes}}
+                            {% endif %}
+
+                        </div>
+                        
+                        <div class="tab-pane fade" id="AddressInfo"> <!--ADRESS INFO-->
+                            <legend class="text-right">Endereço Fiscal</legend>
+                            <p> <!--ADDRESS-->
+                                <label>Endereço</label><span class="pull-right">{{basicinfo.address_info.end_fiscal}}, {{basicinfo.address_info.end_fiscal_numero}} - {{basicinfo.address_info.end_fiscal_municipio}}/{{basicinfo.address_info.end_fiscal_estado}}</span>
+                            </p>
+                            {% if basicinfo.address_info.end_fiscal_CEP %} <!--ADDRESS COMPLEMENT-->
+                                <p> 
+                                    <label>CEP</label><span class="pull-right">{{basicinfo.address_info.end_fiscal_CEP}}</span>
+                                </p>
+                            {% endif %}
+                            {% if basicinfo.address_info.end_complemento %} <!--ADDRESS COMPLEMENT-->
+                                <p> 
+                                    <label>Complemento</label><span class="pull-right">{{basicinfo.address_info.end_complemento}}</span>
+                                </p>
+                            {% endif %}
+                            <p> <!--ADDRESS COUNTRY-->
+                                <label>País</label><span class="pull-right">{{basicinfo.address_info.end_fiscal_pais}}</span>
+                            </p>
+
+                            <legend class="text-right">Informações de Contato</legend>
+                            {% if basicinfo.address_info.cont_tel_fixo %} <!--LANDLINE-->
+                                <p> 
+                                    <label>Telefone Fixo</label><span class="pull-right">{{basicinfo.address_info.cont_tel_fixo}}</span>
+                                </p>
+                            {% endif %}
+                            {% if basicinfo.address_info.cont_tel_fixo_adicional %} <!--LANDLINE 2-->
+                                <p> 
+                                    <label>Telefone Fixo Adicional</label><span class="pull-right">{{basicinfo.address_info.cont_tel_fixo_adicional}}</span>
+                                </p>
+                            {% endif %}
+                            {% if basicinfo.address_info.cont_tel_cel %} <!--MOBILE NUMBER-->
+                                <p> 
+                                    <label>Telefone Celular</label><span class="pull-right">{{basicinfo.address_info.cont_tel_cel}}</span>
+                                </p>
+                            {% endif %}
+                            {% if basicinfo.address_info.cont_tel_cel_adicional %} <!--MOBILE NUMBER 2-->
+                                <p> 
+                                    <label>Telefone Celular Adicional</label><span class="pull-right">{{basicinfo.address_info.cont_tel_cel_adicional}}</span>
+                                </p>
+                            {% endif %}
+                            {% if basicinfo.address_info.cont_email %} <!--EMAIL-->
+                                <p> 
+                                    <label>e-Mail</label><span class="pull-right">{{basicinfo.address_info.cont_email}}</span>
+                                </p>
+                            {% endif %}
+                            {% if basicinfo.address_info.cont_email_adicional %} <!--EMAIL 2-->
+                                <p> 
+                                    <label>e-Mail Adicional</label><span class="pull-right">{{basicinfo.address_info.cont_email_adicional}}</span>
+                                </p>
+                            {% endif %}
+
+
+
+
+                        </div> 
+
+                        <div class="tab-pane fade" id="EmployeeInfo"> <!--EMPLOYEE INFO-->
+
+                        </div> 
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div class="spacer"></div>
+
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="ImagePopUpModal" aria-hidden="true"> <!--IMAGE ENLARGER MODAL-->
+        <div class="modal-dialog">
+            <div class="modal-content" id="img-modal-content">
+                <div class="modal-body">
+                    <img src="" class="imagepreview" style="width: 100%;">
+                </div>
+            </div>
+    </div>
+    </div>
+    
+    <div class="modal fade" id="EndServiceModal" tabindex="-1" role="dialog" aria-labelledby="EndServiceModal" aria-hidden="true"> <!--END SERVICE MODAL-->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Finalizar Serviço - {{ basicinfo.nome }}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="/cliente/visualizar/{{basicinfo.id}}">
+                        {% csrf_token %}
+                        
+                        <label for="confirmation" class = "control-label">Digite sua Senha Para Confirmar a Operação.</label>
+                        <input name="password" type="password" class = "form-control" id = "confirmation" placeholder="Senha">
+                        <input name="username" hidden type="text" value="{{user.username}}">
+                        <input name="clientID" hidden type="number" id="clientID" value="{{basicinfo.id}}">
+                        <input name="operation" hidden type="text" id="operation" value="endService">
+
+                        <br>
+                        <input id="submitShutDown" class="btn btn-sm btn-primary" type="submit" style="float:right;" value="Desativar Serviço">
+
+                        <div class="spacer"></div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="StartServiceModal" tabindex="-1" role="dialog" aria-labelledby="StartServiceModal" aria-hidden="true"> <!--END SERVICE MODAL-->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Iniciar Serviço - {{ basicinfo.nome }}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="/cliente/visualizar/{{basicinfo.id}}">
+                        {% csrf_token %}
+                        
+                        <label for="confirmation" class = "control-label">Digite sua Senha Para Confirmar a Operação.</label>
+                        <input name="password" type="password" class = "form-control" id = "confirmation" placeholder="Senha">
+                        <input name="username" hidden type="text" value="{{user.username}}">
+                        <input name="clientID" hidden type="number" id="clientID" value="{{basicinfo.id}}">
+                        <input name="operation" hidden type="text" id="operation" value="startService">
+                        <br>
+                        <input id="submitShutDown" class="btn btn-sm btn-primary" type="submit" style="float:right;" value="Desativar Serviço">
+
+                        <div class="spacer"></div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}

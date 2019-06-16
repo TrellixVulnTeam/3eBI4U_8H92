@@ -17,7 +17,9 @@ create_cliente_forms = [
 urlpatterns = [
 
     path('cadastro/', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/cadastro'),
-    path('visualizar/<int:id>', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/visualizar'),
+    path('editar/<int:id>', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/editar'),
+    path('visualizar/<int:id>', views.DetalhesCliente.as_view(), name = 'cliente/visualizar'),
     path('', views.appMenu, name = 'cliente/menu'),
+    # API
     path('api/get_by_name/', views.autocompleteByname, name = 'cliente/autocompleteByName')
     ]

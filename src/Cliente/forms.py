@@ -21,7 +21,6 @@ class BasicInfoForm(forms.ModelForm):
         fields = [
             'nome',
             'nome_responsavel',
-            'nome_local_servico',
             'tipo_pessoa',
             'numero_documento_CPF',
             'numero_documento_CNPJ',
@@ -181,6 +180,8 @@ class CadastroClienteWizard(SessionWizardView):
 
         # CREATING OBJECT
         else:
+            eid =  False 
+
             for k, v in form_dict.items():
                 if k == 'Basic Info':
                     cdata = v.cleaned_data
@@ -208,7 +209,7 @@ class CadastroClienteWizard(SessionWizardView):
                     basicinfo.quantidade_funcionarios_alocados = len(funcionarios_atribuidos)
                     basicinfo.save()
                 
-        return redirect('/cliente/')
+        return redirect('/cliente/visualizar/' + (str(eid) if eid else str(basicinfo.id)))
 
     def get_form_initial(self, step):
         if 'id' in self.kwargs:

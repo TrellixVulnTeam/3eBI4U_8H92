@@ -9,7 +9,14 @@ class ClienteBasicInfoTable(tables.Table):
     class Meta:
         model = BasicInfo
         
-        fields = ["tipo_pessoa", "quantidade_funcionarios_alocados", "numero_documento_CNPJ", "servico_ativo"]
+        fields = ["tipo_pessoa", "numero_documento_CNPJ", "servico_ativo"]
     
-        sequence = ("Nome", "tipo_pessoa", "quantidade_funcionarios_alocados", "numero_documento_CNPJ", "servico_ativo")
+        sequence = ("Nome", "tipo_pessoa", "numero_documento_CNPJ", "servico_ativo")
         
+        attrs = {
+            'style' :   'font-size: 1em;',
+            'tbody' : {
+                'id'    :   'js-filter-employee-table'
+            }
+        }
+

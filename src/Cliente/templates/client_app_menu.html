@@ -17,6 +17,14 @@
 
     $(document).ready(function(){
 
+        // Table Filtering
+        $("#js-filter-search").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#js-filter-employee-table tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
         // DISABLE MENU OVERFLOW
         $('html').css('overflow', 'hidden');
 
@@ -68,80 +76,6 @@
             }
         });
 
-
-        // TEXTBOX PAGINATION
-        console.log($('#contents').contents().text())
-        if (1 == 1){
-            var x = $('#contents').text();
-
-            x = x.replace(/(((.|\n){300,}?\b)|((.|\n){1,299}(?!.)))/mg, '<div class="individual-page">$1</div>');
-
-            $('#contents').html(x);
-
-            $('#contents > .individual-page').each(function () {
-                if ($(this).is(':first-child')) {
-                $("#currentPage").html($(this).index());
-            } else {
-                $(this).hide()
-                $("#totalPages").html($(this).index());
-            }
-            });
-
-            if(parseInt($('#totalPages')) == 0){
-                $('#next').hide();
-                $('#prev').hide();
-            } else {
-                $('#next').show();
-                $('#prev').show();
-            }
-
-
-            $('#next').on('click', function() {
-                var currentPage = $('#currentPage').html()
-                var totalPages = $('#totalPages').html()
-                $($("#contents").children().get().reverse()).each(function() {
-                if($(this).index() == parseInt(currentPage) + 1){
-                    $('#currentPage').html(parseInt(currentPage) + 1)
-                $('#currentPage').trigger('change');
-                    $(this).show()
-                } else if ($(this).index() == currentPage){
-                    $(this).hide()
-                }
-            })
-            })
-
-            $('#prev').on('click', function() {
-                var currentPage = $('#currentPage').html()
-                var totalPages = $('#totalPages').html()
-                if (!parseInt(currentPage) == 0){
-                    $(this).show();
-                    $($("#contents").children().get()).each(function() {
-                    if($(this).index() == parseInt(currentPage) - 1){
-                        $('#currentPage').html(parseInt(currentPage) - 1)
-                        $('#currentPage').trigger('change');
-                        $(this).show()
-                    } else if ($(this).index() == currentPage){
-                        $(this).hide()
-                    }
-                    })
-                }
-            })
-
-            $('#currentPage').on('change', function() {
-
-                if ($(this).html() == $('#totalPages').html()){
-                $('#next').hide();
-                } else {
-                    $('#next').show();
-                }
-                if (parseInt($(this).html()) == 0){
-                    $('#prev').prop('disabled', true);
-                } else {
-                    $('#prev').prop('disabled', false);
-                }
-            })
-        }
-
         // Adding Popover Event to Picture
         $('[data-toggle="popover"]').popover();
 
@@ -171,9 +105,6 @@
         window.location.assign("/funcionario/visualizar/" + id);
     };
 
-
-
-
     function occurrenceShutDownRB() {
         var OSDRB = document.getElementById('opt3');
         var OSDTA = document.getElementById('occurrenceShutDown');
@@ -199,9 +130,9 @@
     <div class="row"> <!--ERROR ROW BEGINS-->
 
         {% if ERROR %}
-            <div id="alert" class="alert alert-danger alert-dismissible fade in">
+            <div id="alert" class="alert alert-danger alert-dismissible fade in col-sm-5">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>{{ERROR_HEADER}}</strong> {{ERROR_MSG}}
+                <strong>{{ERROR_HEADER}}</strong><span class="pull-right">{{ERROR_MSG}}</span>
             </div>
         {% endif %}
 
@@ -239,13 +170,13 @@
                         {% thumbnail imageObject.docscan_picture "250x250" colorspace="GRAY" as im %}
                         <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o Cliente." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeClient()">
                         {% empty %}
-                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeClient()">Editar Cadastro</button>
+                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeClient()">Visualizar Cliente</button>
                         {% endthumbnail %}
                     {% else %}
                         {% thumbnail imageObject.docscan_picture "250x250" as im %}
                         <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o Cliente." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeClient()">
                         {% empty %}
-                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeClient()">Editar Cadastro</button>
+                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeClient()">Visualizar Cliente</button>
                         {% endthumbnail %}
                     {% endif %}
                 </div>
@@ -270,28 +201,16 @@
                     </span>
                     </div>
                     <div>ID:<span class="pull-right" id="cid">{{SEARCH_OBJ.id}}</span></div>
-                    {% if SEARCH_OBJ.observacoes %}
-                    <div id="currentPage" hidden></div>
-                    <div id="totalPages" hidden></div>
-                    <div class="row">
-                            <span class="col-md-4 col-sm-12 pull-left">Observações:</span>
-                            <span class="col-md-1 col-xs-12 text-justify" id="contents">{{SEARCH_OBJ.observacoes}}</span>
-
-                            <div class="btn-group col-md-offset-10 col-xs-offset-8">
-                                <button class="custom-paginator" id="prev" style="width:30px; height: 30px; border-radius:50%;">-</button>
-                                <button class="custom-paginator" id="next">+</button>
-                            </div>
-                    </div>
-                    {% endif %}
 
                     <br>
+                    <!--
                     <span>Funcionários Atribuidos:</span><br/>
                     <br>
                     {% for employee in SEARCH_OBJ_EMPLOYEES.funcionario_atrib.all %}
                         <button class="btn btnmenu" style="margin: 0;" onclick="visualizeEmployee(this)">{{ employee }}</button>
                         <div class="hidden-xs hidden-sm hidden-md hidden-lg eid">{{employee.id}}</div>
                     {% endfor %}
-
+                    -->
                 </div>
             </div>
         </div><!--EMPLOYEE INFORMATION ENDS-->
@@ -337,28 +256,30 @@
 
     </div> <!--CONTENT ROW ENDS-->
 
-
-
-
-
-
     <!--MODALS-->
-    <div class="modal fade" id="modalTable"> <!--CLIENTES LISTING MODAL BEGINS-->
+    <div class="modal fade" id="modalTable"> <!--CLIENTE LISTING MODAL BEGINS-->
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Clientes Cadastrados</h4>
+                <div class="modal-header container-fluid">
+                    <button type="button" class="close col-sm-1 col-sm-offset-10" data-dismiss="modal">&times;</button>
+                    <div class="row">
+                        <div class="spacer-sm"></div>
+                        <div class="col-sm-8">
+                            <h3 class="modal-title">Clientes Cadastrados</h3>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="Pesquisar Funcionario..." id="js-filter-search">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-body">
                     {% render_table table 'django_tables2/bootstrap-responsive.html' %}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </div> <!--CLIENTES LISTING MODAL ENDS-->
+    </div> <!--CLIENTE LISTING MODAL ENDS-->
 
 
 

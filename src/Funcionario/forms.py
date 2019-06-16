@@ -710,9 +710,6 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     not_empty_data = [ k for k,val in v.cleaned_data.items() if val ]
                     savingform.save(update_fields=not_empty_data)
 
-                    
-
-
         # ELSE CREATE NEW RECORDS
         else:
             for k, v in form_dict.items():

@@ -472,8 +472,6 @@ class DetalhesFuncionario(View):
             # SUCCESS RENDER
             return render(request, template_name, context)
 
-
-
         # REACTIVATING EMPLOYEE RELATION
         if newstatus == "reactivate":
         

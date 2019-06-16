@@ -2,7 +2,8 @@ from django.db import models
 from django.core.validators import RegexValidator
 from .utilities import validateCPF, validateCNPJ, validateCEP, validateNoFutureDates
 from Funcionario.models import BasicInfo as Funcionario
-
+from django.utils import timezone
+import datetime
 
 # App Logic ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -94,7 +95,6 @@ class BasicInfo(models.Model):
 
     nome                                =   models.CharField(max_length = 100, null = True, blank = True, verbose_name = "Nome")
     nome_responsavel                    =   models.CharField(max_length = 100, null = True, blank = True, verbose_name = "Nome do Responsável" )
-    nome_local_servico                  =   models.CharField(max_length = 100, null = True, blank = True, verbose_name = "Local do Serviço")
 
     tipo_pessoa                         =   models.CharField(max_length = 1, null = True, blank = True, choices = [('F', 'Física'), ('J', 'Jurídica')], verbose_name = "Tipo de Pessoa")
 
@@ -113,10 +113,13 @@ class BasicInfo(models.Model):
     data_inicio_servico                 =   models.DateTimeField(null = True, blank = True, verbose_name = "Data Início de Serviço")
     data_fim_servico                    =   models.DateTimeField(null = True, blank = True, verbose_name = "Data Fim de Serviço")
 
+    def __str__(self):
+        return str(self.nome)
+
 # 2 - Address Info
 class AddressInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "address_info")
 
     end_fiscal_CEP              =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
     end_fiscal                  =   models.CharField(max_length = 500, null = True, blank = True)
@@ -135,18 +138,49 @@ class AddressInfo(models.Model):
     cont_email                  =   models.EmailField(null = True, blank = True)
     cont_email_adicional        =   models.EmailField(null = True, blank = True)
 
-    #end_servico_CEP              =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
-    #end_servico                  =   models.CharField(max_length = 500, null = True, blank = True)
-    #end_servico_numero           =   models.IntegerField(null = True, blank = True)
-    #end_servico_bairro           =   models.CharField(max_length = 200, null = True, blank = True)
-    #end_servico_complemento      =   models.CharField(max_length = 100, null = True, blank = True)
-    #end_servico_municipio        =   models.CharField(max_length = 200, null = True, blank = True)
-    #end_servico_estado           =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    #end_servico_pais             =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
-
-# 4 - Contractual Info
+# 3 - Contractual Info
 class ContractualInfo(models.Model):
 
-    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True)
+    basicinfo                   =   models.OneToOneField(BasicInfo, models.CASCADE, primary_key = True, related_name = "contractual_info")
 
     funcionario_atrib           =   models.ManyToManyField(Funcionario, related_name = "funcionarios_atribuidos")
+
+# 4 -SERVICE GROUNDS
+class ServiceGround(models.Model):
+    
+    cliente                     =   models.ForeignKey(BasicInfo, models.CASCADE, related_name = "local_servico_cliente")
+
+    nome                        =   models.CharField(max_length = 300, null = True, blank = True)
+    funcionario_responsavel     =   models.ForeignKey(Funcionario, models.CASCADE, related_name = "local_servico_responsavel")
+
+    CEP                         =   models.CharField(max_length = 9, null = True, blank = True, validators=[validateCEP])
+    endereco                    =   models.CharField(max_length = 500, null = True, blank = True)
+    numero                      =   models.IntegerField(null = True, blank = True)
+    bairro                      =   models.CharField(max_length = 200, null = True, blank = True)
+    complemento                 =   models.CharField(max_length = 100, null = True, blank = True)
+    municipio                   =   models.CharField(max_length = 200, null = True, blank = True)
+    estado                      =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
+    pais                        =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
+
+    def __str__(self):
+        return str(self.cliente) + '/' + str(self.nome)
+
+# 5 -SERVICE ORDERS
+class ServiceOrder(models.Model):
+    
+    cliente         =   models.ForeignKey(BasicInfo, models.CASCADE, related_name = "ordem_servico_cliente", null = True, blank = True)
+    local_servico   =   models.ForeignKey(ServiceGround, models.CASCADE, related_name = "ordem_servico_ls", null = True, blank = True)
+    funcionarios    =   models.ManyToManyField(Funcionario, related_name = "ordem_servico_funcionarios")
+
+    categoria       =   models.CharField(max_length = 200, null = True, blank = True)
+    servico         =   models.BooleanField(null = True, blank = True)
+    produto         =   models.BooleanField(null = True, blank = True)
+    quantidade      =   models.IntegerField(null = True, blank = True)
+    
+
+    @property
+    def OS(self):
+        return str(timezone.now().year) + str(timezone.now().month) + str(self.id)
+
+    def __str__(self):
+        return self.OS
