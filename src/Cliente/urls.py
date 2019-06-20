@@ -17,6 +17,9 @@ create_cliente_forms = [
 urlpatterns = [
 
     path('cadastro/', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/cadastro'),
+    path('LS/<int:id>', views.ServiceGroundView.as_view(), name = 'cliente/LS'),
+    path('gerar-OS/<int:id>', views.ServiceOrderView.as_view(), name = 'cliente/gerar-OS'),
+    path('OS/<int:OSid>', views.VisualizeServiceOrderView.as_view(), name = 'cliente/OS'),
     path('editar/<int:id>', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/editar'),
     path('visualizar/<int:id>', views.DetalhesCliente.as_view(), name = 'cliente/visualizar'),
     path('', views.appMenu, name = 'cliente/menu'),

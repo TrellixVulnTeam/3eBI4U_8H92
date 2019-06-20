@@ -12,7 +12,7 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from chosen import forms as chosenforms
 
-from .models import BasicInfo, AddressInfo, ContractualInfo
+from .models import BasicInfo, AddressInfo, ContractualInfo, ServiceGround, ServiceOrder, ServiceDescription
 from Funcionario.models import BasicInfo as FuncBasicInfo
 
 class BasicInfoForm(forms.ModelForm):
@@ -225,3 +225,77 @@ class CadastroClienteWizard(SessionWizardView):
             return modeldict
         else:
             return self.initial_dict.get(step, {})
+
+class ServiceGroundForm(forms.ModelForm):
+    class meta():
+        model = ServiceGround
+
+        fields = [
+            'cliente'
+            'nome',
+            'funcionario_responsavel',
+            'CEP',
+            'endereco',
+            'numero',
+            'bairro',
+            'complemento',
+            'municipio',
+            'estado'
+        ]
+
+        labels = {
+            'nome'  :   'Nome',
+            'funcionario_responsavel'   :   'Funcionário Responsável',
+            'CEP'   :   'CEP',
+            'endereco'  :   'Endereço',
+            'numero'    :   'Número',
+            'bairro'    :   'Bairro',
+            'complemento'   :   'Complemento',
+            'municipio' :   'Município',
+            'estado'    :   'Estado'
+        }
+
+        widgets = {
+            'numero'    :   widgets.TextInput
+        }
+    
+ServiceGroundFormSet = forms.modelformset_factory(
+    ServiceGround,
+    ServiceGroundForm,
+    extra = 1,
+    can_delete = True,
+    exclude = ['cliente'],
+    widgets = {
+        'numero'    :   widgets.TextInput
+    }
+)
+
+class ServiceOrderForm(forms.ModelForm):
+    class Meta():
+        model = ServiceOrder
+        fields = [
+            'local_servico',
+            'produto'
+        ]
+        label = {
+            'produto' : 'Possui Produto ?'
+        }
+
+
+class ServiceDescriptionForm(forms.ModelForm):
+    class Meta():
+        model = ServiceDescription
+        fields = [
+            'funcionario',
+            'qtd_horas'
+        ]
+        labels = {
+            'funcionario' : 'Funcionário',
+            'qtd_horas' : 'Quantidade de Horas'
+        }
+
+        widgets = {
+            'qtd_horas' : widgets.TextInput
+        }
+
+ServiceFormSet = forms.inlineformset_factory(ServiceOrder, ServiceDescription, form = ServiceDescriptionForm, extra = 1, fields=('funcionario', 'qtd_horas'))

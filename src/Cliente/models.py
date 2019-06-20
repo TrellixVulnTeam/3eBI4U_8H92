@@ -145,7 +145,7 @@ class ContractualInfo(models.Model):
 
     funcionario_atrib           =   models.ManyToManyField(Funcionario, related_name = "funcionarios_atribuidos")
 
-# 4 -SERVICE GROUNDS
+# 4 - SERVICE GROUNDS
 class ServiceGround(models.Model):
     
     cliente                     =   models.ForeignKey(BasicInfo, models.CASCADE, related_name = "local_servico_cliente")
@@ -160,27 +160,59 @@ class ServiceGround(models.Model):
     complemento                 =   models.CharField(max_length = 100, null = True, blank = True)
     municipio                   =   models.CharField(max_length = 200, null = True, blank = True)
     estado                      =   models.CharField(max_length = 2, choices = brazilian_states_choices, null = True, blank = True)
-    pais                        =   models.CharField(max_length = 200, choices = country_choices, null = True, blank = True)
 
     def __str__(self):
-        return str(self.cliente) + '/' + str(self.nome)
+        return str(self.cliente) + ' | ' + str(self.nome)
 
 # 5 -SERVICE ORDERS
 class ServiceOrder(models.Model):
     
-    cliente         =   models.ForeignKey(BasicInfo, models.CASCADE, related_name = "ordem_servico_cliente", null = True, blank = True)
-    local_servico   =   models.ForeignKey(ServiceGround, models.CASCADE, related_name = "ordem_servico_ls", null = True, blank = True)
-    funcionarios    =   models.ManyToManyField(Funcionario, related_name = "ordem_servico_funcionarios")
+    # PRIMARY KEY
+    id = models.BigAutoField(primary_key = True)
 
-    categoria       =   models.CharField(max_length = 200, null = True, blank = True)
-    servico         =   models.BooleanField(null = True, blank = True)
-    produto         =   models.BooleanField(null = True, blank = True)
-    quantidade      =   models.IntegerField(null = True, blank = True)
-    
+    # RELATIONAL FIELDS
+    cliente         =   models.ForeignKey(BasicInfo, models.CASCADE, related_name = "ordem_servico_cliente", verbose_name = 'Cliente', null = True, blank = True)
+    local_servico   =   models.ForeignKey(ServiceGround, models.CASCADE, related_name = "ordem_servico_ls", verbose_name = 'Local de Serviço', null = True, blank = True)
+
+    # MAIN MODEL FIELDS
+    data_emissao    =   models.DateField(null = True, blank = True, auto_now_add = True, verbose_name = 'Data de Emissão')
+
+    # BOOLEAN FIELDS
+    produto         =   models.BooleanField(default = False, verbose_name = 'Possui Produto ?')
+    faturado        =   models.BooleanField(default = False, verbose_name = 'Faturado')
+
+    @property
+    def Total(self):
+        return sum([x.valor_total for x in list(self.descricao_servico_OS.all())])
 
     @property
     def OS(self):
-        return str(timezone.now().year) + str(timezone.now().month) + str(self.id)
+        return str(self.data_emissao.strftime('%Y')) + str(self.data_emissao.strftime('%m')) + str(self.id)
 
     def __str__(self):
         return self.OS
+
+# 6 - SERVICE DESCRIPTION
+class ServiceDescription(models.Model):
+    
+    # PRIMARY KEY
+    id = models.BigAutoField(primary_key = True)
+
+    # RELATIONAL FIELDS
+    funcionario     =   models.ForeignKey(Funcionario, models.CASCADE, null = True, blank = True, related_name = 'descricao_servico_funcionario')
+    SO              =   models.ForeignKey(ServiceOrder, models.CASCADE, null = True, blank = True, related_name = 'descricao_servico_OS')
+
+    # MAIN MODEL FIELDS
+    qtd_horas       =   models.IntegerField(null = True, blank = True)
+    valor_hora      =   models.DecimalField(max_digits = 8, decimal_places = 2, null = True, blank = True)
+    valor_total     =   models.DecimalField(max_digits = 11, decimal_places = 2, null = True, blank = True)
+
+    def save(self,force_insert = False, force_update = False):
+        self.valor_hora = self.funcionario.valor_hora_receita
+        self.valor_total = self.valor_hora * self.qtd_horas
+        super(ServiceDescription, self).save(force_insert, force_update)
+
+
+# 7 - PRODUCTS DESCRIPTION
+
+

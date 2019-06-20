@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    {{ wizard.form.media }}
+{% endblock head %}
+
+{% block content %}
+
+    {% if wizard.form.numero_documento_CPF.errors or wizard.form.numero_documento_CNPJ.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+
+    </div>
+    {% endif %}
+
+    <div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 0 40px 40px 40px; margin-top: 10px; margin-bottom: 40px;">    
+        
+        <div class="page-header row row-no-gutter">
+            <legend>
+                <div class="text-center">
+                    <h1>
+                        Ordem de Serviço — {{OS.cliente}}</br>
+                        <small>#{{OS}}</small>
+                    </h1>
+                </div>
+                
+                <div class="text-right">
+                    {{emissão}}
+                </div>
+            </legend> 
+        </div>
+
+        
+        <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+
+            {% csrf_token %}
+            {{ service_description.management_form }}
+
+            <div class="row"> <!--OS INFO ROW-->
+                                    
+                <div class="form-group col-sm-7" style="transform: translateY(20%);"> <!--GROUNDS-->
+                    <label for="{{ form.local_servico.id_for_label }}" class = "control-label col-sm-3 text-right">
+                        {{form.local_servico.label}}
+                    </label>
+                    <div class="col-sm-8">
+                        {% render_field form.local_servico class="form-control" placeholder=form.local_servico.label %}
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-sm-offset-2"> <!--PRODUCT TOGGLE-->
+                    <div class="form-group hidden-xs">
+                        <label class="col-sm-7" style="transform: translateY(60%);">{{form.produto.label}}</label>
+                        <div class="checkbox col-sm-5">
+                            <label for="{{form.produto.id_for_label}}" class = "checkbox control-label switch text-center">
+                                {% render_field form.produto %}
+                                <span class="slider round"><span class="on text-left">SIM</span><span class="off text-right">NÃO</span></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            
+            <div class="spacer"></div>
+
+            <legend class="text-left">Serviço</legend>
+            <div class="spacer"></div>
+            <table class="table col-sm-12">
+                {% for form in service_description.forms %}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                    <input type="text" name="OSid" value="{{OS.id}}" hidden/>
+
+                    {% if forloop.first %}
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">{{form.funcionario.label}}</th>
+                                <th class="text-center">{{form.qtd_horas.label}}</th>
+                                <th class="text-right">Controle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    {% endif %}
+                    <div class="row">
+                        <tr class="form-row">
+                            <td class="text-center fmsetfield counter" style="padding-top: 15px;">{{forloop.counter}}</td>
+                            <td class="col-sm-5 fmsetfield">{% render_field form.funcionario class="form-control" %}</td>
+                            <td class="col-sm-5 fmsetfield">{% render_field form.qtd_horas class="form-control" %}</td>
+                            <td class="btn-group pull-right">
+                                <button class="btn btn-danger remove-form-row">-</button>
+                                <button class="btn btn-success add-form-row">+</button>                
+                            </td>
+                        </tr>
+                    </div>
+                    {% if forloop.last %}
+                        </tbody>
+                    {% endif %}
+                {% endfor %}
+                <th></th>
+            </table>
+
+            <div class="spacer"></div>
+
+            <div class="btn-group col-lg-offset-9 col-lg-3 col-xs-12">
+                <button class="btn btn-success btn-md col-lg-12 col-xs-12" type="submit" style="margin-top:10px; background: RGB(255, 163, 26); color:white; border-color: RGB(255, 163, 26);">Salvar</button>
+            </div>
+            
+
+
+        </form>
+    </div>
+
+    <script>
+        // DYNAMIC FORMSET AUXILIAR FUNCTIONS
+        function updateElementIndex(el, prefix, ndx) {
+                // UPDATES EACH ELEMENT INDEX
+                var id_regex = new RegExp('(' + prefix + '-\\d+)');
+                var replacement = prefix + '-' + ndx;
+                if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+                if (el.id) el.id = el.id.replace(id_regex, replacement);
+                if (el.name) el.name = el.name.replace(id_regex, replacement);
+            };
+
+        function cloneMore(selector, prefix) {
+            // CLONES ORIGINAL ELEMENT WHEN ADDING NEW ONE AND CREATES REMOVE FORM BUTTON
+            var newElement = $(selector).clone(true);
+            var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+            newElement.find(':input').each(function() {
+                if ($(this).attr('name')){
+                    var name = $(this).attr('name').replace('-' + (total-1) + '-', '-' + total + '-');
+                    var id = 'id_' + name;
+                    $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+                }
+            });
+            
+            total++;
+            
+            $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+            
+            newElement.children().first().text(parseInt(newElement.children().first().text()) + 1);
+
+            $(selector).after(newElement);
+            
+            //var conditionRow = $('.form-row:not(:last)');
+            
+            //conditionRow.find('.btn.add-form-row').removeClass('btn-success').addClass('btn-danger').removeClass('add-form-row').addClass('remove-form-row').html('-');
+            
+            return false;
+        };
+
+        function deleteForm(prefix, btn) {
+            // CREATE DELETING FORM FUNCTIONALITY
+            var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            if (total > 1){
+                btn.closest('.form-row').remove();
+                var forms = $('.form-row');
+                $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+                for (var i=0, formCount=forms.length; i<formCount; i++) {
+                    $(forms.get(i)).find(':input').each(function() {
+                        updateElementIndex(this, prefix, i);
+                    });
+                }
+            }
+            return false;
+        };
+
+        // ON LOADING PAGE (DOCUMENT.READY)
+        $(document).ready(function(){
+
+            // GETTING URL
+            var id = window.location.href.match(/[1-9]+$/)[0];
+            
+
+            // ADDING FORM EVENT LISTENER TO CALL CLONEMORE
+            $(document).on('click', '.add-form-row', function(e){
+                e.preventDefault();
+                cloneMore('.form-row:last', 'descricao_servico_OS');
+            });
+
+            // REMOVING FORM EVENT LISTENER TO CALL DELETEFORM
+            $(document).on('click', '.remove-form-row', function(e){
+                e.preventDefault();
+                deleteForm('descricao_servico_OS', $(this));
+                return false;
+            });
+
+
+        });
+
+    </script>
+
+
+{% endblock content %}
+

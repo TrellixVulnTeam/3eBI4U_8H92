@@ -79,8 +79,10 @@ phoneRegex = RegexValidator(
 # 1 - Basic Info
 class BasicInfo(models.Model):
 
+    # PRIMARY KEY
     id                          =   models.BigAutoField(primary_key = True)
 
+    # MODEL MAIN INFO
     primeiro_nome               =   models.CharField(max_length = 100)
     ultimo_nome                 =   models.CharField(max_length = 100)
     data_nascimento             =   models.DateField(null = True, blank = True, validators = [utilities.validateNoFutureDates])
@@ -98,7 +100,13 @@ class BasicInfo(models.Model):
     nome_completo_pai           =   models.CharField(max_length = 200, null = True, blank = True)
     estado_civil                =   models.CharField(max_length = 200, choices = civil_state_choices, null = True, blank = True)
     escolaridade                =   models.CharField(max_length = 200, null = True, blank = True, choices = intern_schooling_choices)
+    categoria                   =   models.CharField(max_length = 200, null = True, blank = True)
 
+    # VALUES
+    valor_hora_custo            =   models.DecimalField(max_digits = 8, decimal_places = 2, null = True, blank = True)
+    valor_hora_receita          =   models.DecimalField(max_digits = 8, decimal_places = 2, null = True, blank = True)
+
+    # BOOLEANS
     primeiro_emprego            =   models.BooleanField(null = True, blank = True)
     estrangeiro                 =   models.BooleanField(null = True, blank = True)
     outro_emprego               =   models.BooleanField(null = True, blank = True)
@@ -110,11 +118,13 @@ class BasicInfo(models.Model):
     ferias                      =   models.BooleanField(default=False)  # REQUIRED
     afastamento                 =   models.BooleanField(default=False)  # REQUIRED
 
+    # STATUS INFO
     status                      =   models.CharField(max_length = 100, null = True, blank = True)
 
     obs_status                  =   models.TextField(null = True, blank = True)
     obs_desligamento            =   models.TextField(null = True, blank = True)
 
+    # DATES
     data_ultima_ativacao        =   models.DateTimeField(null = True, blank = True)
     data_ultima_modificacao     =   models.DateTimeField(null = True, blank = True)
     data_ultimo_desligamento    =   models.DateTimeField(null = True, blank = True)
@@ -342,7 +352,7 @@ class DocumentAttachments(models.Model):
 # 12 - Dependent Info (If Needed)
 class Dependente(models.Model):
 
-    basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE)
+    basicinfo                   =   models.ForeignKey(BasicInfo, models.CASCADE, related_name = 'dependente')
 
     grau_parentesco             =   models.CharField(max_length = 500, choices = grau_parentesco_choices, null = True, blank = True)
     nome                        =   models.CharField(max_length = 200, null = True, blank = True)

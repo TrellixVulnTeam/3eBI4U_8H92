@@ -119,8 +119,8 @@
             </div>
 
             <div class="col-sm-2 spacer-xxs"> <!--SERVICE STATUS-->
-                {% if basicinfo.data_fim_servico %}
-                    <span class="text-primary bold-text">Final {% if basicinfo.servico_ativo %}Previsto {% endif %} do {% if not basicinfo.servico_ativo %}Ultimo {% endif %} Serviço:<br/>{{basicinfo.data_fim_servico}}</span><br>
+                {% if basicinfo.data_fim_servico and not basicinfo.servico_ativo %}
+                    <span class="text-primary bold-text">Final do Ultimo Serviço:<br/>{{basicinfo.data_fim_servico}}</span><br>
                 {% endif %}
             </div>
 
@@ -144,9 +144,9 @@
                     <button class="btn-block btnmenu panel-heading">
                         <span>Ordens de Serviço</span>
                     </button>
-                    <button class="btn-block btnmenu panel-heading">
+                    <a class="btn-block btnmenu panel-heading text-center" href="{% url 'cliente/LS' basicinfo.id %}">
                         <span>Locais de Serviço</span>
-                    </button>
+                    </a>
                     {% if basicinfo.servico_ativo %}
                         <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#EndServiceModal">
                             <span>Finalizar Serviço</span>
@@ -170,7 +170,10 @@
                     <ul class="nav nav-pills"> <!--TAB MENU-->
                         <li class="active"><a data-toggle="tab" href="#BasicInfo">Dados do Cliente</a></li>
                         <li><a data-toggle="tab" href="#AddressInfo">Dados Complementares</a></li>
-                        <li><a data-toggle="tab" href="#EmployeeInfo">Funcionários Alocados</a></li>                     
+                        <li><a data-toggle="tab" href="#EmployeeInfo">Funcionários Alocados</a></li>
+                        {% if basicinfo.local_servico_cliente.all.count > 0 %}
+                            <li><a data-toggle="tab" href="#GroundsInfo">Locais de Serviço</a></li>
+                        {% endif %}
                     </ul>
 
                     <div class="spacer-xs"></div>
@@ -260,7 +263,22 @@
 
                         <div class="tab-pane fade" id="EmployeeInfo"> <!--EMPLOYEE INFO-->
 
+                        </div>
+
+                        <div class="tab-pane fade" id="GroundsInfo"> <!--EMPLOYEE INFO-->
+
+                            {% for ground in basicinfo.local_servico_cliente.all %}
+                                    <address class="col-sm-5 {% cycle '' 'col-sm-offset-2' %}">
+                                        <legend class="text-right">{{ground.nome}}</legend>
+                                        <label>Endereço</label><br/>
+                                        {{ground.endereco}}, {{ground.numero}}{% if ground.complemento %} - {{ground.complemento}}{% endif %}<br/>
+                                        {{ground.bairro}} - {{ground.municipio}} / {{ground.estado}}<br/>
+                                        {{ground.CEP}}
+                                    </address>
+                            {% endfor %}
+
                         </div> 
+
 
                     </div>
                 </div>

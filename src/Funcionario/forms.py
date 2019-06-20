@@ -508,7 +508,6 @@ Dependentefmset = modelformset_factory(
     extra = 1
     )
 
-
 TEMPLATES = {
         'Basic Info'        :   'wizard_template_basic_info.html',
         'Address Info'      :   'wizard_template_address_info.html',

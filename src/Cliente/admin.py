@@ -4,6 +4,7 @@ from .models import (
     AddressInfo,
     ContractualInfo,
     ServiceGround,
+    ServiceDescription,
     ServiceOrder
 )
 
@@ -12,4 +13,5 @@ admin.site.register(BasicInfo)
 admin.site.register(AddressInfo)
 admin.site.register(ContractualInfo)
 admin.site.register(ServiceGround)
+admin.site.register(ServiceDescription)
 admin.site.register(ServiceOrder)
