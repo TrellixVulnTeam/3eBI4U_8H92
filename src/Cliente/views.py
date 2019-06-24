@@ -1,21 +1,26 @@
-from json import dumps
-import re
+from django.views import View
+from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.list import ListView
+from django.db import transaction
 from django.shortcuts import render, HttpResponse, redirect
 from django.http.response import HttpResponseNotFound
+from django.contrib import messages
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.urls import reverse_lazy
-from .utilities import validateCNPJ, validateCPF
 from django.core.exceptions import ValidationError
+from django.template import RequestContext
 from .models import BasicInfo, ContractualInfo, ServiceGround, ServiceDescription, ServiceOrder
+from Funcionario.models import BasicInfo as Funcionario
 from .tables import ClienteBasicInfoTable
-from django.views import View
-from django.views.generic.edit import CreateView
-from django.contrib.auth import authenticate
+from .utilities import validateCNPJ, validateCPF
 from .forms import ServiceGroundFormSet, ServiceFormSet, ServiceOrderForm
-from django.db import transaction
+from json import dumps
+import re
 
 # Create your views here.
+
 @login_required
 def appMenu(request, *args, **kwargs):
     table = ClienteBasicInfoTable(BasicInfo.objects.all())
@@ -64,44 +69,16 @@ def appMenu(request, *args, **kwargs):
             
     return render(request, template_name, context)
 
-def autocompleteByname(request, *args, **kwargs):
-
-    if request.is_ajax():
-        term = request.GET.get('term', '')
-        names = BasicInfo.objects.filter(nome__contains = term)[:20]
-
-        print(term)
-
-        results = []
-        
-        for name in names:
-            name_json = {}
-            
-            name_json  = name.id
-            name_json  = name.nome
-            name_json  = name.nome
-
-            
-
-            results.append(name_json)
-        
-        data = dumps(results)
-    
-    else:
-        data = 'fail'
-    
-    mimetype = 'application/json'
-
-    print(data)
-
-    return HttpResponse(data, mimetype)
-
 class DetalhesCliente(View):
 
     template_name = "single_customer_menu.html"
     context = {}
 
     def get(self, request, *args, **kwargs):
+
+        context = RequestContext(self.request)
+        print(type(context))
+
 
         # Check for id in URL
         if not self.kwargs.get('id'):
@@ -280,3 +257,90 @@ class VisualizeServiceOrderView(View):
         })
 
         return render(request, self.template_name, self.context)
+
+class DeleteOSView(DeleteView):
+    model = ServiceOrder
+    success_message = "OS Deletada com Sucesso !"
+    template_name = 'delete_confirmation_OS.html'
+
+    
+
+    def get_object(self, queryset=None):
+        obj = super(DeleteOSView, self).get_object()
+        self.cliente = obj.cliente.id
+        return obj
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteOSView, self).get_context_data(self, **kwargs)
+        context.update({
+            'ERROR' : True,
+            'ERROR_HEADER'  :   ''
+        })
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(DeleteOSView, self).delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('cliente/visualizar', kwargs = {'id' : self.cliente})
+
+class ListOSView(ListView):
+    template_name = 'list_OS.html'
+    paginate_by = 8
+
+    def get_queryset(self):
+        #filter_val = self.request.GET.get('filter', 'give-default-value')
+        #order = self.request.GET.get('orderby', 'give-default-value')
+        cliente = self.kwargs.get('id')
+        context = ServiceOrder.objects.filter(cliente = cliente).order_by('-id')
+        return context
+    
+    def get_context_data(self, **kwargs):
+        context = super(ListOSView, self).get_context_data(**kwargs)
+        context.update({
+            'clientID'  :   self.kwargs.get('id'),
+            'cliente'   :   BasicInfo.objects.get(id = self.kwargs.get('id'))
+        })
+        return context
+
+
+# AJAX Calls Processing
+def autocompleteByname(request, *args, **kwargs):
+
+    if request.is_ajax():
+        term = request.GET.get('term', '')
+        names = BasicInfo.objects.filter(nome__contains = term)[:20]
+
+        print(term)
+
+        results = []
+        
+        for name in names:
+            name_json = {}
+            
+            name_json  = name.id
+            name_json  = name.nome
+            name_json  = name.nome
+
+            
+
+            results.append(name_json)
+        
+        data = dumps(results)
+    
+    else:
+        data = 'fail'
+    
+    mimetype = 'application/json'
+
+    print(data)
+
+    return HttpResponse(data, mimetype)
+
+def filterEmployeeDropDown(request, *args, **kwargs):
+    category    = request.GET.get('categoria', None)
+    if not category == '---------' and category:
+        employees   =   Funcionario.objects.filter(categoria = category)
+    else:
+        employees   =   Funcionario.objects.all()
+    return render(request, 'OS_employee_dropdown.html', {'employees' : employees})

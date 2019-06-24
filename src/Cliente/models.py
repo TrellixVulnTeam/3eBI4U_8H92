@@ -176,6 +176,7 @@ class ServiceOrder(models.Model):
 
     # MAIN MODEL FIELDS
     data_emissao    =   models.DateField(null = True, blank = True, auto_now_add = True, verbose_name = 'Data de Emissão')
+    observacao      =   models.TextField(blank = True, null = True, verbose_name = 'Observações')
 
     # BOOLEAN FIELDS
     produto         =   models.BooleanField(default = False, verbose_name = 'Possui Produto ?')
@@ -206,6 +207,7 @@ class ServiceDescription(models.Model):
     qtd_horas       =   models.IntegerField(null = True, blank = True)
     valor_hora      =   models.DecimalField(max_digits = 8, decimal_places = 2, null = True, blank = True)
     valor_total     =   models.DecimalField(max_digits = 11, decimal_places = 2, null = True, blank = True)
+    descricao       =   models.CharField(max_length = 200, null = True, blank = True, verbose_name = 'Descrição')
 
     def save(self,force_insert = False, force_update = False):
         self.valor_hora = self.funcionario.valor_hora_receita

@@ -62,14 +62,24 @@
                     </div>
                 </div>
 
+                <div class="form-group col-sm-10 col-sm-offset-1" > <!--GROUNDS-->
+                    <label for="{{ form.observacao.id_for_label }}" class = "control-label col-sm-2 text-right">
+                        {{form.observacao.label}}
+                    </label>
+                    <div class="col-sm-8">
+                        {% render_field form.observacao class="form-control" placeholder='Insira sua Observação...' style="resize: none; width: 160%; height: 100px;" %}
+                    </div>
+                </div>
+
+
             </div>
 
             
-            <div class="spacer"></div>
+            <div class="spacer-xxs"></div>
 
-            <legend class="text-left">Serviço</legend>
+            <legend class="text-center bold-text">Serviço</legend>
             <div class="spacer"></div>
-            <table class="table col-sm-12">
+            <table class="table col-sm-12" funcionario-load-url="{% url 'cliente/OS/loadEmployees' %}" id="SD-table">
                 {% for form in service_description.forms %}
                     {% for hidden in form.hidden_fields %}
                         {{ hidden }}
@@ -80,9 +90,11 @@
                         <thead>
                             <tr>
                                 <th></th>
+                                <th class="text-center">Categoria</th>
                                 <th class="text-center">{{form.funcionario.label}}</th>
+                                <th class="text-center">{{form.descricao.label}}</th>
                                 <th class="text-center">{{form.qtd_horas.label}}</th>
-                                <th class="text-right">Controle</th>
+                                <th class="text-right"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,8 +102,10 @@
                     <div class="row">
                         <tr class="form-row">
                             <td class="text-center fmsetfield counter" style="padding-top: 15px;">{{forloop.counter}}</td>
-                            <td class="col-sm-5 fmsetfield">{% render_field form.funcionario class="form-control" %}</td>
-                            <td class="col-sm-5 fmsetfield">{% render_field form.qtd_horas class="form-control" %}</td>
+                            <td class="col-sm-3 fmsetfield">{% render_field form.categoria class="form-control js-categoria" %}</td>
+                            <td class="col-sm-3 fmsetfield">{% render_field form.funcionario class="form-control" %}</td>
+                            <td class="col-sm-3 fmsetfield">{% render_field form.descricao class="form-control" %}</td>
+                            <td class="col-sm-1 fmsetfield">{% render_field form.qtd_horas class="form-control" %}</td>
                             <td class="btn-group pull-right">
                                 <button class="btn btn-danger remove-form-row">-</button>
                                 <button class="btn btn-success add-form-row">+</button>                
@@ -190,6 +204,22 @@
                 return false;
             });
 
+
+            $(".js-categoria").change(function () {
+                var url = $("#SD-table").attr("funcionario-load-url");  // get the url of the `load_cities` view
+                var category = $(this).val();  // get the selected country ID from the HTML input
+                var elem = $(this).parent()
+                $.ajax({                       // initialize an AJAX request
+                    url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+                    data: {
+                        'categoria': category       // add the country id to the GET parameters
+                    },
+                    success: function (data) {   // `data` is the return of the `load_cities` view function                    
+                        elem.next().children().html(data); // replace the contents of the city input with the data that came from the server
+                    }
+                });
+
+            });
 
         });
 

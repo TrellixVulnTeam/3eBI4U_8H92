@@ -275,27 +275,32 @@ class ServiceOrderForm(forms.ModelForm):
         model = ServiceOrder
         fields = [
             'local_servico',
-            'produto'
+            'produto',
+            'observacao'
         ]
         label = {
-            'produto' : 'Possui Produto ?'
+            'produto' : 'Possui Produto ?',
+            'observacao' : 'Observações'
         }
 
 
 class ServiceDescriptionForm(forms.ModelForm):
+    categoria = forms.ChoiceField(choices=[('---------','---------')]+[(x['categoria'], x['categoria']) for x in FuncBasicInfo.objects.order_by().values('categoria').distinct()])
     class Meta():
         model = ServiceDescription
         fields = [
             'funcionario',
-            'qtd_horas'
+            'qtd_horas',
+            'descricao'
         ]
         labels = {
             'funcionario' : 'Funcionário',
-            'qtd_horas' : 'Quantidade de Horas'
+            'qtd_horas' : 'Horas',
+            'descricao' : 'Descrição'
         }
 
         widgets = {
             'qtd_horas' : widgets.TextInput
         }
-
-ServiceFormSet = forms.inlineformset_factory(ServiceOrder, ServiceDescription, form = ServiceDescriptionForm, extra = 1, fields=('funcionario', 'qtd_horas'))
+    
+ServiceFormSet = forms.inlineformset_factory(ServiceOrder, ServiceDescription, form = ServiceDescriptionForm, extra = 1, fields=('funcionario', 'qtd_horas', 'descricao'))

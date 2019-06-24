@@ -10,7 +10,7 @@
         --spacerxl: calc(var(--spacer) * 3);
         --spacerxxl: calc(var(--spacer) * 4);
         --backgroundcolor: #F1F1F1;
-        --blue: ;
+        --blue: #258fed;
         --darkblue: #122B41;
         --orange: #FFA31A;
     }        
@@ -27,7 +27,7 @@
         --spacerxl: calc(var(--spacer) * 3);
         --spacerxxl: calc(var(--spacer) * 4);
         --backgroundcolor: #F1F1F1;
-        --blue: ;
+        --blue: #258fed;
         --darkblue: #122B41;
         --orange: #FFA31A;
     }
@@ -44,7 +44,7 @@
         --spacerxl: calc(var(--spacer) * 3);
         --spacerxxl: calc(var(--spacer) * 4);
         --backgroundcolor: #F1F1F1;
-        --blue: ;
+        --blue: #258fed;
         --darkblue: #122B41;
         --orange: #FFA31A;
     }
@@ -61,7 +61,7 @@
         --spacerxl: calc(var(--spacer) * 3);
         --spacerxxl: calc(var(--spacer) * 4);
         --backgroundcolor: #F1F1F1;
-        --blue: ;
+        --blue: #258fed;
         --darkblue: #122B41;
         --orange: #FFA31A;
     }
@@ -78,7 +78,7 @@
         --spacerxl: calc(var(--spacer) * 3);
         --spacerxxl: calc(var(--spacer) * 4);
         --backgroundcolor: #F1F1F1;
-        --blue: ;
+        --blue: #258fed;
         --darkblue: #122B41;
         --orange: #FFA31A;
     }
@@ -268,7 +268,7 @@ a {
 }
 
 .btnmenu:hover {
-    background-color: #258fed;
+    background-color: var(--blue);
     color:white;
     transform: var(--btnmenu-translate-transformation);
 }

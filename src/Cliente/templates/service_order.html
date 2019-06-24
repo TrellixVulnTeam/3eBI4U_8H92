@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
     <legend class="text-center">
         <h1>
             Ordem de Serviço — {{OS.cliente}}</br>
             <small>#{{OS}} de {{OS.data_emissao}}</small>
         </h1>
     </legend> 
-
+    <div class="spacer"></div>
     <legend class="bold-text text-center">{{OS.local_servico.nome | upper}}</legend>
+    <div class="col-sm-2 col-sm-offset-2 bold-text">Observações:</div>
+    <div class="col-sm-offset-1 text-left">{{OS.observacao}}</div>
 
 
     <div class="col-sm-8 col-sm-offset-2">
@@ -16,40 +19,60 @@
             <legend class="text-center bold-text">
                 <h1><small>Serviços</small></h1>
             </legend>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Funcionário</th>
-                        <th class="text-right">Quantidade de Horas</th>
-                    </tr>
-                </thead>
-                {% for SD in OS.descricao_servico_OS.all %}
-                    <tr>
-                        <td>{{SD.funcionario}}</td>
-                        <td class="text-right">{{SD.qtd_horas}}</td>
-                    </tr>
-                {% empty %}
-                    Esta OS não Possui Serviços !
-                {% endfor %}
-            </table>
-        </div>
-    </div>
-
-    <div class="col-sm-1  col-sm-offset-7">
-        <div class="spacer-xs"></div>
-        <div class="btn-group btn-group-justified">
-            <a href="#" class="btn btnmenu"><div class="glyphicon glyphicon-download-alt"></div></a>
+            {% for SD in OS.descricao_servico_OS.all %}
+                {% if forloop.first %}<table class="table">
+                    <thead>
+                        <tr>
+                            <th>Funcionário</th>
+                            <th>Descrição</th>
+                            <th class="text-right">Quantidade de Horas</th>
+                        </tr>
+                    </thead>
+                {% endif %}
+                <tr>
+                    <td>{{SD.funcionario}}</td>
+                    <td>{{SD.descricao}}</td>
+                    <td class="text-right">{{SD.qtd_horas}}</td>
+                    
+                </tr>
+                {% if forloop.last %}</table>{% endif %}
+            {% empty %}
+                <div class="jumbotron text-center lead bold-text" style="background-color: transparent;">
+                    Esta OS não Possui Nenhum Serviço !
+                </div>           
+            {% endfor %}
         </div>
     </div>
     
-    <div class="col-sm-3">
+    <div class="col-sm-3 col-sm-offset-8 hidden-print">
         <div class="spacer-xs"></div>
         <div class="btn-group btn-group-justified">
-            <a href="#" class="btn btnmenu">Excluir</a>
-            <a href="#" class="btn btnmenu">Imprimir</a>
-            <a href="#" class="btn btnmenu">Voltar</a>
+            <a data-toggle="modal" href="#deleteOSModal" class="btn btnmenu">Excluir</a>
+            <a href="#" class="btn btnmenu" onclick="window.print()">Imprimir</a>
+            <a href="{% url 'cliente/OS/lista' OS.cliente.id %}" class="btn btnmenu">Voltar</a>
         </div> 
+        <div class="spacer"></div>
     </div>
+
+    <!--MODALS-->
+    <div class="modal fade" id="deleteOSModal"> <!--CLIENTE LISTING MODAL BEGINS-->
+        <div class="modal-dialog modal-md">
+            <div class="modal-content container-fluid">
+                
+                <form action="{% url 'cliente/OS/excluir' OS.id %}" method="POST" >{% csrf_token %}
+                    <div class="modal-body" style="background-color: transparent;">
+                        <p class="text-center lead bold-text">Tem Certeza que Deseja Excluir a OS #{{OS}} ?</p>
+                        <div class="btn-group pull-right">
+                            <button type="submit" class="btn btnmenu" style="margin-top: 0; margin-bottom: 20px;">Excluir</button>
+                            <button type="button" class="btn btnmenu" data-dismiss="modal" style="margin-top: 0; margin-bottom: 20px;">Cancelar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> <!--CLIENTE LISTING MODAL ENDS-->
+
+
 
 
 

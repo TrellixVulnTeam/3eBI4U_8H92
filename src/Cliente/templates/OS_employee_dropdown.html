@@ -1,0 +1,4 @@
+<option value="" selected>---------</option>
+{% for employee in employees %}
+<option value="{{ employee.pk }}">{{ employee.primeiro_nome }} {{ employee.ultimo_nome }}</option>
+{% endfor %}

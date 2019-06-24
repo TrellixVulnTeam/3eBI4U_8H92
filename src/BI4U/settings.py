@@ -88,6 +88,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'BI4U.wsgi.application'
 
+# Message Storage Settings
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

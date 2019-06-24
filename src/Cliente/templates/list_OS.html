@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+        .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+            background-color: #3c3c3c;
+            color: white;
+        }
+</style>
+{% endblock head %}
+{% block content %}
+    
+    <div class="row">
+        <h2 class="text-center bold-text">Ordens de Servico — {{cliente.nome}}</h2>
+        
+    </div>
+    <div class="spacer"></div>
+
+    {% if object_list %}
+        <table class="table table-hover">
+            <thead>
+                <th>OS</th>
+                <th>Local de Serviço</th>
+                <th>Data de Emissão</th>
+                <th>Faturada</th>
+            </thead>
+            <tbody>
+                {% for OS in object_list %}
+                    <tr onclick="window.location.href = '/cliente/OS/{{OS.OS}}';" style="cursor: pointer;">
+                        <td>{{OS.OS}}</td>
+                        <td>{{OS.local_servico}}</td>
+                        <td>{{OS.data_emissao}}</td>
+                        <td>{% if not OS.faturado %} ✘ {% else %} ✔ {% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="jumbotron text-center" style="background-color: transparent;">
+            <span class="lead">Nenhuma Ordem de Serviço encontrada !</span>
+        </div>
+    {% endif %}
+
+    {% if page_obj.has_other_pages %}
+        <style>
+            .pagination > li > a, .pagination > .disabled > span {
+                background-color: var(--darkblue);
+                color: white;
+                border-color: white;
+            }
+
+            .pagination > li > a:hover {
+                background-color: var(--blue);
+                color: white;
+            }
+
+            .pagination > .disabled > span:hover {
+                background-color: var(--darkblue);                
+                color: white;
+            }
+
+            .pagination > .active > span, .pagination > .active > span:hover  {
+                background-color: var(--blue);
+                border-color: white;
+            }
+        
+        </style>
+
+        <ul class="pagination pull-right">
+            {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+
+    {% endif %}
+    <div class="btn-group-vertical" >
+        <a href="{% url 'cliente/OS/gerar' clientID %}" class="btn btnmenu" style="margin-top: 0; border: solid 1px white;">Nova Ordem de Serviço</a>
+        <a href="{% url 'cliente/visualizar' clientID %}" class="btn btnmenu" style="border: solid 1px white;">Voltar</a>
+    </div>
+
+{% endblock content %}
