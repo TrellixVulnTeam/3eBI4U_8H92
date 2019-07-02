@@ -22,8 +22,7 @@ class BasicInfoForm(forms.ModelForm):
             'nome',
             'nome_responsavel',
             'tipo_pessoa',
-            'numero_documento_CPF',
-            'numero_documento_CNPJ',
+            'numero_documento',
             'servico_ativo',
             'observacoes'
         ]
@@ -32,22 +31,19 @@ class BasicInfoForm(forms.ModelForm):
             'nome'                              :'Nome da Empresa',
             'nome_responsavel'                  :'Nome do Responsável',
             'tipo_pessoa'                       :'Tipo de Pessoa',
-            'numero_documento_CPF'              :'Número CPF',
-            'numero_documento_CNPJ'             :'Número CNPJ',
+            'numero_documento'                  :'Número do Documento',
             'servico_ativo'                     :'Serviço Ativo',
             'observacoes'                       :'Observações'
         }
         widgets = {
             'nome'                              :   widgets.TextInput,              
             'nome_responsavel'                  :   widgets.TextInput,
-            'numero_documento_CPF'              :   widgets.TextInput,
-            'numero_documento_CNPJ'             :   widgets.TextInput,
+            'numero_documento'                  :   widgets.TextInput,
             'servico_ativo'                     :   widgets.CheckboxInput
             }
 
         error_messages = {
-            'numero_documento_CPF'              :   {'invalid' : 'Número de CPF inválido'},
-            'numero_documento_CNPJ'             :   {'invalid' : 'Número de CNPJ inválido'}
+            'numero_documento'                  :   {'invalid' : 'Número de Documento Inválido'}
         }
 
 class AddressInfoForm(forms.ModelForm):

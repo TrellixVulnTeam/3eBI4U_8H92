@@ -37,8 +37,6 @@
             box-shadow: none;
         }
 
-
-
     </style>
 {% endblock customcss %}
 
@@ -95,7 +93,7 @@
                     {% thumbnail basicinfo.docscans.docscan_picture "250x300" as im %}
                         <img class="center-block" src="{{ im.url }}" style='border-radius:50px;'>
                     {% empty %}
-                        Sem Imagem
+                        <p class="text-center lead">Sem Imagem</p>
                     {% endthumbnail %}
                 </div>
                 <div class="row" style="margin-top: -50px;"> <!--BUTTONS MENU-->
@@ -123,14 +121,14 @@
                     <span id="eid" hidden>{{basicinfo.id}}</span>
                     <h2>
                         {{basicinfo.primeiro_nome}} {{basicinfo.ultimo_nome}}, {{age}}<br><small><!--NAME AND AGE-->
-                        {{basicinfo.nacionalidade}}, {{basicinfo.data_nascimento}}, {{basicinfo.get_estado_civil_display}}<br><!--NATIONALITY, BIRTHDATE, CIVIL STATE-->
-                        {{basicinfo.contractual_info.contrat_funcao_cargo}} {{basicinfo.contractual_info.contrat_funcao_nivel}}, {% if basicinfo.SEG %}Funcionário SEG{% else %}Funcionário Eireli{% endif %} <!--FUNCTION, LEVEL AND COMPANY--></small>
+                        {% if basicinfo.nacionalidade %}{{basicinfo.nacionalidade}}, {% endif %} {{basicinfo.data_nascimento}}{% if basicinfo.get_estado_civil %}, {{basicinfo.get_estado_civil_display}}{% endif %}<br><!--NATIONALITY, BIRTHDATE, CIVIL STATE-->
+                        {% if basicinfo.contractualinfo.contrar_funcao_cargo %}{{basicinfo.contractual_info.contrat_funcao_cargo}} {% if basicinfo.contractual_info.contrat_funcao_nivel %}{{basicinfo.contractual_info.contrat_funcao_nivel}}{% endif %},{% endif %} {% if basicinfo.SEG %}Funcionário SEG{% else %}Funcionário Eireli{% endif %} <!--FUNCTION, LEVEL AND COMPANY--></small>
                     </h2>
                 </div>
 
                 <div class="col-sm-3"> <!--ACTIVE STATUS-->
                     <div class="spacer-xxs"></div>
-                    <h4 class="text-primary bold-text">{{basicinfo.status}}</h4>
+                    <h4 class="text-primary bold-text">{% if basicinfo.status %}{{basicinfo.status}}{% else %}Status não Informado !{% endif %}</h4>
                 </div>
 
                 <div class="col-sm-3"> <!--EXTRA STATUS INFORMATION-->
@@ -277,11 +275,11 @@
                                     <div class="col-sm-6"> <!--CTPS-->
                                         <legend class="col-sm-12">CTPS</legend>
                                         <p class="col-sm-4">
-                                            <label>{{basicinfo.documents_info.docs_CTPS_numero_geral}}-{{basicinfo.documents_info.docs_CTPS_numero_serie}}</label>
+                                            <label>{{basicinfo.documents_info.docs_CTPS_numero_geral}}/{{basicinfo.documents_info.docs_CTPS_numero_serie}}</label>
                                         </p>
 
                                         <p class="col-sm-7 pull-right">
-                                            <label>Emitido em {{basicinfo.documents_info.docs_CTPS_data_emissao}} - {{basicinfo.documents_info.docs_CTPS_UF}}</label>
+                                            <label>Emitido em {{basicinfo.documents_info.docs_CTPS_data_emissao|date:"d/m/Y"}} - {{basicinfo.documents_info.docs_CTPS_UF}}</label>
                                         </p>
                                     </div>
                                 {% endif %}
@@ -309,7 +307,7 @@
                                             <label>{{basicinfo.documents_info.docs_RG_numero_geral}} / {{basicinfo.documents_info.docs_RG_emissor}}-{{basicinfo.documents_info.docs_RG_UF}}</label>
                                         </p>
                                         <p class="col-sm-7">
-                                            <label>Emitido em {{basicinfo.documents_info.docs_RG_data_emissao}}</label>
+                                            <label>Emitido em {{basicinfo.documents_info.docs_RG_data_emissao|date:"d/m/Y"}}</label>
                                         </p>
                                     </div>
                                 {% endif %}
@@ -322,7 +320,7 @@
                                             <label>{{basicinfo.documents_info.docs_RNE_numero_geral}} / {{basicinfo.documents_info.docs_RNE_emissor}}-{{basicinfo.documents_info.docs_RNE_UF}}</label>
                                         </p>
                                         <p class="col-sm-7">
-                                            <label>Emitido em {{basicinfo.documents_info.docs_RNE_data_emissao}}</label>
+                                            <label>Emitido em {{basicinfo.documents_info.docs_RNE_data_emissao|date:"d/m/Y"}}</label>
                                         </p>
                                     </div>
                                 {% endif %}
@@ -335,7 +333,7 @@
                                             <label>{{basicinfo.documents_info.docs_OC_numero_geral}} / {{basicinfo.documents_info.docs_OC_emissor}}-{{basicinfo.documents_info.docs_OC_UF}}</label>
                                         </p>
                                         <p class="col-sm-7">
-                                            <label>Emitido em {{basicinfo.documents_info.docs_OC_data_emissao}}</label>
+                                            <label>Emitido em {{basicinfo.documents_info.docs_OC_data_emissao|date:"d/m/Y"}}</label>
                                         </p>
                                     </div>
                                 {% endif %}
@@ -349,14 +347,14 @@
                                         </p>
                                         
                                         <p class="col-sm-6">
-                                            <label>Categoria {{basicinfo.documents_info.docs_CNH_categoria}}</label>
+                                            <label>Categoria {{basicinfo.documents_info.docs_CNH_categoria|date:"d/m/Y"}}</label>
                                         </p>
 
                                         <p class="col-sm-6">
-                                            <label>Emitido em {{basicinfo.documents_info.docs_CNH_data_emissao}}</label>
+                                            <label>Emitido em {{basicinfo.documents_info.docs_CNH_data_emissao|date:"d/m/Y"}}</label>
                                         </p>
                                         <p class="col-sm-6">
-                                            <label>Valido até {{basicinfo.documents_info.docs_CNH_data_validade}}</label>
+                                            <label>Valido até {{basicinfo.documents_info.docs_CNH_data_validade|date:"d/m/Y"}}</label>
                                         </p>
 
                                     </div>
@@ -370,13 +368,13 @@
                             <div class="col-sm-5">
                                 {% if basicinfo.foreigner_info.estr_data_chegada %}
                                     <p>
-                                        <label>Data de Chegada</label><span class="pull-right">{{basicinfo.foreigner_info.estr_data_chegada}}</span>
+                                        <label>Data de Chegada</label><span class="pull-right">{{basicinfo.foreigner_info.estr_data_chegada|date:"d/m/Y"}}</span>
                                     </p>
                                 {% endif %}
                                 
                                 {% if basicinfo.foreigner_info.estr_data_naturalizacao %}
                                     <p>
-                                        <label>Data de Naturalização</label><span class="pull-right">{{basicinfo.foreigner_info.estr_data_naturalizacao}}</span>
+                                        <label>Data de Naturalização</label><span class="pull-right">{{basicinfo.foreigner_info.estr_data_naturalizacao|date:"d/m/Y"}}</span>
                                     </p>
                                 {% endif %}                            
                             </div>
@@ -430,9 +428,6 @@
                             {% if basicinfo.contact_info.cont_email_secundario %}
                                 <p><label>e-Mail Secundario</label><span class="pull-right">{{basicinfo.contact_info.cont_email_secundario}}</span></p>
                             {% endif %}
-
-
-
                         </div>
 
                         <div class="tab-pane fade" id="BankingInfo"> <!--BANKING INFO-->
@@ -544,14 +539,14 @@
                                 {% if basicinfo.intern_info.estag_data_inicio %}
                                     <p><label>Data de Início</label>
                                         <span class="pull-right">
-                                            {{basicinfo.intern_info.estag_data_inicio}}
+                                            {{basicinfo.intern_info.estag_data_inicio|date:"d/m/Y"}}
                                         </span></p>
                                 {% endif %}
 
                                 {% if basicinfo.intern_info.estag_data_fim %}
                                     <p><label>Data de Finalização</label>
                                         <span class="pull-right">
-                                            {{basicinfo.intern_info.estag_data_fim}}
+                                            {{basicinfo.intern_info.estag_data_fim|date:"d/m/Y"}}
                                         </span></p>
                                 {% endif %}
                             </div>
@@ -640,14 +635,14 @@
                                 {% if basicinfo.contractual_info.contrat_data_admissao %}
                                     <p><label>Data de Admissão</label>
                                         <span class="pull-right">
-                                            {{basicinfo.contractual_info.contrat_data_admissao}}
+                                            {{basicinfo.contractual_info.contrat_data_admissao|date:"d/m/Y"}}
                                         </span></p>
                                 {% endif %}
                                 
                                 {% if basicinfo.contractual_info.contrat_data_inicio %}
                                     <p><label>Data de Início</label>
                                         <span class="pull-right">
-                                            {{basicinfo.contractual_info.contrat_data_inicio}}
+                                            {{basicinfo.contractual_info.contrat_data_inicio|date:"d/m/Y"}}
                                         </span></p>
                                 {% endif %}
 
@@ -679,7 +674,7 @@
                                 {% if basicinfo.contractual_info.contrat_data_ultima_alteracao_cargo %}
                                     <p><label>Data da Ultima Alteração de Cargo</label>
                                         <span class="pull-right">
-                                            {{basicinfo.contractual_info.contrat_data_ultima_alteracao_cargo}}
+                                            {{basicinfo.contractual_info.contrat_data_ultima_alteracao_cargo|date:"d/m/Y"}}
                                         </span></p>
                                 {% endif %}
 

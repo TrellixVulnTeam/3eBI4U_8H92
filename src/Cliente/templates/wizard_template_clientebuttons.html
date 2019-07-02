@@ -29,13 +29,13 @@
                 <div class="spacer-xxs"></div>
                 <div class="col-md-4 pull-right">
                     {% if 'editar' in request.path %}
-                        {% with tot_len=request.path|length|add:"-20"|stringformat:"s" %}
+                        {% with tot_len=request.path|length|add:"-16"|stringformat:"s" %}
                             {% with slicestr="-"|add:tot_len|add:":" %}
-                            <a class="btn btn-md col-xs-5" href="{% url 'funcionario/visualizar' request.path|slice:slicestr %}" style="background: var(--darkblue); color:white; border-color: white;">Sair</a>            
+                            <a class="btn btn-md col-xs-5" href="{% url 'cliente/visualizar' request.path|slice:slicestr %}" style="background: var(--darkblue); color:white; border-color: white;">Sair</a>            
                             {% endwith %}
                         {% endwith %}
                     {% else %}
-                    <a class="btn btn-md col-xs-5" href="{% url 'funcionario/menu' %}" style="background: var(--darkblue); color:white; border-color: white;">Sair</a>            
+                    <a class="btn btn-md col-xs-5" href="{% url 'cliente/menu' %}" style="background: var(--darkblue); color:white; border-color: white;">Sair</a>            
                     {% endif %}
                     <button class="btn btn-md col-xs-7" data-dismiss="modal" type="button" style="background: var(--darkblue); color:white; border-color: white;">Cancelar</button>
                 </div>

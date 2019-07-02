@@ -1,5 +1,5 @@
 backports.csv==1.0.7
-cairocffi==1.0.2
+cairocffi==0.9.0
 CairoSVG==2.4.0
 cffi==1.12.3
 cssselect2==0.2.1

@@ -548,8 +548,10 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     if 'ativo' in v.changed_data:
                         if cdata['ativo'] == True:
                             basicinfo.data_ultima_ativacao = timezone.localtime(timezone.now())
+                            basicinfo.status = "Funcionário em Atividade"
                         else:
                             basicinfo.data_ultimo_desligamento = timezone.localtime(timezone.now())
+                            basicinfo.status = "Funcionário Desligado"
 
                     for attr, value in basicinfo.__dict__.items():
                         if attr in cdata.keys():

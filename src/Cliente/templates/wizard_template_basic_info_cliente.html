@@ -10,47 +10,62 @@
 {% block customjs %}
     <script>
         $(document).ready(function() {
-            $('#tipoPessoa').on('change', function(e){
-                if (this.value == "F") {
-                    $('#CNPJ').hide();
-                    $('#CPF').show();
-                    
-                    $('.cnpj').prop('required', false);
-                    $('.cpf').prop('required', true);
-
-                } else if (this.value == "J") {
-                    $('#CPF').hide();
-                    $('#CNPJ').show();
-
-                    $('.cpf').prop('required', false);
-                    $('.cnpj').prop('required', true);
-
+            if ($("#tipoPessoa").val() == "F"){
+                $('#doc').show();
+                $('#docNumber').prop('required', true);
+                $('#docNumber').val('')
+                $('#docNumberLabel').html('Número do CPF');
+                $('#docNumber').attr('placeholder', '000.000.000-00');
+                $('#docNumber').attr('maxlength', '14');
+            } else if ($("#tipoPessoa").val() == "J") {
+                $('#doc').show();
+                $('#docNumber').prop('required', true);
+                $('#docNumber').val('')
+                $('#docNumberLabel').html('Número do CNPJ');
+                $('#docNumber').attr('placeholder', '00.000.000/0000-00');
+                $('#docNumber').attr('maxlength', '18');
+            }
+            $('#docNumber').on('keypress', function(){
+                if ($('#tipoPessoa').val() == "F") {
+                    mascara(this, cpf);
                 } else {
-                    $('#CPF').hide();
-                    $('#CNPJ').hide();
+                    mascara(this, cnpj);
+                }
+            });
 
-                    $('.cpf').prop('required', false);
-                    $('.cnpj').prop('required', false);
+            $('#tipoPessoa').on('change', function(e){
+                if (this.value == "F" || this.value == "J") {
+                    $('#doc').show();
+                    $('#docNumber').prop('required', true);
+                    $('#docNumber').val('')
+                    if (this.value == "F"){
+                        $('#docNumberLabel').html('Número do CPF');
+                        $('#docNumber').attr('placeholder', '000.000.000-00');
+                        $('#docNumber').attr('maxlength', '14');
+                    } else {
+                        $('#docNumberLabel').html('Número do CNPJ');
+                        $('#docNumber').attr('placeholder', '00.000.000/0000-00');
+                        $('#docNumber').attr('maxlength', '18');
+                    }
+                } else {
+                    $('#doc').hide();
+                    $('#docNumber').prop('required', false);
                 }
                 
-            })
-        })
+            });
+        });
 
     </script>
 {% endblock customjs %}
 
 {% block content %}
 
-    {% if wizard.form.numero_documento_CPF.errors or wizard.form.numero_documento_CNPJ.errors %}
-    <div id="alert" class="alert alert-danger alert-dismissible fade in">
+    {% if wizard.form.numero_documento.errors %}
+    <div id="alert" class="alert alert-danger alert-dismissible fade in col-sm-5">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 
-        {% if wizard.form.numero_documento_CPF.errors %}
-            <div><strong>CPF:</strong> {{ wizard.form.numero_documento_CPF.errors }}</div>
-        {% endif %}
-
-        {% if wizard.form.numero_documento_CNPJ.errors %}
-            <div><strong>CNPJ:</strong> {{ wizard.form.numero_documento_CNPJF.errors }}</div>
+        {% if wizard.form.numero_documento.errors %}
+            <div><strong>Número de Documento:</strong> {{ wizard.form.numero_documento.errors }}</div>
         {% endif %}
 
 
@@ -131,38 +146,23 @@
                     </div>
                 </div>
 
-                
-                
-                <!--CPF NUMBER-->
+                <!--DOCUMENT NUMBER-->
                 <div class="col-lg-4">
                     <div class="spacer-sm"></div>
-                    <div class="form-group" hidden id="CPF">
-                        <label for="{{ wizard.form.numero_documento_CPF.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.numero_documento_CPF.label}}
+                    <div class="form-group" hidden id="doc">
+                        <label for="{{ wizard.form.numero_documento.id_for_label }}" id="docNumberLabel" class ="control-label col-lg-5 text-right">
+                            Número do CNPJ
                         </label>
                         <div class="col-lg-6">
-                            {% render_field wizard.form.numero_documento_CPF class="form-control cpf" placeholder="000.000.000-00" %}
+                            {% render_field wizard.form.numero_documento class="form-control" id="docNumber" placeholder="000.000.000-00" %}
                         </div>
                     </div>
                 </div>
                 
-                <!--CNPJ NUMBER-->
-                <div class="col-lg-4">
-                    <div class="form-group" hidden id="CNPJ">
-                        <label for="{{ wizard.form.numero_documento_CNPJ.id_for_label }}" class = "control-label col-lg-5 text-right">
-                            {{wizard.form.numero_documento_CNPJ.label}}
-                        </label>
-                        <div class="col-lg-6">
-                            {% render_field wizard.form.numero_documento_CNPJ class="form-control cnpj" placeholder="00.000.000/0000-00" %}
-                        </div>
-                    </div>
-
-                </div>
-    
 
             </div>
             
-            {% include 'wizard_template_buttons.html' %}
+            {% include 'wizard_template_clientebuttons.html' %}
         
         </form>
     </div>

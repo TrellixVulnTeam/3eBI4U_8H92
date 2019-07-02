@@ -2,7 +2,7 @@ from django.views import View
 from django.views.generic.edit import CreateView, DeleteView
 from django.views.generic.list import ListView
 from django.db import transaction
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, render_to_response
 from django.http.response import HttpResponseNotFound
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -77,8 +77,6 @@ class DetalhesCliente(View):
     def get(self, request, *args, **kwargs):
 
         context = RequestContext(self.request)
-        print(type(context))
-
 
         # Check for id in URL
         if not self.kwargs.get('id'):
@@ -232,15 +230,18 @@ class ServiceOrderView(View):
     def post(self, request, *args, **kwargs):
         ServiceOrderObj = ServiceOrder.objects.get(id = request.POST.get('OSid'))
 
-        formset = ServiceFormSet(request.POST, instance = ServiceOrderObj)
-        if formset.is_valid():
-            formset.save()
+        formset = ServiceFormSet(request.POST or None, instance = ServiceOrderObj)
+        form = ServiceOrderForm(request.POST or None, instance = ServiceOrderObj)
 
-        form = ServiceOrderForm(request.POST, instance = ServiceOrderObj)
-        if form.is_valid():
+        if formset.is_valid() and form.is_valid():
             form.save()
+            formset.save() 
+        else:
+            print('Deletando OS {}'.format(request.POST.get('OSid')))
+            ServiceOrderObj.delete()
 
-        return redirect('cliente/visualizar', kwargs.get('id'))
+
+        return redirect('cliente/OS/lista', kwargs.get('id'))
 
 class VisualizeServiceOrderView(View):
     template_name = 'service_order.html'
@@ -260,7 +261,7 @@ class VisualizeServiceOrderView(View):
 
 class DeleteOSView(DeleteView):
     model = ServiceOrder
-    success_message = "OS Deletada com Sucesso !"
+    success_message = "Ordem de Serviço Deletada com Sucesso !"
     template_name = 'delete_confirmation_OS.html'
 
     
@@ -282,7 +283,7 @@ class DeleteOSView(DeleteView):
         return super(DeleteOSView, self).delete(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('cliente/visualizar', kwargs = {'id' : self.cliente})
+        return reverse_lazy('cliente/OS/lista', kwargs = {'id' : self.cliente})
 
 class ListOSView(ListView):
     template_name = 'list_OS.html'
@@ -311,8 +312,6 @@ def autocompleteByname(request, *args, **kwargs):
         term = request.GET.get('term', '')
         names = BasicInfo.objects.filter(nome__contains = term)[:20]
 
-        print(term)
-
         results = []
         
         for name in names:
@@ -321,8 +320,6 @@ def autocompleteByname(request, *args, **kwargs):
             name_json  = name.id
             name_json  = name.nome
             name_json  = name.nome
-
-            
 
             results.append(name_json)
         
@@ -333,8 +330,6 @@ def autocompleteByname(request, *args, **kwargs):
     
     mimetype = 'application/json'
 
-    print(data)
-
     return HttpResponse(data, mimetype)
 
 def filterEmployeeDropDown(request, *args, **kwargs):
@@ -344,3 +339,21 @@ def filterEmployeeDropDown(request, *args, **kwargs):
     else:
         employees   =   Funcionario.objects.all()
     return render(request, 'OS_employee_dropdown.html', {'employees' : employees})
+
+# Utility Views
+def deleteBlankOS(request, *args, **kwargs):
+    
+    clientID = kwargs.get('id')
+    fullOS = ServiceOrder.objects.filter(cliente = clientID)
+    delOS = []
+
+    for OS in fullOS:
+        if OS.is_empty:
+            delOS.append(OS.OS)
+            OS.delete()
+    
+    success_message = " {} Ordens de Serviço Deletadas com Sucesso !".format(str(len(delOS))) if len(delOS) > 0 else "Nenhuma Ordem de Serviço Inválida foi Encontrada."
+    messages.success(request, success_message)
+
+
+    return redirect('cliente/OS/lista', id = clientID)

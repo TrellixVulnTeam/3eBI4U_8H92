@@ -10,6 +10,12 @@ def validateCEP(value):
                 return ValidationError('CEP Inválido')
         return None
 
+def validateCPFCNPJ(value):
+        if len(value) > 14:
+                return validateCNPJ(value)
+        return validateCPF(value)
+
+
 # CNPJ Validator That Prevents Invalid Verification Digits
 def validateCNPJ(value):
         CNPJ = re.sub(r'[\-\.\/\\]', '', value)

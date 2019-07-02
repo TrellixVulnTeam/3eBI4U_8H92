@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from .utilities import validateCPF, validateCNPJ, validateCEP, validateNoFutureDates
+from .utilities import validateCPF, validateCNPJ, validateCEP, validateNoFutureDates, validateCPFCNPJ
 from Funcionario.models import BasicInfo as Funcionario
 from django.utils import timezone
 import datetime
@@ -97,9 +97,7 @@ class BasicInfo(models.Model):
     nome_responsavel                    =   models.CharField(max_length = 100, null = True, blank = True, verbose_name = "Nome do Responsável" )
 
     tipo_pessoa                         =   models.CharField(max_length = 1, null = True, blank = True, choices = [('F', 'Física'), ('J', 'Jurídica')], verbose_name = "Tipo de Pessoa")
-
-    numero_documento_CPF                =   models.CharField(max_length = 14, validators = [validateCPF], null = True, blank = True, verbose_name = "Número de CPF")
-    numero_documento_CNPJ               =   models.CharField(max_length = 18, validators = [validateCNPJ], null = True, blank = True, verbose_name = "Número de CNPJ")
+    numero_documento                    =   models.CharField(max_length = 18, validators = [validateCPFCNPJ], null = True, blank = True, verbose_name = "Número do Documento")
 
     servico_ativo                       =   models.BooleanField(default = True, verbose_name = "Serviço Ativo")
 
@@ -183,6 +181,22 @@ class ServiceOrder(models.Model):
     faturado        =   models.BooleanField(default = False, verbose_name = 'Faturado')
 
     @property
+    def has_LS(self):
+        return True if self.local_servico else False
+    
+    @property
+    def has_OBS(self):
+        return True if self.observacao else False
+    
+    @property
+    def has_SD(self):
+        return True if self.descricao_servico_OS.all().count() > 0 else False
+
+    @property
+    def is_empty(self):
+        return False if self.has_LS or self.has_OBS or self.has_SD else True
+
+    @property
     def Total(self):
         return sum([x.valor_total for x in list(self.descricao_servico_OS.all())])
 
@@ -200,7 +214,7 @@ class ServiceDescription(models.Model):
     id = models.BigAutoField(primary_key = True)
 
     # RELATIONAL FIELDS
-    funcionario     =   models.ForeignKey(Funcionario, models.CASCADE, null = True, blank = True, related_name = 'descricao_servico_funcionario')
+    funcionario     =   models.ForeignKey(Funcionario, models.CASCADE, related_name = 'descricao_servico_funcionario')
     SO              =   models.ForeignKey(ServiceOrder, models.CASCADE, null = True, blank = True, related_name = 'descricao_servico_OS')
 
     # MAIN MODEL FIELDS

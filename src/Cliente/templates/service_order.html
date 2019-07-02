@@ -30,7 +30,7 @@
                     </thead>
                 {% endif %}
                 <tr>
-                    <td>{{SD.funcionario}}</td>
+                    <td><a href="{% url 'funcionario/visualizar' SD.funcionario.id %}" style="color: inherit;">{{SD.funcionario}}</a></td>
                     <td>{{SD.descricao}}</td>
                     <td class="text-right">{{SD.qtd_horas}}</td>
                     

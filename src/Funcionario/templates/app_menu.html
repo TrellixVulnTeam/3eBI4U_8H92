@@ -104,13 +104,13 @@
                         {% thumbnail imageObject.docscan_picture "250x250" colorspace="GRAY" as im %}
                         <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
                         {% empty %}
-                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeEmployee()">Editar Cadastro</button>
+                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeEmployee()">Visualizar Funcionário</button>
                         {% endthumbnail %}
                     {% else %}
                         {% thumbnail imageObject.docscan_picture "250x250" as im %}
                         <img data-placement="bottom" data-toggle="popover" data-trigger="hover" data-content="Clique aqui para maiores informações sobre o funcionário." src="{{ im.url }}" style='border-radius:50px; padding:1px; transform: translateY(-15%); cursor: pointer;' onclick="visualizeEmployee()">
                         {% empty %}
-                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeEmployee()">Editar Cadastro</button>
+                            <button class="btn btnmenu" style="margin: 0;" onclick="visualizeEmployee()">Visualizar Funcionário</button>
                         {% endthumbnail %}
                     {% endif %}
                 </div>

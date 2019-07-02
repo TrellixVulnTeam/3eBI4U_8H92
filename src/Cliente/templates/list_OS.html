@@ -9,7 +9,9 @@
 </style>
 {% endblock head %}
 {% block content %}
-    
+    <!--MESSAGES AND ERRORS-->
+    {% include 'messages_and_errors.html' %}
+
     <div class="row">
         <h2 class="text-center bold-text">Ordens de Servico — {{cliente.nome}}</h2>
         
@@ -66,7 +68,7 @@
         
         </style>
 
-        <ul class="pagination pull-right">
+        <ul class="pagination pull-right" style="margin-top: 0;">
             {% if page_obj.has_previous %}
                 <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
             {% else %}
@@ -87,9 +89,29 @@
         </ul>
 
     {% endif %}
-    <div class="btn-group-vertical" >
-        <a href="{% url 'cliente/OS/gerar' clientID %}" class="btn btnmenu" style="margin-top: 0; border: solid 1px white;">Nova Ordem de Serviço</a>
-        <a href="{% url 'cliente/visualizar' clientID %}" class="btn btnmenu" style="border: solid 1px white;">Voltar</a>
-    </div>
+    <a href="{% url 'cliente/visualizar' clientID %}" class="btn btnmenu" style="margin-top: 0; border: solid 1px white;">Voltar</a>
+    <button href="#createOSWarning" class="btn btnmenu" data-toggle="modal" style="margin-top: 0; border: solid 1px white;">Nova Ordem de Serviço</button>
+    <a href="{% url 'cliente/OS/lista/excluir-brancos' clientID %}" class="btn btnmenu" style="margin-top: 0; border: solid 1px white;">Excluir Ordens de Serviço Inválidas</a>
+    
+    <!--MODALS-->
+    <div class="modal fade" id="createOSWarning"> <!--CLIENTE LISTING MODAL BEGINS-->
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body row" style="padding: 50px 50px;">
+                    <legend class="h2 bold-text text-center">Lembrete !</legend>
+                    <div class="spacer-xxs"></div>
+                    <span class="text-justify" style="font-size: 1.35em;">
+                        Ao criar uma nova Ordem de Serviço, um número de registro será <strong>reservado</strong> para ela.</br>
+                        Tenha certeza de finalizar o processo de maneira correta, <strong>salvando o formulário com todas as informações necessárias para a criação.</strong></br>
+                        <strong>Caso o processo seja interrompido, ou a página seja recarregada, uma Ordem de Serviço em branco será gerada.</strong></br>
+                        Para deletar Ordens de Serviço em branco, utilize o botão <strong>"Deletar OS em Branco"</strong> que se encontra nesta página !
+                    </span>
+                    <div class="spacer-xxs"></div>
+                    <button type="button" class="btn btnmenu" style="margin-top: 0" data-dismiss="modal">Voltar</button>
+                    <a href="{% url 'cliente/OS/gerar' clientID %}" class="btn btnmenu pull-right" style="margin-top: 0;">Criar Ordem de Serviço</a>
+                </div>
+            </div>
+        </div>
+    </div> <!--CLIENTE LISTING MODAL ENDS-->
 
 {% endblock content %}
