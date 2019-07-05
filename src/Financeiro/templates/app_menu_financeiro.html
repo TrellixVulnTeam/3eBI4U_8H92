@@ -6,6 +6,51 @@
     <title>BI4U - Financeiro</title>
 {% endblock head %}
 
+{% block customcss %}
+<style>
+#btn_lancamento span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+#btn_lancamento:hover span {
+  padding-right: 0;
+}
+
+#btn_lancamento span:after {
+  content: '\002A53';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#btn_lancamento span:before {
+  content: '\002A53';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: -20px;
+  transition: 0.5s;
+}
+
+#btn_lancamento:hover span:after {
+  opacity: 1;
+  right: -20px;
+}
+
+#btn_lancamento:hover span:before {
+  opacity: 1;
+  left: -20px;
+}
+
+</style>
+{% endblock customcss %}
+
+
 {% block custom_scripts %}<script>
 
     $(document).ready(function () {
@@ -58,8 +103,6 @@
     });
 
 </script>{% endblock custom_scripts %}
-
-{% block linked_refs %} <link rel="stylesheet" href='{% static "css/appmenu_funcionario.css" %}'> {% endblock linked_refs %}
 
 
 {% block content %}
@@ -116,29 +159,39 @@
         <div class="col-md-4 col-md-pull-8" >
             <div class="spacer-lg hidden-xs"></div>
             <div class="col-md-10 hidden-xs"> <!--FINANCEIRO MENU-->
-                    
-                <button class="btn-block btnmenu panel-heading" id="btn_lancamento" style="color:white; margin: 75px 0;">
-                    <span>Lançamentos Individuais </span>
+                
+                <div class="spacer-lg"></div>
+
+                <button class="btn-block btnmenu panel-heading" id="btn_lancamento" style="color:white; margin: 15px 0;">
+                    <span>Lançamentos</span>
                 </button>
 
                 <div class="submenu">
-                    <button class="col-md-6  btn btnsubmenu panel-heading" style=" color:white; position: absolute; transform:translate(190%, -260%); display: none;" data-toggle="modal" href="{% url 'lancamentosReceita' %}" data-target="#modalIncome">
-                        <span>Receitas</span>
+                    <button class="col-md-5  btn btnsubmenu panel-heading" style=" color:white; position: absolute; transform:translate(0%, -265%); display: none;" data-toggle="modal" href="{% url 'lancamentosReceita' %}" data-target="#modalIncome">
+                        <span>Recebimentos</span>
                     </button>
                     
-                    <button class="col-md-6 btn btnsubmenu panel-heading" style=" color:white; position: absolute; transform:translate(190%, -130%); display: none;" data-toggle="modal" href="{% url 'lancamentosDespesa' %}" data-target="#modalExpense">
-                        <span>Despesas</span>
+                    <button class="col-md-5 btn btnsubmenu panel-heading" style=" color:white; position: absolute; transform:translate(120%, -265%); display: none;" data-toggle="modal" href="{% url 'lancamentosDespesa' %}" data-target="#modalExpense">
+                        <span>Pagamentos</span>
                     </button>
                 </div>
 
-                <button onclick="location.href='/financeiro/lancamentos/'" type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 75px 0;">
-                    <span>Fluxo de Caixa </span>
+                <button onclick="location.href='/financeiro/lancamentos/'" type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 15px 0;">
+                    <span>Fluxo de Caixa Detalhado</span>
                 </button>        
 
-                <button onclick="location.href='/financeiro/fluxo/'" type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 75px 0;">
-                    <span>Resumo Financeiro </span>
+                <button onclick="location.href='/financeiro/fluxo/'" type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 15px 0;">
+                    <span>Fluxo de Caixa Resumo </span>
                 </button>
             
+                <button type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 15px 0;">
+                    <span>Faturas </span>
+                </button>
+
+                <button type="button" class="btn-block btnmenu panel-heading" style="color:white; margin: 15px 0;">
+                    <span>Contas Futuras </span>
+                </button>
+
             </div>
 
             <div class="hidden-sm hidden-md hidden-lg"> <!--FINANCEIRO MENU - XS SCREEN-->
@@ -147,11 +200,11 @@
                 <div class="btn-group btn-group-justified">
                                 
                     <button class="btn-block btnmenu panel-heading" onclick="location.href='/financeiro/lancamentos/'" type="button">
-                        <span>Fluxo de Caixa </span>
+                        <span>Fluxo de Caixa Detalhado </span>
                     </button>        
     
                     <button onclick="location.href='/financeiro/fluxo/'" type="button" class="btn-block btnmenu panel-heading">
-                        <span>Resumo Financeiro </span>
+                        <span>Fluxo de Caixa Resumo </span>
                     </button>
                 
                 </div>
