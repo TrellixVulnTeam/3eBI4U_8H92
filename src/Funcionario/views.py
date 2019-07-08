@@ -151,6 +151,7 @@ class DetalhesFuncionario(View):
         
                 if newstatus == "occurrenceshutdown":
                     bi.obs_desligamento = str(timezone.localdate()) + ' - ' + str(request.POST.get('obsfield')) + '\n' + str(bi.obs_desligamento) if request.POST.get('obsfield') != None or request.POST.get('obsfield') != "" else ""
+                    bi.status = "Funcionário Desligado com Ocorrência"
                 bi.save()
         
             else:

@@ -11,6 +11,7 @@ from formtools.wizard.views import SessionWizardView
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.contrib.sessions.backends.db import SessionStore
+from decimal import Decimal
 
 from ControleAdministrativo.models import FuncionarioCargo, FuncionarioNivel
 
@@ -66,7 +67,9 @@ class BasicInfoForm(forms.ModelForm):
             'deficiente',
             'outro_emprego',   
             'estagiario',
-            'SEG'      
+            'SEG',
+
+            'categoria'      
        
         ]
         labels = {
@@ -92,7 +95,8 @@ class BasicInfoForm(forms.ModelForm):
             'outro_emprego'                                     :'Possui Outro Emprego ?',   
             'estagiario'                                        :'É Estagiário ?',
             'deficiente'                                        :'Possui Alguma Deficiência ?',
-            'SEG'                                               :'Funcionário SEG ou Eireli ?'
+            'SEG'                                               :'Funcionário SEG ou Eireli ?',
+            'categoria'                                         :'Categoria da Função'
         }
         widgets = {
             'primeiro_nome'         :   widgets.TextInput,
@@ -754,6 +758,11 @@ class CadastroFuncionarioWizard(SessionWizardView):
                     InternInfo.objects.create(**cdata)
                 elif k == 'Contractual Info':
                     cdata = v.cleaned_data
+                    # Getting Hourly Values From Full Salary
+                    hora_custo = Decimal(cdata.get('contrat_salario_base', 0).replace('.', '').replace(',', '.'))/180
+                    basicinfo.valor_hora_custo = hora_custo
+                    basicinfo.valor_hora_receita = hora_custo * 2
+                    basicinfo.save()
                     cdata['basicinfo'] = basicinfo
                     ContractualInfo.objects.create(**cdata)
                 elif k == 'Doc Scans':

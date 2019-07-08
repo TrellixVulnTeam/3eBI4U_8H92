@@ -124,6 +124,18 @@
                         </div>
                     </div>
 
+                    <!--FUNCTION CATEGORY-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.categoria.id_for_label }}" class = "control-label col-lg-3 text-right">
+                            {{wizard.form.categoria.label}}
+                        </label>
+                        <div class="col-lg-9">
+                            {% render_field wizard.form.categoria class="form-control" placeholder=wizard.form.categoria.label %}
+                        </div>
+                    </div>
+
+                    <div class="spacer"></div>
+
                     <!--COUNTY-->
                     <div class="form-group">
                         <label for="{{ wizard.form.municipio_nascimento.id_for_label }}" class = "control-label col-lg-4 text-right">
@@ -133,6 +145,20 @@
                             {% render_field wizard.form.municipio_nascimento class="form-control" placeholder=wizard.form.municipio_nascimento.label%}
                         </div>
                     </div>
+
+                    <!--STATE OF BIRTH-->
+                    <div class="form-group">
+                        <label for="{{ wizard.form.estado_nascimento.id_for_label }}" class = "control-label col-lg-4 text-right">
+                            {{wizard.form.estado_nascimento.label}}
+                        </label>
+                        <div class="col-lg-8">
+                            {% render_field wizard.form.estado_nascimento class="form-control" %}
+                        </div>
+                    </div>
+                    
+
+
+                    <div class="spacer"></div>
 
                 </div>
 
@@ -206,16 +232,6 @@
                                     {{wizard.form.outro_emprego.label}}
                                 </label>
                             </div>
-                        </div>
-                    </div>
-
-                    <!--STATE OF BIRTH-->
-                    <div class="form-group">
-                        <label for="{{ wizard.form.estado_nascimento.id_for_label }}" class = "control-label col-lg-6 text-right">
-                            {{wizard.form.estado_nascimento.label}}
-                        </label>
-                        <div class="col-lg-6">
-                            {% render_field wizard.form.estado_nascimento class="form-control" %}
                         </div>
                     </div>
 
