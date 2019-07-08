@@ -212,9 +212,12 @@ class DetalhesFuncionario(View):
                 bi.afastamento = True
                 bi.status = "Funcionário Afastado"
                 bi.data_ultima_modificacao = timezone.localtime(timezone.now())
-                bi.obs_status += str(timezone.localdate()) +' (' + 'AFASTAMENTO' + ')' + ' - ' + str(request.POST.get('obsfield')) + '\n'
-  
-                bi.save() 
+                try:
+                    bi.obs_status += str(timezone.localdate()) +' (' + 'AFASTAMENTO' + ')' + ' - ' + str(request.POST.get('obsfield')) + '\n'
+                except TypeError:
+                    bi.obs_status = str(timezone.localdate()) +' (' + 'AFASTAMENTO' + ')' + ' - ' + str(request.POST.get('obsfield')) + '\n'
+                finally:
+                    bi.save() 
             
             else:
                 context.update({
@@ -254,8 +257,12 @@ class DetalhesFuncionario(View):
                 bi.afastamento = True
                 bi.status = "Funcionário Suspenso"
                 bi.data_ultima_modificacao = timezone.localtime(timezone.now())
-                bi.obs_status += str(timezone.localdate()) +' (' + 'SUSPENÇÃO' + ')' + ' - ' + str(request.POST.get('obsfield')) + '\n'
-                bi.save() 
+                try:
+                    bi.obs_status += str(timezone.localdate()) +' (' + 'SUSPENÇÃO' + ')' + ' - ' + str(request.POST.get('obsfield')) + '\n'
+                except TypeError:
+                    bi.obs_status = str(timezone.localdate()) +' (' + 'SUSPENÇÃO' + ')' + ' - ' + str(request.POST.get('obsfield')) + '\n'
+                finally:
+                    bi.save() 
             
             else:
                 context.update({
