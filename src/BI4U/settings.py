@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'dynamic_formsets',
     'bootstrap3',
-    'chosen'
+    'chosen',
 
     # STANDARD
     'django.contrib.admin',
