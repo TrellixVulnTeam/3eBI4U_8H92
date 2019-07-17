@@ -1,0 +1,19 @@
+<thead>
+    <td></td>
+    <td class="text-center">OS</td>
+    <td class="text-center">Cliente</td>
+    <td class="text-center">Local de Serviço</td>
+    <td class="text-center">Valor Pré Calculado</td>
+</thead>
+<tbody>    
+    {% for value in OSList %}
+    <tr onclick="markchecked(event, $(this))" style="cursor: pointer;">
+        <td><input type="checkbox" id='OS-{{forloop.counter}}' value="{{value.id}}"></td>
+        <td class="text-center">{{value.OS}}</td>
+        <td class="text-center">{{value.cliente}}</td>
+        <td class="text-center">{{value.local_servico}}</td>
+        <td class="text-center">{{value.Total}}</td>
+        <td><button class="btn btnmenu pull-right" onclick="window.location.href = '/cliente/OS/{{value.OS}}';" style="margin: 0">Detalhes</button></td>
+    </tr>
+    {% endfor %}
+</tbody>

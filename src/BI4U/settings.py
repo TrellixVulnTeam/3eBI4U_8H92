@@ -96,9 +96,20 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
+#   DEFAULT SQLITE3 DABTABASE
+#   'default': {
+#       'ENGINE': 'django.db.backends.sqlite3',
+#       'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#   }
+#
+#   CUSTOMIZED MYSQL DATABASE
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'db_bi4u_gap',
+        'USER': 'django',
+        'PASSWORD': 'Slash-San2',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 

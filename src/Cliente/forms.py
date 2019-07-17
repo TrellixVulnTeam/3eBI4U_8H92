@@ -281,7 +281,7 @@ class ServiceOrderForm(forms.ModelForm):
 
 
 class ServiceDescriptionForm(forms.ModelForm):
-    categoria = forms.ChoiceField(choices=[('---------','---------')]+[(x['categoria'], x['categoria']) for x in FuncBasicInfo.objects.order_by().values('categoria').distinct()])
+    categoria = forms.ChoiceField(choices=lambda: [('---------','---------')]+[(x['categoria'], x['categoria']) for x in FuncBasicInfo.objects.order_by().values('categoria').distinct()])
     class Meta():
         model = ServiceDescription
         fields = [

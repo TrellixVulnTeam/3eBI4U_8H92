@@ -23,10 +23,10 @@ urlpatterns = [
     path('OS/gerar/<int:id>', views.ServiceOrderView.as_view(), name = 'cliente/OS/gerar'),
     path('OS/excluir/<int:pk>', views.DeleteOSView.as_view(), name = 'cliente/OS/excluir'),
     path('OS/lista/<int:id>', views.ListOSView.as_view(), name = 'cliente/OS/lista'),
-    path('OS/lista/excluir-brancos/<int:id>', views.deleteBlankOS, name = 'cliente/OS/lista/excluir-brancos'),
     path('editar/<int:id>', CadastroClienteWizard.as_view(create_cliente_forms), name = 'cliente/editar'),
     path('', views.appMenu, name = 'cliente/menu'),
     # API
     path('OS/api/load-employees/', views.filterEmployeeDropDown, name = 'cliente/OS/loadEmployees'),
+    path('OS/lista/excluir-brancos/<int:id>', views.deleteBlankOS, name = 'cliente/OS/lista/excluir-brancos'),
     path('api/get_by_name/', views.autocompleteByname, name = 'cliente/autocompleteByName')
     ]

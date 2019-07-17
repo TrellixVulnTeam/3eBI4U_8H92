@@ -759,7 +759,7 @@ class CadastroFuncionarioWizard(SessionWizardView):
                 elif k == 'Contractual Info':
                     cdata = v.cleaned_data
                     # Getting Hourly Values From Full Salary
-                    hora_custo = Decimal(cdata.get('contrat_salario_base', 0).replace('.', '').replace(',', '.'))/180
+                    hora_custo = Decimal(cdata.get('contrat_salario_base', 0).replace('.', '').replace(',', '.'))/168
                     basicinfo.valor_hora_custo = hora_custo
                     basicinfo.valor_hora_receita = hora_custo * 2
                     basicinfo.save()

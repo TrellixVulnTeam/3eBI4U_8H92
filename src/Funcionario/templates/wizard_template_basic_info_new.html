@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% load static %}
+{% load employee_tags %}
+{% load bootstrap3 %}
+
+{% block head %}
+    {{ wizard.form.media }}
+    <title>BI4U - Editar Cadastro de Funcionário</title>
+{% endblock head %}
+
+{% block content %}
+<div class="container" style = "border: solid 3px black; border-radius: 10px; padding: 40px; margin-top: 10px; margin-bottom: 40px;">    
+        
+    <h2 class="page-header row row-no-gutter" style="margin-bottom: 40px">
+        <span class="col-lg-6 pull-left hidden-xs">Cadastro de Funcionário</span>
+        <span class="text-nowrap hidden-sm hidden-md hidden-lg" style="font-size: 0.9em;">Cadastro de Funcionário</span>
+        <small class="pull-right hidden-xs">Dados do Trabalhador</small>
+        <div class="spacer hidden-sm hidden-md hidden-lg"></div>
+        <small class="hidden-sm hidden-md hidden-lg">Dados do Trabalhador</small>
+    </h2>
+
+    <form action="" method="post" class = "form-horizontal col-lg-12" enctype="multipart/form-data" style="padding:0">
+    
+        
+        
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            {% include 'wizard_template_buttons.html' %}
+        {% endbuttons %}
+        
+    </form>
+</div>
+
+{% endblock content %}
