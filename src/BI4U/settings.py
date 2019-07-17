@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django_tables2',
     'crispy_forms',
     'dynamic_formsets',
-    'chosen',
     'bootstrap3',
 
     # STANDARD
