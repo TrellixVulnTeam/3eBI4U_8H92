@@ -1,0 +1,9 @@
+<tbody>    
+    {% for value in list %}
+    <tr style="cursor: pointer;" class="{% if value.status == 'Fechado' %}bg-success{% elif value.status == 'Em Andamento'  %}bg-warning{% elif value.status == 'Aberto' %}bg-danger{% endif %}" onclick="window.location.replace('{% url base_url_visualizar id=value.id %}')">
+        <td class="text-left">{{value}}</td>
+    </tr>
+    {% empty %}
+    <tr class="text-center"><td>Nenhum Registro Encontrado !</td></tr>
+    {% endfor %}
+</tbody>

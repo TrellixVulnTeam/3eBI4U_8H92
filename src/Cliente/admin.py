@@ -1,17 +1,13 @@
 from django.contrib import admin
-from .models import (
-    BasicInfo,
-    AddressInfo,
-    ContractualInfo,
-    ServiceGround,
-    ServiceDescription,
-    ServiceOrder
-)
+from . import models
+
 
 # Register your models here.
-admin.site.register(BasicInfo)
-admin.site.register(AddressInfo)
-admin.site.register(ContractualInfo)
-admin.site.register(ServiceGround)
-admin.site.register(ServiceDescription)
-admin.site.register(ServiceOrder)
+admin.site.register(models.BasicInfo)
+admin.site.register(models.AddressInfo)
+admin.site.register(models.ContractualInfo)
+admin.site.register(models.ServiceGround)
+admin.site.register(models.ServiceDescription)
+admin.site.register(models.ServiceOrder)
+admin.site.register(models.ServiceRecord)
+admin.site.register(models.OccurrenceCall)

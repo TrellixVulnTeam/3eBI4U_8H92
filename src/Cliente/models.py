@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
 from .utilities import validateCPF, validateCNPJ, validateCEP, validateNoFutureDates, validateCPFCNPJ
 from Funcionario.models import BasicInfo as Funcionario
 from django.utils import timezone
@@ -90,6 +91,8 @@ phoneRegex = RegexValidator(
 
 # 1 - Basic Info
 class BasicInfo(models.Model):
+
+
 
     id                                  =   models.BigAutoField(primary_key = True)
 
@@ -207,6 +210,12 @@ class ServiceOrder(models.Model):
     def __str__(self):
         return self.OS
 
+    class Meta:
+        permissions = (
+            ("can_view_OSList", "Grants Permission to OS Listing View"),
+            
+        )
+
 # 6 - SERVICE DESCRIPTION
 class ServiceDescription(models.Model):
     
@@ -228,7 +237,52 @@ class ServiceDescription(models.Model):
         self.valor_total = self.valor_hora * self.qtd_horas
         super(ServiceDescription, self).save(force_insert, force_update)
 
+# 7 - PRODUCT DESCRIPTION
 
-# 7 - PRODUCTS DESCRIPTION
+# 8 - DAILY SERVICE RECORD
+class ServiceRecord(models.Model):
+    
+    # PRIMARY KEY
+    id = models.BigAutoField(primary_key = True)
 
+    # RELATIONAL FIELDS
+    LS = models.ForeignKey(ServiceGround, models.CASCADE, 'service_record')
+    
+    # REGULAR FIELDS
+    data = models.DateField(auto_now_add = True)
+    description = models.TextField(verbose_name = 'Relatório')
 
+    def __str__(self):
+        return str(self.LS) + ' | ' +  str(self.data)
+
+    class Meta:
+        unique_together = ('data', 'LS')
+
+# 9 - OCCURRENCE CALL
+class OccurrenceCall(models.Model):
+    
+    # PRIMARY KEY
+    id = models.BigAutoField(primary_key = True)
+
+    # RELATIONAL FIELDS
+    LS = models.ForeignKey(ServiceGround, models.CASCADE, 'ServiceOccurence')
+
+    # REGULAR FIELDS
+    data = models.DateField(auto_now_add = True)
+    description = models.TextField()
+    motive = models.TextField()
+    status = models.CharField(max_length = 100, choices = [('Aberto','Aberto'), ('Fechado', 'Fechado'),('Em Andamento', 'Em Andamento')])
+
+    @property
+    def OC(self):
+        return str(self.data.strftime('%Y')) + str(self.data.strftime('%m')) + str(self.id)
+
+    def __str__(self):
+        return "Chamado #" + str(self.OC)
+
+    class Meta:
+        permissions = (
+            ("occurrence_listing_viewer", "Grants Permission to Occurrence Listing View"),
+            ("occurrence_manage", "Grants Permission to manage Occurrence Calls"),
+            
+        )

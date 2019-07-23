@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+<title>BI4U - Chamado #{{OC.OC}}</title>
+{% endblock head %}
+
+{% block content %}
+<div class="col-sm-10 col-sm-offset-1">
+    <legend class="text-center bold-text">Chamado #{{OC.OC}} de {{OC.data}}</legend>
+    <div class="pull-right lead bold-text {% if OC.status == 'Aberto' %}text-danger{% elif OC.status == 'Em Andamento' %}text-warning{% elif OC.status == 'Fechado' %}text-success{% endif %} text-success">Chamado {{OC.status}}</div>
+
+        <div class="spacer"></div>
+
+        <div id="motivo">
+            <div class="lead bold-text">{{OC.motive}}</div>
+        </div>
+
+        <div class="spacer-xs"></div>
+
+        <div id="description">
+            {{OC.description|linebreaks}}
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="buttons">
+            <a class="btn btnmenu-static" href="{% url 'cliente/chamado/selecionar' OC.LS.cliente.id %}">{% bootstrap_icon 'arrow-left' %} Voltar</a>
+            <button class="btn btnmenu-static" onclick="window.print();">{% bootstrap_icon 'print' %} Imprimir</button>
+            <a class="btn btnmenu-static" style="padding: 10px 25px;" href="{% url 'cliente/chamado/editar' OC.id %}">{% bootstrap_icon 'edit' %}</a>
+        </div>
+
+</div>
+{% endblock content %}
+
+{% block custom_scripts %}
+<script>
+    $(document).ready(function(){
+        $("#description").html(function(i, h){
+            return h.replace(/\[([^\]]+)\] — /g, '{% bootstrap_icon "pushpin" %} <b>[$1] — </b>');
+        });       
+    });
+</script>
+{% endblock custom_scripts %}

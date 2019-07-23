@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <legend class="text-center">Abrir Chamado — {{LS}}</legend>
+    <div class="spacer"></div>
+    <p class="bold-text">Entre com a descrição do chamado no campo abaixo.</p>
+    <p class="bold-text">Aguarde a confirmação e anote o número de identificação do chamado que será gerado.</p>
+    <form id = "submission-form" action="" method="POST">
+        {% csrf_token %}
+        {% bootstrap_field form.description show_label=False placeholder="Descrição do Chamado..." %}
+        {% buttons %}
+            <div class="pull-right">
+                <a class="btn btnmenu-static" href="{% url 'cliente/chamado/selecionar' id=LS.cliente.id %}">Voltar</a>
+                <button class="btn btnmenu-static hidden-print" type="submit">
+                    {% bootstrap_icon "save" %} Abrir Chamado
+                </button>
+            </div>
+        {% endbuttons %}
+    </form>
+</div>
+
+{% endblock content %}

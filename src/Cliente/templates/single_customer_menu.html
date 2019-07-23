@@ -4,6 +4,7 @@
 {% load static %}
 {% load thumbnail %}
 
+
 {% block head %}
     <title>BI4U - {{basicinfo.nome}}</title>
 {% endblock head %}
@@ -90,17 +91,6 @@
     
     <div class="row"> <!--ERROR ROW BEGINS-->
 
-        {% if messages %}
-            {% for message in messages %}
-                <p class="alert alert-dismissable {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ message }}
-                </p>
-            {% endfor %}
-        {% endif %}
-
-
-
         {% if ERROR %}
             <div id="alert" class="alert alert-danger alert-dismissible fade in col-sm-5">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -118,7 +108,7 @@
                 <h2>
                     {{basicinfo.nome}} {{basicinfo.ultimo_nome}}<br><small><!--NAME-->
                     Pessoa {{basicinfo.get_tipo_pessoa_display}},<!--KIND OF PERSON-->
-                    {% if basicinfo.numero_documento_CNPJ %}CNPJ {{basicinfo.numero_documento_CNPJ}}{% elif basicinfo.numero_documento_CPF %}CPF {{basicinfo.numero_documento_CPF}}{% endif %}<!--DOC NUMBER-->
+                    {% if basicinfo.tipo_pessoa == "J" %}CNPJ {{basicinfo.numero_documento}}{% elif basicinfo.tipo_pessoa == "F" %}CPF {{basicinfo.numero_documento}}{% endif %}<!--DOC NUMBER-->
                     </small>
                 </h2>
             </div>
@@ -149,6 +139,7 @@
 
             <div class="col-sm-2"> 
                 <div class="row"> <!--BUTTONS MENU-->
+                    <div class="spacer"></div>
                     <a class="btn-block btnmenu panel-heading text-center" href="{% url 'cliente/editar' basicinfo.id %}">
                         <span>Editar Cadastro</span>
                     </a>
@@ -158,6 +149,14 @@
                     <a class="btn-block btnmenu panel-heading text-center" href="{% url 'cliente/LS' basicinfo.id %}">
                         <span>Locais de Serviço</span>
                     </a>
+                    <a class="btn-block btnmenu panel-heading text-center" href="{% url 'cliente/report/selecionar' basicinfo.id %}">
+                        <span>Atas de Serviço</span>
+                    </a>
+                    {% if perms.Cliente.add_occurrencecall %}
+                    <a class="btn-block btnmenu panel-heading text-center" href="{% url 'cliente/chamado/selecionar' basicinfo.id %}">
+                        <span>Chamados</span>
+                    </a>
+                    {% endif %}
                     {% if basicinfo.servico_ativo %}
                         <button class="btn-block btnmenu panel-heading" data-toggle="modal" href="#EndServiceModal">
                             <span>Finalizar Serviço</span>
@@ -203,9 +202,6 @@
                                     <label>Data da Ultima Modificação</label><span class="pull-right">{{basicinfo.data_ultima_modificacao}}</span>
                                 </p>
                             {% endif %}
-                            <p> <!--ALOCATED EMPLOYEES QUANTITY-->
-                                <label>Quantidade de Funcionários Atualmente Alocados</label><span class="pull-right">{{basicinfo.quantidade_funcionarios_alocados}}</span>
-                            </p>
 
                             {% if basicinfo.observacoes %}
                                 <legend class="text-right">

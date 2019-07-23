@@ -12,7 +12,7 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from chosen import forms as chosenforms
 
-from .models import BasicInfo, AddressInfo, ContractualInfo, ServiceGround, ServiceOrder, ServiceDescription
+from .models import BasicInfo, AddressInfo, ContractualInfo, ServiceGround, ServiceOrder, ServiceDescription, ServiceRecord, OccurrenceCall
 from Funcionario.models import BasicInfo as FuncBasicInfo
 
 class BasicInfoForm(forms.ModelForm):
@@ -114,6 +114,107 @@ class ContractualInfoForm(ChosenModelForm):
         labels = {
             'funcionario_atrib' :   'Funcionários Atribuidos'
         }
+
+class ServiceOrderForm(forms.ModelForm):
+    class Meta():
+        model = ServiceOrder
+        fields = [
+            'local_servico',
+            'produto',
+            'observacao'
+        ]
+        label = {
+            'produto' : 'Possui Produto ?',
+            'observacao' : 'Observações'
+        }
+
+class ServiceDescriptionForm(forms.ModelForm):
+    categoria = forms.ChoiceField(choices=lambda: [('---------','---------')]+[(x['categoria'], x['categoria']) for x in FuncBasicInfo.objects.order_by().values('categoria').distinct()])
+    class Meta():
+        model = ServiceDescription
+        fields = [
+            'funcionario',
+            'qtd_horas',
+            'descricao'
+        ]
+        labels = {
+            'funcionario' : 'Funcionário',
+            'qtd_horas' : 'Horas',
+            'descricao' : 'Descrição'
+        }
+
+        widgets = {
+            'qtd_horas' : widgets.TextInput
+        }
+
+class ServiceGroundForm(forms.ModelForm):
+    class meta():
+        model = ServiceGround
+
+        fields = [
+            'cliente'
+            'nome',
+            'funcionario_responsavel',
+            'CEP',
+            'endereco',
+            'numero',
+            'bairro',
+            'complemento',
+            'municipio',
+            'estado'
+        ]
+
+        labels = {
+            'nome'  :   'Nome',
+            'funcionario_responsavel'   :   'Funcionário Responsável',
+            'CEP'   :   'CEP',
+            'endereco'  :   'Endereço',
+            'numero'    :   'Número',
+            'bairro'    :   'Bairro',
+            'complemento'   :   'Complemento',
+            'municipio' :   'Município',
+            'estado'    :   'Estado'
+        }
+
+        widgets = {
+            'numero'    :   widgets.TextInput
+        }
+
+class ServiceRecordForm(forms.Form):
+    description = forms.CharField(label = 'Relatório', widget = widgets.Textarea())
+    
+class LSListing(forms.Form):  
+    def __init__(self, *args, **kwargs):
+        cliente = kwargs.pop('cliente')
+        super(LSListing, self).__init__(*args, **kwargs)
+        if cliente:
+            self.fields.update({'LS' : forms.ModelChoiceField(ServiceGround.objects.filter(cliente = cliente), label = "Local de Serviço")})
+        else:
+            self.fields.update({'LS' : forms.ModelChoiceField(ServiceGround.objects.all(), label = "Local de Serviço")})
+        
+class OccurrenceCallForm(forms.ModelForm):
+    class Meta:
+        model = OccurrenceCall
+
+        fields = ['description']
+        label  = {'description' : 'Descrição'}
+
+class OccurrenceCallEditionForm(forms.Form):
+    description = forms.CharField(label = 'Descrição', widget = widgets.Textarea())
+    status = forms.ChoiceField(choices = (('-----',  '-----'), ('Aberto', 'Aberto'), ('Em Andamento', 'Em Andamento'), ('Fechado', 'Fechado')), label = 'Status do Chamado')
+
+ServiceGroundFormSet = forms.modelformset_factory(
+    ServiceGround,
+    ServiceGroundForm,
+    extra = 1,
+    can_delete = True,
+    exclude = ['cliente'],
+    widgets = {
+        'numero'    :   widgets.TextInput
+    }
+    )
+
+ServiceFormSet = forms.inlineformset_factory(ServiceOrder, ServiceDescription, form = ServiceDescriptionForm, extra = 1, fields=('funcionario', 'qtd_horas', 'descricao'))
 
 TEMPLATES = {
         'Basic Info'        :   'wizard_template_basic_info_cliente.html',
@@ -222,81 +323,5 @@ class CadastroClienteWizard(SessionWizardView):
         else:
             return self.initial_dict.get(step, {})
 
-class ServiceGroundForm(forms.ModelForm):
-    class meta():
-        model = ServiceGround
-
-        fields = [
-            'cliente'
-            'nome',
-            'funcionario_responsavel',
-            'CEP',
-            'endereco',
-            'numero',
-            'bairro',
-            'complemento',
-            'municipio',
-            'estado'
-        ]
-
-        labels = {
-            'nome'  :   'Nome',
-            'funcionario_responsavel'   :   'Funcionário Responsável',
-            'CEP'   :   'CEP',
-            'endereco'  :   'Endereço',
-            'numero'    :   'Número',
-            'bairro'    :   'Bairro',
-            'complemento'   :   'Complemento',
-            'municipio' :   'Município',
-            'estado'    :   'Estado'
-        }
-
-        widgets = {
-            'numero'    :   widgets.TextInput
-        }
-    
-ServiceGroundFormSet = forms.modelformset_factory(
-    ServiceGround,
-    ServiceGroundForm,
-    extra = 1,
-    can_delete = True,
-    exclude = ['cliente'],
-    widgets = {
-        'numero'    :   widgets.TextInput
-    }
-)
-
-class ServiceOrderForm(forms.ModelForm):
-    class Meta():
-        model = ServiceOrder
-        fields = [
-            'local_servico',
-            'produto',
-            'observacao'
-        ]
-        label = {
-            'produto' : 'Possui Produto ?',
-            'observacao' : 'Observações'
-        }
 
 
-class ServiceDescriptionForm(forms.ModelForm):
-    categoria = forms.ChoiceField(choices=lambda: [('---------','---------')]+[(x['categoria'], x['categoria']) for x in FuncBasicInfo.objects.order_by().values('categoria').distinct()])
-    class Meta():
-        model = ServiceDescription
-        fields = [
-            'funcionario',
-            'qtd_horas',
-            'descricao'
-        ]
-        labels = {
-            'funcionario' : 'Funcionário',
-            'qtd_horas' : 'Horas',
-            'descricao' : 'Descrição'
-        }
-
-        widgets = {
-            'qtd_horas' : widgets.TextInput
-        }
-    
-ServiceFormSet = forms.inlineformset_factory(ServiceOrder, ServiceDescription, form = ServiceDescriptionForm, extra = 1, fields=('funcionario', 'qtd_horas', 'descricao'))

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+<title>
+    BI4U - Selecionar Chamado
+</title>
+{% endblock head %}
+
+{% block customcss %}
+<style>
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+        background-color: #3c3c3c;
+        color: white;
+    }
+    .my-legend .legend-title {
+        text-align: left;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 100%;
+    }
+    .my-legend .legend-scale ul {
+        margin: 0;
+        margin-bottom: 5px;
+        padding: 0;
+        float: left;
+        list-style: none;
+        }
+    .my-legend .legend-scale ul li {
+        font-size: 100%;
+        list-style: none;
+        margin-left: 0;
+        line-height: 20px;
+        margin-bottom: 2px;
+        }
+    .my-legend ul.legend-labels li span {
+        display: block;
+        float: left;
+        height: 18px;
+        width: 45px;
+        margin-right: 5px;
+        margin-left: 0;
+        border: 1px solid black;
+        }
+    .my-legend .legend-source {
+        font-size: 70%;
+        color: #999;
+        clear: both;
+        }
+    .my-legend a {
+        color: #777;
+        }
+
+</style>
+{% endblock customcss %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+    <legend class="text-center">Chamados — {{cliente.nome}}</legend>
+</div>
+<div class="col-sm-8 col-sm-offset-1">
+    <form action="" method="post">
+        {% bootstrap_form form %}
+    </form>
+
+    <table id="List" class="table table-hover"></table>
+    <div class="pull-right">
+        <a class="btn btnmenu-static" href="{% url 'cliente/visualizar' cliente.id %}">{% bootstrap_icon 'arrow-left' %} Voltar</a>
+        <a class="btn btnmenu-static" id="newOccurrence" base-url="{% url 'cliente/chamado/criar' id=0 %}" href = "#">Abrir Novo Chamado</a>
+    </div>
+</div>
+
+    <div class='my-legend col-sm-2 col-sm-offset-1'>
+        <div class="spacer-xxs"></div>
+        <div class='legend-title'>Status do Chamado</div>
+        <div class='legend-scale'>
+            <ul class='legend-labels'>
+                <li><span class="bg-danger"></span>Aberto</li>
+                <li><span class="bg-warning"></span>Em Andamento</li>
+                <li><span class="bg-success"></span>Fechado</li>
+            </ul>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block custom_scripts %}
+<script>
+    $(document).ready(function() {
+
+        $("#{{form.LS.id_for_label}}").change(function(){
+            
+            $('#List').html('');
+            
+            if ($(this).val() != ''){
+                $('#newOccurrence').attr('href', $("#newOccurrence").attr('base-url').replace(/[0-9]+/g, $(this).val()));    
+            } else {
+                $('#newOccurrence').attr('href', '#');
+            }
+            
+            $.ajax({
+                url: '{% url "cliente/listaOccurrences" %}',
+                data: {
+                    'LS': $(this).val()
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#List').html('');
+                    $('#List').append(data);
+                    
+                },
+                error: function(error){
+                    console.log("error")
+                    console.log(error)
+                }
+            })
+        });
+    });
+</script>
+{% endblock custom_scripts %}

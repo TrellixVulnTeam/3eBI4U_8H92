@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+
+{% block head %}
+    <title>Ata de Serviço</title>
+{% endblock head %}
+
+
+
+{% block content %}
+    <legend class="text-center">
+        <span>Ata de Serviço — {{LS}}</span>
+        <span> — {% if not SR.data %}{{data}}{% else %}{{SR.data}}{% endif %}</span>
+    </legend>
+
+    <div class="spacer"></div>
+
+    <div class = "col-sm-10 col-sm-offset-1" id = "description">{{SR.description | linebreaks}}</div>
+
+    {% if SR.data == data or not SR %}
+    <form action="{% url 'cliente/report/criar' id=LS.id %}" method="POST" class = "form-horizontal col-sm-10 col-sm-offset-1 hidden-print" enctype="multipart/form-data" style="padding:0">
+        <div class="spacer"></div>
+        {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
+        {% bootstrap_field form.description show_label=False placeholder="Adicionar a Ata..."%}
+        {% buttons %}
+        <div class="pull-right">
+            <a class="btn btnmenu-static" href="{% url 'cliente/report/selecionar' id=LS.cliente.id %}">Voltar</a>
+            <a href="#" class="btn btnmenu" onclick="window.print()">Imprimir</a>
+            <button type="submit" class="btn btnmenu-static hidden-print">
+                {% bootstrap_icon "save" %} Salvar Ata
+            </button>
+        </div>
+        {% endbuttons %}
+    </form>
+    {% else %}
+    <div class="row hidden-print">
+        <div class="col-sm-offset-1 pull-left">
+            <div class="spacer"></div>
+            <a class="btn btnmenu-static" href="{% url 'cliente/report/selecionar' id=LS.cliente.id %}">Voltar</a>
+            <a href="#" class="btn btnmenu" onclick="window.print()">Imprimir</a>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock content %}
+
+{% block custom_scripts %}
+<script>
+    $(document).ready(function(){
+        $("#description").html(function(i, h){
+            return h.replace(/\[([^\]]+)\] — /g, '{% bootstrap_icon "pushpin" %} <b>[$1] — </b>');
+        });        
+        
+
+
+    });
+</script>
+{% endblock custom_scripts %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+<title>BI4U - Chamado #{{OC.OC}}</title>
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        <legend class="text-center bold-text">Chamado #{{OC.OC}} de {{OC.data}}</legend>
+    </div>        
+</div>
+
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+
+        <legend class="text-center bold-text">{{OC.motive}}</legend>
+        
+        <div class="spacer"></div>
+
+        <div id="description">{{OC.description|linebreaks}}</div>
+
+        <div class="spacer"></div>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% bootstrap_field form.status show_label=False %}
+            {% bootstrap_field form.description show_label=False placeholder="Descrição do Chamado ..." %}
+        </form>
+        <div class="pull-right">
+                <a class="btn btnmenu-static" href="{% url 'cliente/chamado/visualizar' OC.id %}">{% bootstrap_icon 'arrow-left' %} Voltar</a>
+            <button class="btn btnmenu-static" id="open-confirmation-modal">{% bootstrap_icon 'save' %} Atualizar Chamado</button>
+            <div class="spacer"></div>
+        </div>
+    </div>
+</div>
+
+    <!--MODALS-->
+    <div class="modal fade" id="modal-confirmation"> <!--CLIENTE LISTING MODAL BEGINS-->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header container-fluid bg-darkblue">
+                    Chamado #{{OC.OC}}
+                </div>
+                <div class="modal-body container-fluid">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <p id="confirmation-message" class="bold-text">O status #{{OC.OC}} será marcado como "{}".</p>
+                        <p class="bold-text">Confirma a alteração ?</p>
+                        <div class="pull-right">
+                            <button class="btn btnmenu-static" id="form-submit">Confirmar</button>
+                            <button class="btn btnmenu-static" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!--CLIENTE LISTING MODAL ENDS-->
+
+{% endblock content %}
+
+{% block custom_scripts %}
+<script>
+    $(document).ready(function(){
+
+        $("#description").html(function(i, h){
+            return h.replace(/\[([^\]]+)\] — /g, '{% bootstrap_icon "pushpin" %} <b>[$1] — </b>');
+        });        
+
+        $('#open-confirmation-modal').on('click', function(){
+            $('#confirmation-message').text($('#confirmation-message').text().replace(/{}/, $("#{{form.status.id_for_label}}").val()));
+            $("#modal-confirmation").modal();
+        });
+
+        $('#form-submit').on('click', function(){
+            
+            
+            if ($('#{{form.status.id_for_label}}').val() == "Aberto") {
+                $('#{{form.status.id_for_label}}').val("Em Andamento");
+            };
+            $('form').submit();
+        });
+    });
+</script>
+{% endblock custom_scripts %}
