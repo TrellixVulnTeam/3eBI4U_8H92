@@ -372,3 +372,15 @@ a {
     background-color: var(--darkblue);
     color: white;
 }
+
+.notification-icon {
+    cursor: pointer;
+    color: #9d9d9d !important;
+}
+
+.notification-icon:hover {
+    color: white !important;
+}
+.notification-icon:active {
+    color: white !important;
+}

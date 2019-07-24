@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'Funcionario',
     'Financeiro',
     'Cliente',
+    'Notificacao',
     'ControleAdministrativo'
 ]
 

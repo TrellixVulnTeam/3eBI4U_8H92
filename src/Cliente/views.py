@@ -15,6 +15,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from .models import BasicInfo, ContractualInfo, ServiceGround, ServiceDescription, ServiceOrder, ServiceRecord, OccurrenceCall
 from Funcionario.models import BasicInfo as Funcionario
+from Notificacao.views import notify
 from .tables import ClienteBasicInfoTable
 from .utilities import validateCNPJ, validateCPF
 from .forms import ServiceGroundFormSet, ServiceFormSet, ServiceOrderForm, ServiceRecordForm, LSListing, OccurrenceCallForm, OccurrenceCallEditionForm
@@ -443,7 +444,14 @@ class OccurrenceCallCreationView(PermissionRequiredMixin, View):
 
         messages.success(request, 'Chamado #{} aberto com sucesso !'.format(Occurrence.OC))
 
-        return redirect('cliente/chamado/selecionar', id=LS.cliente.id, permanent = True)
+        # Notify moderators of New Occurrence
+        from django.contrib.auth.models import Group
+        next_url = '/cliente/chamado/selecionar/{}'.format(LS.cliente.id)
+        notification_url = notify(request.user.id, Group.objects.get(name = 'business_admins').id, 0, '/cliente/chamado/visualizar/{}'.format(Occurrence.id), 'Novo Chamado Aberto - #{}'.format(Occurrence.OC), 'Chamado #{} aberto por {}'.format(Occurrence.OC, request.user.get_full_name()), next_url)
+
+        print(next_url, notification_url)
+
+        return redirect('/' + notification_url, permanent = True)
     
     def handle_no_permission(self):
         # add custom message

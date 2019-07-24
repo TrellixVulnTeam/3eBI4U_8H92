@@ -1,4 +1,6 @@
 {% load static %}
+{% load notification_tags %}
+{% load bootstrap3 %}
 
 <script>
     
@@ -59,13 +61,15 @@
             {% if 'home' in request.path %}
                 <li><a href="#" class="btn disabled">Seja bem-vindo {{user.username}} !</a></li>
             {% endif %}
-            <li><a href="{% url 'logout' %}">Sair &nbsp;<span class="glyphicon glyphicon-log-out"></span></a></li>
+            <li>{% notification_center %}</li>
+            <li><a href="{% url 'logout' %}">Sair &nbsp; {% bootstrap_icon 'log-out' %}</a></li>
         {% else %}
             {% if 'home' in request.path %}
                 <li><a href="#" class="btn disabled">Você está em modo anônimo.</a></li>
             {% endif %}
             <li><a href="{% url 'login' %}">Entrar &nbsp;<span class="glyphicon glyphicon-log-in"></span></a></li>
         {% endif %}
+
       </ul>
     </div>
   </div>

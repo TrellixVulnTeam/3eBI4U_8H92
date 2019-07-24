@@ -1,0 +1,19 @@
+{% load bootstrap3 %}
+
+<div class="dropdown">
+    <span class="dropdown-toggle notification-icon" data-toggle="dropdown" style="font-size: 1.5em;">
+        {% bootstrap_icon 'inbox' %}
+    </span>
+    {% if unread > 0 %}<span class="badge badge-notify">{{unread}}</span>{% endif %}
+    <ul class="dropdown-menu notification-menu" >
+        {% for notification in notifications %}
+        <li {% if not forloop.last %}class = "notification"{% endif %}><a href="{% url 'notification/read' notification.id %}">
+            {% if not notification.read %}<span class="dot pull-right"></span>{% endif %}
+            <p class="text-left bold-text">{{notification.creator.get_full_name}}: {{notification.title}}</p>
+            <p class="text-right" style="overflow: hidden; text-overflow: ellipsis;">{{notification.message}}</p>
+        </a></li>
+        {% empty %}
+        <li class="bold-text text-center" style="padding: 20px; cursor: default;">Você não possui nenhuma notificação por enquanto !</li>
+        {% endfor %}
+    </ul>
+</div> 

@@ -20,11 +20,12 @@ from django.conf.urls.static import static
 from django.views.generic.base import TemplateView, RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='home/', permanent=False), name='homeredirect'),
     path('home/', TemplateView.as_view(template_name = 'home.html'), name = 'home'),
     path('funcionario/', include('Funcionario.urls'), name = 'funcionario'),
     path('financeiro/', include('Financeiro.urls'), name='financeiro'),
     path('cliente/', include('Cliente.urls'), name='cliente'),
-    path('accounts/', include('django.contrib.auth.urls'))
+    path('notification/', include('Notificacao.urls'), name='notification'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
