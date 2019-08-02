@@ -64,10 +64,11 @@
     </form>
 
     <table id="List" class="table table-hover"></table>
-    <div class="pull-right">
+    <div class="pull-right" style="margin-bottom: var(--spacer);">
         <a class="btn btnmenu-static" href="{% url 'cliente/visualizar' cliente.id %}">{% bootstrap_icon 'arrow-left' %} Voltar</a>
         <a class="btn btnmenu-static" id="newOccurrence" base-url="{% url 'cliente/chamado/criar' id=0 %}" href = "#">Abrir Novo Chamado</a>
     </div>
+    
 </div>
 
     <div class='my-legend col-sm-2 col-sm-offset-1'>

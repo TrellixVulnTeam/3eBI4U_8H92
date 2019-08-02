@@ -384,3 +384,24 @@ a {
 .notification-icon:active {
     color: white !important;
 }
+
+.divider {
+    height: 1px;
+    width:100%;
+    display:block; /* for use on default inline elements like span */
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #3c3c3c;
+  }
+
+.input-group-addon {
+    min-width:25%;
+    text-align:center;
+    cursor: default;
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}

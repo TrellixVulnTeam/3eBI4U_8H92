@@ -1,0 +1,29 @@
+<table class="table table-hover">
+  <thead>
+    <td></td>
+    <td class="text-center">OS</td>
+    <td class="text-center">Local de Serviço</td>
+    <td class="text-center">Valor Pré Calculado</td>
+  </thead>    
+  <tbody>
+    {% for OS in current_page %}
+    <tr onclick="markchecked(event, $(this))" style="cursor: pointer;" id={{OS.id}}>
+      <td><input type="checkbox" id='OS-{{forloop.counter}}' value="{{OS.id}}"></td>
+      <td class="text-center">#{{OS.OS}}</td>
+      <td class="text-center">{{OS.local_servico}}</td>
+      <td class="text-center">R${{OS.Total}}</td>
+      <td><button class="btn btnmenu pull-right" onclick="window.location.href = '/cliente/OS/{{OS.OS}}';" style="margin: 0">Detalhes</button></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<button class="btn btnmenu-static disabled pull-left" style="margin-right: 10px;" id="btn-fatura">Gerar Fatura</button>
+{% if pagination.is_paginated %}
+<input hidden id="page" value="{{current_page_number}}">
+<ul class="pagination pull-right">
+  {% for page in pagination.pages %}
+  <li class="{% if page == current_page_number|add:1 %}active active-pag{% endif %}" ><a href="" class="js-page-btn">{{page}}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}

@@ -3,7 +3,10 @@ from . import views
 
 
 urlpatterns = [
-    path('fatura/', views.GerarFatura.as_view(), name = 'financeiro/fatura'),
-    path('api/listaOS/', views.ListaOS, name = 'financeiro/api/listaOS'),
-    path('api/geraFatura/', views.GeraFatura, name = 'financeiro/api/geraFatura'),
+    path('fatura/', views.FaturaOSSelectionView.as_view(), name = 'financeiro/fatura/selecionarOS'),
+    path('fatura/criar/<str:os>', views.FaturaCreationView.as_view(), name = 'financeiro/fatura/criar'),
+    path('', views.financeiroMenu.as_view(), name = 'financeiro/appMenu'),
+    
+    # API URLS
+    path('api/listaOS/', views.listaClientes, name = 'financeiro/api/listaOS'),
     ]

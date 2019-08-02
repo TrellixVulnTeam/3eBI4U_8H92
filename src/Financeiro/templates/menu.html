@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}
+<title>BI4U - Financeiro</title>
+{% endblock head %}
+
+{% block content %}
+
+<div class="row">
+    <div class="spacer-xxl clearfix"></div>
+    <div class="col-sm-3">
+        <div class="buttons" style="font-size: 1.2em;">
+            <a class="btnmenu btn-block text-center" href="{% url 'financeiro/fatura/selecionarOS' %}"><span>Fatura</span></a>
+            <div class="spacer clearfix"></div>
+            <button class="btnmenu btn-block"><span>Fatura</span></button>
+            <div class="spacer clearfix"></div>
+            <button class="btnmenu btn-block"><span>Fatura</span></button>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

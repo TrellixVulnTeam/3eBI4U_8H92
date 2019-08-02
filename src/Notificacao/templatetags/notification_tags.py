@@ -17,7 +17,7 @@ def notification_center(context):
     unread = sum(not notification.read for notification in notifications)
 
     context_add.update({
-        'notifications' :   notifications[:10],
+        'notifications' :   notifications[:7],
         'unread'        :   unread
         })
     return context_add

@@ -4,8 +4,6 @@ from Cliente.models import BasicInfo as Cliente
 class ClienteListing(forms.Form):
     cliente = forms.ModelChoiceField(Cliente.objects.all())
 
-
-
 class Fatura(forms.ModelForm):
     class Meta():
         fields = [

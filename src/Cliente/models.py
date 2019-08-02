@@ -174,6 +174,8 @@ class ServiceOrder(models.Model):
     # RELATIONAL FIELDS
     cliente         =   models.ForeignKey(BasicInfo, models.CASCADE, related_name = "ordem_servico_cliente", verbose_name = 'Cliente', null = True, blank = True)
     local_servico   =   models.ForeignKey(ServiceGround, models.CASCADE, related_name = "ordem_servico_ls", verbose_name = 'Local de Serviço', null = True, blank = True)
+    fatura          =   models.ForeignKey("Financeiro.Fatura", models.CASCADE, related_name = "ordem_servico_fatura", null = True, blank = True)
+
 
     # MAIN MODEL FIELDS
     data_emissao    =   models.DateField(null = True, blank = True, auto_now_add = True, verbose_name = 'Data de Emissão')

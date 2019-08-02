@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block head %}<title>BI4U - Fatura</title>{% endblock head %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        <legend class="text-center">Faturar Ordens de Serviço</legend>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <form action="" method="POST">
+        {% bootstrap_form form %}
+        </form>
+
+        <div id="List"></div>
+
+        <a href="{% url 'financeiro/appMenu' %}" class="btn btnmenu-static pull-left">{% bootstrap_icon 'arrow-left' %} Voltar</a>
+        <input type="text" hidden id="js-checked">
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block custom_scripts %}
+<script>
+
+    function ajaxCall(cliente, page) {
+
+        $.ajax({
+            url: '{% url "financeiro/api/listaOS" %}',
+            data: {
+                'cliente': cliente,
+                'page' : page
+            },
+            dataType: 'html',
+            success: function (data) {
+                $('#List').html('');
+                $('#List').append(data);
+            },
+            error: function(error){
+                console.log("error")
+                console.log(error)
+            },
+            complete: function(data){
+               
+                if ($('#js-checked').length){
+                    if ($('#js-checked').val() != ''){
+                        $("tr").each(function() {
+                            if (~$('#js-checked').val().indexOf('|' + $(this).attr('id') + '|')){
+                                $(this).click();
+                            }
+                        });
+                    } 
+                } 
+
+            }
+        })
+
+
+        
+
+    };
+    
+    function markchecked(event, row){
+        row.find('input:checkbox:first').each(function(){
+            if ($(this).prop('checked')) {
+                $(this).prop('checked', false);
+                row.css('background-color', 'inherit');
+                
+                // Saving Checked Values
+                $('#js-checked').val($('#js-checked').val().replace('|' + $(this).val() + '|', ''));
+                data = $('#js-checked').val();
+                data = data.substring(1, data.length - 1)
+                arr = data.split('||');
+                arr = Array.from(new Set(arr));
+                data = arr.join('||')
+                data = '|' + data + '|'
+
+                $('#js-checked').val(data);
+                // End Saving Checked Value
+                
+                if ($('#js-checked').val() == '') {
+                    $('#btn-fatura').addClass('disabled');
+                    $('#btn-fatura').prop('disabled', true);
+                } else {
+                    $('#btn-fatura').removeClass('disabled');
+                    $('#btn-fatura').prop('disabled', false);
+                };
+
+            } else {
+                $(this).prop('checked', true);
+                row.css('background-color', '#a6a6a6');
+                
+                // Saving Checked Values
+                $('#js-checked').val($('#js-checked').val() + '|' + $(this).val() + '|');
+                
+                data = $('#js-checked').val();
+                data = data.substring(1, data.length - 1)
+                arr = data.split('||');
+                arr = Array.from(new Set(arr));
+                data = arr.join('||')
+                data = '|' + data + '|'
+
+                $('#js-checked').val(data);
+                // End Saving Checked Value
+
+                if ($('#js-checked').val() == '') {
+                    $('#btn-fatura').addClass('disabled');
+                    $('#btn-fatura').prop('disabled', true);
+                } else {
+                    $('#btn-fatura').removeClass('disabled');
+                    $('#btn-fatura').prop('disabled', false);
+                };
+            }
+        })
+    }
+
+    $(document).ready(function() {
+
+
+        $('#List').on('click', '#btn-fatura', function(){
+            data = $('#js-checked').val();
+            data = data.substring(1, data.length-1)
+            arr = data.split('||');
+            arr = Array.from(new Set(arr)); 
+            data = 'order=' + arr.join('&order=');
+            url = "{% url 'financeiro/fatura/criar' os='a' %}".replace('/a', '/' + data);
+            window.location.replace(url);
+        })
+
+        $("#{{form.cliente.id_for_label}}").change(function(){
+            
+            if ($('#page').length) {
+                var page = $('#page').length;
+            } else {
+                var page = 0; 
+            }
+            
+            ajaxCall($(this).val(), page);
+
+        });
+        
+        $('#List').on('click', 'a', function(){
+            event.preventDefault();
+            ajaxCall( $("#{{form.cliente.id_for_label}}").val(), parseInt((this).text) - 1);
+        })
+        
+    });
+</script>
+{% endblock custom_scripts %}
+
+{% block customcss %}
+<style>
+    .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+        background-color: #3c3c3c;
+        color: white;
+    }
+
+    .active-pag > a {
+        background-color: var(--darkblue) !important;
+        border-color: var(--darkblue) !important;
+        color: white !important;
+    }
+
+    .pagination > li > a {
+        color: var(--darkblue);
+    }
+
+</style>
+{% endblock customcss %}

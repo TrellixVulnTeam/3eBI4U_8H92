@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+<script src='{% static "js/custom_masks.js" %}'></script>
+{% block head %}<title>BI4U - Fatura</title>{% endblock head %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        <a href="{% url 'financeiro/fatura/selecionarOS' %}" class="btn btnmenu-static pull-left">{% bootstrap_icon 'arrow-left' %} Voltar</a>
+        <div class="spacer-xxs clearfix"></div>
+        <legend class="text-center">Faturamento Ordens de Serviço</legend>
+        <div class="spacer"></div>
+    </div>
+</div>
+
+<div class="row">
+    <!--START OF DESCRIPTION-->
+    <div class="col-sm-10 col-sm-offset-1">
+        {% for OS in OSList %}
+        <div class="panel">
+            <div class="panel-heading text-center" style="cursor: pointer;"  data-toggle="collapse" data-target="#collapser-{{forloop.counter}}">Ordem de Serviço #{{OS.OS}}</div>
+            <div class="panel-body collapse" id="collapser-{{forloop.counter}}" style="background-color: #efefef; border: solid 2px black !important;">
+                <!--SERVICES TABLE-->
+                <table class="table">
+                    <tbody>
+                        <div class="text-center lead">Serviços</div>
+                        {% for description in OS.descricao_servico_OS.all %}
+                        <tr>
+                            <td class="text-left">{{description.descricao}}</td>
+                            <td class="text-center">{{description.funcionario}}</td>
+                            <td class="text-center">{{description.qtd_horas}} Horas</td>
+                            <td class="form-inline text-right">R$ <input type="text" id="{{forloop.parentloop.counter}}-{{forloop.counter}}" value="{{description.valor_total}}" class="js-service-value-{{forloop.parentloop.counter}} money form-control text-center"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!--PRODUCTS TABLE-->
+                <table class="table">
+                    <tbody>
+                        <div class="text-center lead">Produtos</div>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer bold-text" style="border: dashed 2px black; border-top: 0;">
+                <div class="pull-left"><span>SUBTOTAL</span></div>
+                <div class="pull-right"><span class="js-subtotal-{{forloop.counter}}"></span></div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        <!--END OF DESCRIPTION-->
+</div>
+
+<div class="row">
+    <div class="spacer-xxs"></div>
+    <div class="col-sm-10 col-sm-offset-1 bold-text" style="font-size: 1.1em;">
+
+        <div class="pull-left"><span>SUBTOTAL</span></div>
+        <div class="col-sm-2 pull-right">
+            <div class="input-group">
+                <span class="input-group-addon">R$</span>
+                <input id="js-subtotal" type="text" disabled class="form-control money text-center" style="cursor: default;">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="pull-left"><span>DESCONTO (%)</span></div>
+        <div class="col-sm-2 pull-right">
+            <div class="input-group">
+                <span class="input-group-addon">%</span>  
+                <input id="js-discount" type="text" class="form-control percent text-center">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div class="spacer-xxs"></div>
+
+
+        <div class="pull-left"><span>TOTAL</span></div>
+        <div class="col-sm-2 pull-right">
+            <div class="input-group">
+                <span class="input-group-addon">R$</span>  
+                <input id="js-total" type="text" class="form-control money text-center">
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="spacer-xxs"></div>
+
+        <button class="btn btn-block btnmenu-static" id="faturar">Faturar</button>
+
+        <div class="clearfix"></div>
+
+        <div class="spacer"></div>
+
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block custom_scripts %}
+<script>
+
+function adjustTotals() {
+
+    var parent = "-1";
+    var totals = [];
+    var full_value = 0.0;
+    $("input[class^='js-service-value-']").each(function(){
+        var classMatrix = $(this).attr('id').split('-'); // M(21) where [parentloop, childloop] 
+        //console.log('-----');
+        //console.log('classMatrix:', classMatrix);
+
+        
+        if (classMatrix[0] != parent){
+            parent = classMatrix[0]
+            //console.log('New Parent: ', parent);
+            
+        } 
+
+        var currentValue = parseFloat($(this).val().replace(/\./g, '').replace(',', '.'));
+        if (currentValue != null && !isNaN(currentValue)){
+            //console.log(currentValue);
+            
+            full_value += currentValue;
+            
+            if (totals[parent]){
+                totals[parent] += currentValue;
+                //console.log('parent: ', parent, 'Value: ', totals[parent]);
+            
+            } else {
+                totals[parent] = currentValue;
+            
+                //console.log(totals[parent]);
+            }
+   
+        }
+        
+        
+        //console.log('Current Value: ', currentValue)
+
+        
+    });
+
+    totals = totals.filter(function(el){
+        return el != null;
+    });
+
+    totals.forEach(function(value, index){
+        new_value = value.toFixed(2).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+        new_value = new_value.substring(0, new_value.lastIndexOf('.')) + ',' + new_value.substring(new_value.lastIndexOf('.') + 1)
+        $('.js-subtotal-'+ (index + 1)).text('R$' + new_value);
+    });
+
+    final_value = full_value;
+    full_value = full_value.toFixed(2).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+    full_value = full_value.substring(0, full_value.lastIndexOf('.')) + ',' + full_value.substring(full_value.lastIndexOf('.') + 1)
+    $('#js-subtotal').val(full_value);
+
+    discount = parseFloat($('#js-discount').val().replace(',', '.'))/100;
+    if (isNaN(discount) || discount == null) {
+        discount = 0.0;
+    }
+
+    final_value = final_value * (1 - discount);
+    final_value = final_value.toFixed(2).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+    final_value = final_value.substring(0, final_value.lastIndexOf('.')) + ',' + final_value.substring(final_value.lastIndexOf('.') + 1)
+
+    $('#js-total').val(final_value);
+
+}
+
+$(document).ready(function(){
+
+    adjustTotals();
+
+    $("input[class^='js-service-value-']").each(function(){
+        $(this).on('keyup', function(){
+            adjustTotals();
+        });
+    });
+
+    $('#js-discount').on('keyup', function(){
+        adjustTotals();
+    })
+    
+
+    $('#faturar').on('click', function(){
+        var OS = [{% for OS in OSList %}{{OS.id}}, {% endfor %}];
+        discount = parseFloat($('#js-discount').val().replace(',', '.'));
+        if (isNaN(discount) || discount == null) {
+            discount = 0.0;
+        }
+ 
+
+
+        $.ajax({
+            type: "POST",
+            url: "url",
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'OS' : JSON.stringify(OS),
+                'discount' : discount,
+                'total' : $('#js-total').val().replace('.', '').replace(',', '.')
+            },
+            dataType: "HTML",
+            success: function (response) {
+                console.log(response);
+            },
+            error: function(response){
+                console.log(response);
+            }
+        });
+    });
+
+
+});
+</script>
+{% endblock custom_scripts %}
